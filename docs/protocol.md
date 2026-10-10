@@ -56,6 +56,18 @@ Rule: A1 succeeds against B1 if intent improvement is at least delta_I, the
 entity difference is no worse than -epsilon_E, schema validity is at least
 S_min, and p95 latency is at most L_max.
 
+## 4a. Data as frozen at G2
+
+| Project | Domains | Intents | Entity types | k-shot | Dev | Test |
+|---|---|---|---|---|---|---|
+| P1 Home assistant | alarm, iot | 12 | 18 | 120 | 100 (80 + 20 OOS) | 300 (250 + 50 OOS) |
+| P2 Productivity assistant | calendar, email, lists | 10 | 26 | 100 | 100 (80 + 20 OOS) | 300 (250 + 50 OOS) |
+| P3 Ordering and travel (held out) | takeaway, transport | 6 | 19 | 60 | 100 (80 + 20 OOS) | 200 (167 + 33 OOS) |
+
+Sampling seed 20261011, per-project stream `20261011|<project>`. Verified
+reproducible. Full counts, limitations and the two declared near-duplicate
+overlaps are in `DATA_REPORT.md`.
+
 ## 5. Data access rules
 
 - Train: model fitting and few-shot example selection.
@@ -76,6 +88,6 @@ Cold start is measured separately. Cache hits never contribute a latency number.
 
 | Artifact | Commit hash | Date |
 |---|---|---|
-| Project descriptions P1, P2, P3 | _at G2_ | |
-| Split IDs and k-shot pools | _at G2_ | |
+| Project descriptions P1, P2, P3 (`configs/descriptions/`) | `dd4e25ab240f18438888404dc8a8d06e1f59a3ac` | 11 Oct 2026 |
+| Split IDs, k-shot pools and entity schemas (`data/manifests/`) | `dd4e25ab240f18438888404dc8a8d06e1f59a3ac` | 11 Oct 2026 |
 | Protocol, thresholds, configurations, code | _at G10_ | |
