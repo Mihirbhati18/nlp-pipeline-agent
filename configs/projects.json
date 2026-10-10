@@ -1,0 +1,55 @@
+{
+  "dataset": {
+    "name": "MASSIVE",
+    "version": "1.1",
+    "release_date": "2022-11-16",
+    "locale": "en-US",
+    "licence": "CC BY 4.0 (Attribution 4.0 International)",
+    "attribution_required": true,
+    "citation": "FitzGerald et al., MASSIVE: A 1M-Example Multilingual Natural Language Understanding Dataset with 51 Typologically-Diverse Languages, ACL 2023",
+    "source_url": "https://amazon-massive-nlu-dataset.s3.amazonaws.com/amazon-massive-dataset-1.1.tar.gz",
+    "derived_from": "SLURP (CC BY 4.0)",
+    "local_file": "data/raw/1.1/data/en-US.jsonl",
+    "sha256_archive": "4cba5faa11c71437928e17cb1b9b3d8b8e727e7ea363a3a9a8045e19c0491577"
+  },
+  "sampling": {
+    "seed": 20261011,
+    "k_per_intent": 10,
+    "dev_total": 100,
+    "dev_oos": 20,
+    "test_total": 300,
+    "test_oos": 50,
+    "note": "Per-project overrides below apply when a project's official split cannot supply the standard size. Fallback sizes are the ones named in PROJECT_PLAN.md section 4."
+  },
+  "projects": [
+    {
+      "id": "P1",
+      "name": "Home assistant",
+      "role": "development",
+      "domains": ["alarm", "iot"],
+      "rationale": "Alarms and connected-home device control are what a single home-assistant product covers. 12 intents, so candidate choice is a real decision and the intent macro-F1 is not dominated by two classes."
+    },
+    {
+      "id": "P2",
+      "name": "Productivity assistant",
+      "role": "development",
+      "domains": ["calendar", "email", "lists"],
+      "rationale": "Calendar, email and list management are the standard scope of a work-productivity assistant. 10 intents and the largest train split, and its longer entity schema makes prompts bigger than P1's, which stresses the prompt-size cap."
+    },
+    {
+      "id": "P3",
+      "name": "Ordering and travel",
+      "role": "held-out",
+      "domains": ["takeaway", "transport"],
+      "test_total": 200,
+      "test_oos": 33,
+      "override_reason": "The official en-US test split holds only 181 in-scope cases for these two domains, short of the 250 the standard size needs. PROJECT_PLAN.md section 4 names 200 as the test fallback, so P3 uses it: 167 in-scope + 33 out-of-scope. Decided at G2 from split counts alone, before any prediction and before any P3 content was inspected.",
+      "rationale": "Ordering food and arranging travel is a coherent transactional assistant, and it is deliberately unlike P1 and P2 in purpose, so adaptation to it is a real generalisation test."
+    }
+  ],
+  "oos_pool": {
+    "domains": ["audio", "cooking", "datetime", "general", "music", "news", "play", "qa", "recommendation", "social", "weather"],
+    "rule": "Out-of-scope cases for every project come only from these reserved domains, which no project uses. Cases are sampled disjointly across projects, so no utterance serves as out-of-scope evidence for more than one project.",
+    "note": "No system is trained on out-of-scope examples. Out-of-scope thresholds are tuned on development data only."
+  }
+}

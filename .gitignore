@@ -11,7 +11,10 @@ venv/
 # Cache *statistics* are recorded in each run manifest instead.
 cache/
 
-# Raw dataset files. data/manifests/ IS tracked (source, licence, IDs, hashes).
+# Raw dataset files and the prepared splits. data/manifests/ IS tracked: it holds
+# the source, licence, counts, every case ID and every file hash, so the splits
+# below are reproducible from it with `python scripts/prepare_data.py`. Keeping
+# them untracked also keeps test labels out of the repository before the freeze.
 data/processed/
 data/raw/
 

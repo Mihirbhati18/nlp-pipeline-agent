@@ -14,22 +14,24 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 11 Oct 2026 | G1 | Cache key covers prompt, model, digest and every generation setting; hit/miss counted; corrupt entry treated as a miss, not a prediction | 8 checks pass | `tests/test_cache.py` |
 | 11 Oct 2026 | G1 | Logical vs physical call counting; cache hit carries no latency; prompt cap rejects before spending a call; repair retry is a new counted call; failures recorded and not cached | 10 checks pass | `tests/test_llm_client.py` |
 | 11 Oct 2026 | G1 | Run folder writes config and manifest; run IDs never reused; failed runs stay visible; data hashes recorded | 7 checks pass | `tests/test_runs.py` |
+| 11 Oct 2026 | G2 | MASSIVE `annot_utt` to character-span conversion: slot at position 0, slot at end, repeated value, adjacent slots, inconsistent annotation rejected, and all 16,521 en-US records converted | 9 checks pass, 16,521/16,521 records, 0 mismatches | `tests/test_massive.py` |
+| 11 Oct 2026 | G2 | Split sizes, official-split provenance, in-scope domain membership, out-of-scope pool rule, no shared case ID within or across projects, gold span indexing, file hashes, declared overlaps, frozen descriptions present | 34 checks pass | `tests/test_data_splits.py` |
 
-Reproduce with: `python -m pytest tests -q` (25 passed, 11 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (68 passed, 11 Oct 2026).
 
 ## Runs
 
 | Run ID | Gate | System / project | Status | Notes |
 |---|---|---|---|---|
-| _none yet_ | - | - | - | The first run will be the G0 throughput test, written to `runs/<id>/` |
+| _none yet_ | - | - | - | No model run exists. G2 data preparation is deterministic and recorded in `data/manifests/`, not as a run folder. The first run folder will be the G0 throughput test |
 
 ## Screenshots
 
 | ID | Gate | What it must show | Status | File |
 |---|---|---|---|---|
 | S00 | G0 | Throughput report title, run ID, date, per-model median/p95/JSON-validity/determinism, chosen model | Pending - needs Ollama | - |
-| S01 | G1 | `pytest` output with 25 passing checks, plus the repository tree | Pending | - |
-| S02 | G2 | Data manifest: MASSIVE version, licence, counts, label inventory, split IDs, description commit hash | Pending | - |
+| S01 | G1 | `pytest` output with the passing checks, plus the repository tree | Pending | - |
+| S02 | G2 | Data manifest: MASSIVE version, licence, counts, label inventory, split IDs, description commit hash | **Ready to capture** - run `python scripts/prepare_data.py` and show `docs/DATA_REPORT.md` | - |
 | S03 | G3 | Evaluator unit-test report including every span-rule case | Pending | - |
 | S04 | G4 | All 12 catalogue configurations running; B0/B1 development outputs | Pending | - |
 | S05 | G5 | B2 timing record, B3-k score, B4 seed determinism | Pending | - |
