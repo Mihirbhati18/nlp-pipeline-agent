@@ -1,0 +1,32 @@
+[project]
+name = "agentic-nlp-pipeline-design"
+version = "0.1.0"
+description = "An agentic framework for automatic project-specific NLP pipeline design"
+requires-python = ">=3.10"
+
+# Laptop (design time, evaluation, baselines B0/B4, runtime via Ollama HTTP).
+# torch/transformers are NOT here: B3 fine-tuning runs on a Kaggle GPU notebook
+# (notebooks/kaggle_b3_finetune.ipynb), so the laptop never needs them.
+dependencies = [
+  "scikit-learn==1.5.2",
+  "numpy==1.26.4",
+  "scipy==1.13.1",
+  "pandas==2.2.3",
+  "datasets==3.0.1",
+  "matplotlib==3.9.2",
+  "jsonschema==4.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.3",
+  "jupyter==1.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

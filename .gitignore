@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Prediction cache: large, regenerable, keyed by prompt + model digest.
+# Cache *statistics* are recorded in each run manifest instead.
+cache/
+
+# Raw dataset files. data/manifests/ IS tracked (source, licence, IDs, hashes).
+data/processed/
+data/raw/
+
+# Run outputs are immutable evidence but large; keep metrics/summaries tracked
+# and ignore bulk prediction dumps. Reconsider before the G12 reproduction.
+runs/*/predictions.jsonl
+runs/*/timing.jsonl
+
+# Secrets: free-API keys for the Architect's planning calls only.
+.env
+*.key
+secrets.json
