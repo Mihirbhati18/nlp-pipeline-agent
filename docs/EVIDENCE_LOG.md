@@ -16,8 +16,11 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 11 Oct 2026 | G1 | Run folder writes config and manifest; run IDs never reused; failed runs stay visible; data hashes recorded | 7 checks pass | `tests/test_runs.py` |
 | 11 Oct 2026 | G2 | MASSIVE `annot_utt` to character-span conversion: slot at position 0, slot at end, repeated value, adjacent slots, inconsistent annotation rejected, and all 16,521 en-US records converted | 9 checks pass, 16,521/16,521 records, 0 mismatches | `tests/test_massive.py` |
 | 11 Oct 2026 | G2 | Split sizes, official-split provenance, in-scope domain membership, out-of-scope pool rule, no shared case ID within or across projects, gold span indexing, file hashes, declared overlaps, frozen descriptions present | 34 checks pass | `tests/test_data_splits.py` |
+| 11 Oct 2026 | G3 | Span-location rule: repeated substring takes the next unclaimed occurrence, missing substring is unsupported and never fuzzy-matched, case difference matches case-insensitively, overlapping entities cannot claim the same characters, quotes stripped but nothing else normalised | 15 checks pass | `tests/test_span_rule.py` |
+| 11 Oct 2026 | G3 | Scorer against hand-computed fixtures: perfect, wrong, empty and malformed output; empty output scores 0 entity F1 with unsupported rate N/A rather than 0; failures and missing responses stay in every denominator; latency only from supplied timing runs | 14 checks pass | `tests/test_scorer.py` |
+| 11 Oct 2026 | G3 | Output contract: valid shapes, code fences, undeclared intent and entity types, malformed items kept rather than dropped, extra fields, repair instruction | 17 checks pass | `tests/test_output_schema.py` |
 
-Reproduce with: `python -m pytest tests -q` (68 passed, 11 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (114 passed, 11 Oct 2026).
 
 ## Runs
 
@@ -32,7 +35,7 @@ Reproduce with: `python -m pytest tests -q` (68 passed, 11 Oct 2026).
 | S00 | G0 | Throughput report title, run ID, date, per-model median/p95/JSON-validity/determinism, chosen model | Pending - needs Ollama | - |
 | S01 | G1 | `pytest` output with the passing checks, plus the repository tree | Pending | - |
 | S02 | G2 | Data manifest: MASSIVE version, licence, counts, label inventory, split IDs, description commit hash | **Ready to capture** - run `python scripts/prepare_data.py` and show `docs/DATA_REPORT.md` | - |
-| S03 | G3 | Evaluator unit-test report including every span-rule case | Pending | - |
+| S03 | G3 | Evaluator unit-test report including every span-rule case | **Ready to capture** - run `python -m pytest tests/test_span_rule.py tests/test_scorer.py tests/test_output_schema.py -v` | - |
 | S04 | G4 | All 12 catalogue configurations running; B0/B1 development outputs | Pending | - |
 | S05 | G5 | B2 timing record, B3-k score, B4 seed determinism | Pending | - |
 | S06 | G6 | Analyzer preserving intents and required entities; conflict flagged | Pending | - |
