@@ -1,0 +1,34 @@
+{
+  "run_id": "20261011_1614_P1_B0_0",
+  "started_at": "2026-10-11T16:14:14+0530",
+  "status": "complete",
+  "git": {
+    "commit": "d5814a932b890a77e5b23c2b502e42e6c4deeadc",
+    "branch": "master",
+    "dirty": "true"
+  },
+  "python": "3.10.11",
+  "platform": "Windows 10 (AMD64)",
+  "packages": {
+    "scikit-learn": "1.5.2",
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "torch": "not installed",
+    "transformers": "not installed",
+    "pytest": "9.1.1"
+  },
+  "model": "none (no LLM)",
+  "model_digest": null,
+  "ollama_version": null,
+  "settings": null,
+  "budgets": null,
+  "cache_enabled": false,
+  "data_hashes": {
+    "pool": "641c337450c89d1753596c403f59a3bf60bc88aa40b7fffdd74094c4a99f45ef",
+    "dev": "1b1270b63a68adeac7be6f0b623ef912fa727a34f5896f9a3e2b92ea6b5e4bbc"
+  },
+  "metric_definitions_version": "1.2",
+  "notes": "",
+  "finished_at": "2026-10-11T16:14:14+0530",
+  "n_cases": 100
+}

@@ -1,0 +1,1 @@
+{"ts": 1791715455.0980854, "kind": "threshold_tuned", "threshold": 0.29444993635545724, "dev_macro_f1_at_threshold": 0.6813482183451224, "n_candidate_thresholds": 101, "criterion": "macro-F1 over intents plus the out-of-scope class, dev only", "tuned_on": "development split only"}

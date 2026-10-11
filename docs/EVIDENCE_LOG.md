@@ -19,14 +19,17 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 11 Oct 2026 | G3 | Span-location rule: repeated substring takes the next unclaimed occurrence, missing substring is unsupported and never fuzzy-matched, case difference matches case-insensitively, overlapping entities cannot claim the same characters, quotes stripped but nothing else normalised | 15 checks pass | `tests/test_span_rule.py` |
 | 11 Oct 2026 | G3 | Scorer against hand-computed fixtures: perfect, wrong, empty and malformed output; empty output scores 0 entity F1 with unsupported rate N/A rather than 0; failures and missing responses stay in every denominator; latency only from supplied timing runs | 14 checks pass | `tests/test_scorer.py` |
 | 11 Oct 2026 | G3 | Output contract: valid shapes, code fences, undeclared intent and entity types, malformed items kept rather than dropped, extra fields, repair instruction | 17 checks pass | `tests/test_output_schema.py` |
+| 11 Oct 2026 | G4 | Catalogue has exactly 12 unique configurations covering every factor combination, 4 of them two-stage; B1's configuration is in it; prompts stay inside the cap for all 12; definitions never dropped; two-stage makes 2 calls and stops at 1 on rejection; TF-IDF rejection costs no call; one counted repair retry; runtime failures recorded | 24 checks pass | `tests/test_catalogue.py` |
+| 11 Oct 2026 | G4 | Threshold tuning: separable case, ties break toward the lower threshold, reject-nothing reachable, criterion recorded; B0 makes no model calls, extracts no entities, entity F1 0 with unsupported rate N/A, refuses to predict before tuning, deterministic | 16 checks pass | `tests/test_thresholds_b0.py` |
 
-Reproduce with: `python -m pytest tests -q` (114 passed, 11 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (154 passed, 11 Oct 2026).
 
 ## Runs
 
 | Run ID | Gate | System / project | Status | Notes |
 |---|---|---|---|---|
-| _none yet_ | - | - | - | No model run exists. G2 data preparation is deterministic and recorded in `data/manifests/`, not as a run folder. The first run folder will be the G0 throughput test |
+| `20261011_1614_P1_B0_0` | G4 | B0 / P1 development | complete | Intent macro-F1 0.780, OOS F1 0.510, entity F1 0 (no extraction by design). Threshold 0.3482 tuned on this same split, so optimistic |
+| `20261011_1614_P2_B0_0` | G4 | B0 / P2 development | complete | Intent macro-F1 0.730, OOS F1 0.510, entity F1 0. Threshold 0.2944, same bias note |
 
 ## Screenshots
 
