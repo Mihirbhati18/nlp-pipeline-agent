@@ -24,11 +24,13 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 12 Oct 2026 | G4 | Repair parity across extraction strategies: a broken two-stage stage one gets exactly one repair, the repair asks only for an intent and offers exactly the labels its prompt offered, a failed repair still ends invalid, the retry is counted, disabling repair disables it everywhere, and all three strategies make exactly one call plus one repair | 10 checks pass | `tests/test_catalogue_repair_parity.py` |
 | 12 Oct 2026 | G6 | Data access guard: train and dev available, the test split locked before the freeze with no back door, every split of the held-out project locked, release requires the freeze commit and returns a new handle leaving the original locked, refused accesses not recorded as accesses | 15 checks pass | `tests/test_access.py` |
 | 12 Oct 2026 | G6 | Analyzer: clean spec passes; duplicate intents, duplicate entity types, the reserved OOS label, an empty inventory or description, impossible constraints, and pool labels outside the inventory are all rejected; missing examples reported without blocking; constraints preserved; enrichment cannot add, rename or remove a declared name, and an undescribed name keeps no description; unparseable or failed enrichment reported without blocking | 25 checks pass | `tests/test_analyzer.py` |
+| 12 Oct 2026 | G7 | Architect: exactly 3 initial + 1 revision evaluated, over-proposals cut and logged, duplicates refused, hallucinated configuration ids discarded and replaced by a recorded fallback, every attempt carries a rationale and its source, reasoned and fallback choices counted separately, planning calls separated from runtime calls, a crashed candidate still consumes its slot and is excluded from selection, no-eligible-candidate reported explicitly, and the revision prompt provably contains the development error report | 23 checks pass | `tests/test_architect.py` |
+| 12 Oct 2026 | G5 | B3 BIO decoding: adjacent same-type entities not merged, a type change mid-entity is a boundary, orphan I- tags still produce an entity, tags on special tokens ignored, decoded text always a substring of the utterance, whitespace-only spans dropped | 14 checks pass, 1 skipped pending torch | `tests/test_b3_encoder.py` |
 | 11 Oct 2026 | G5 | Selection rule: highest intent macro-F1 wins, ties break by entity F1 then lower p95 then config id, order-independent; a hard constraint beats a better headline score; no-eligible-candidate is explicit; a missing score is rejected not treated as zero; an unknown latency is recorded as unchecked | 13 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B4 search: a seed always draws the same configurations, different seeds differ, budget respected with no duplicates, draws only from the catalogue, exhaustive finds the catalogue best, random sometimes misses it, logical calls reported separately from physical, five-seed summary reports a spread and counts no-eligible seeds | 17 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B3 Kaggle assets: the uploaded split file carries no test IDs and no P3; its case IDs and hashes match the frozen manifests exactly; the notebook is valid JSON with compiling cells, never mentions P3 or test splits, verifies the G2 dataset hash, refuses to train on out-of-scope examples, exports predictions rather than metrics, and marks B3-full as an upper reference | 11 checks pass | `tests/test_b3_assets.py` |
 
-Reproduce with: `python -m pytest tests -q` (245 passed, 12 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (282 passed, 1 skipped, 12 Oct 2026).
 
 ## Runs
 
@@ -49,7 +51,7 @@ Reproduce with: `python -m pytest tests -q` (245 passed, 12 Oct 2026).
 | S04 | G4 | All 12 catalogue configurations running; B0/B1 development outputs | **Ready to capture** - `python scripts/run_catalogue_check.py --model qwen2.5:3b --n 10` | - |
 | S05 | G5 | B2 timing record, B3-k score, B4 seed determinism | Pending | - |
 | S06 | G6 | Analyzer preserving intents and required entities; conflict flagged | **Ready to capture** - `python -m pytest tests/test_analyzer.py tests/test_access.py -v` plus the live P1/P2 enrichment output | - |
-| S07 | G7 | Candidate plans with rationale; budget cap respected | Pending | - |
+| S07 | G7 | Candidate plans with rationale; budget cap respected | **Ready to capture** - `python -m pytest tests/test_architect.py -v` | - |
 | S08 | G8 | Development leaderboard and selection decision log | Pending | - |
 | S09 | G9 | Fresh process loading the exported artifact; normal/OOS/invalid requests | Pending | - |
 | S10 | G10 | Freeze commit, protocol.md thresholds, exact test call budget | Pending | - |
