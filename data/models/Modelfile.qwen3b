@@ -1,0 +1,15 @@
+# Registers a locally downloaded GGUF with Ollama, as an alternative to
+# `ollama pull` when the connection cannot sustain a registry pull.
+#
+# Weights: Qwen/Qwen2.5-3B-Instruct-GGUF, qwen2.5-3b-instruct-q4_k_m.gguf
+# from Hugging Face. Same model family and quantization as Ollama's
+# `qwen2.5:3b`, obtained over a resumable HTTP range download.
+#
+# Register with:
+#   ollama create qwen2.5-3b-local -f data/models/Modelfile.qwen3b
+#
+# Generation settings are NOT set here. The experiment code sends temperature,
+# seed, num_predict and format per request, and records them in the cache key
+# and every run manifest, so the protocol stays the single source of truth.
+
+FROM ./qwen2.5-3b-instruct-q4_k_m.gguf

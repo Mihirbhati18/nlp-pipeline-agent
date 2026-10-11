@@ -27,3 +27,7 @@ runs/*/timing.jsonl
 .env
 *.key
 secrets.json
+
+# Local model weights (GGUF). Large and re-downloadable; the Modelfile that
+# registers them IS tracked so the setup is reproducible.
+data/models/*.gguf
