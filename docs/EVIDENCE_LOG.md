@@ -21,8 +21,9 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 11 Oct 2026 | G3 | Output contract: valid shapes, code fences, undeclared intent and entity types, malformed items kept rather than dropped, extra fields, repair instruction | 17 checks pass | `tests/test_output_schema.py` |
 | 11 Oct 2026 | G4 | Catalogue has exactly 12 unique configurations covering every factor combination, 4 of them two-stage; B1's configuration is in it; prompts stay inside the cap for all 12; definitions never dropped; two-stage makes 2 calls and stops at 1 on rejection; TF-IDF rejection costs no call; one counted repair retry; runtime failures recorded | 24 checks pass | `tests/test_catalogue.py` |
 | 11 Oct 2026 | G4 | Threshold tuning: separable case, ties break toward the lower threshold, reject-nothing reachable, criterion recorded; B0 makes no model calls, extracts no entities, entity F1 0 with unsupported rate N/A, refuses to predict before tuning, deterministic | 16 checks pass | `tests/test_thresholds_b0.py` |
+| 11 Oct 2026 | G5 | B3 Kaggle assets: the uploaded split file carries no test IDs and no P3; its case IDs and hashes match the frozen manifests exactly; the notebook is valid JSON with compiling cells, never mentions P3 or test splits, verifies the G2 dataset hash, refuses to train on out-of-scope examples, exports predictions rather than metrics, and marks B3-full as an upper reference | 11 checks pass | `tests/test_b3_assets.py` |
 
-Reproduce with: `python -m pytest tests -q` (154 passed, 11 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (165 passed, 11 Oct 2026).
 
 ## Runs
 
