@@ -92,6 +92,34 @@ than P1's and P2's, and the comparison is per-project anyway.
    remove that. This is a limitation for every LLM system here, including the
    baselines.
 
+## Entity types the k-shot pool never demonstrates (found at G6)
+
+Each project's entity schema is derived from its **full** train split, but the
+prompt pool holds only k = 10 examples per intent. So a declared entity type can
+be absent from every example the model ever sees.
+
+| Project | Schema types | Shown in the k-shot pool | Needed in dev gold but never shown | Share of dev gold entities affected |
+|---|---|---|---|---|
+| P1 | 18 | 11 | 0 | 0% |
+| **P2** | 26 | 10 | **5** (`email_folder`, `meal_type`, `media_type`, `place_name`, `timeofday`) | **10.7%** (8 of 75) |
+| P3 | 19 | 11 | 0 | 0% |
+
+**Why this matters.** For about 11% of P2's development entities, no system has
+an in-prompt example to copy: the entity must be recognised from the declared
+schema and the project description alone. P1 and P3 are unaffected, so this is a
+property of P2's larger schema (26 types against P1's 18) meeting the same
+10-examples-per-intent budget.
+
+**A prediction this makes, which the experiment can falsify.** The
+schema-guided catalogue configurations carry field descriptions into the
+prompt, and the Analyzer's enrichment supplies those descriptions. If
+description-based enrichment helps anywhere, it should help P2's entity recall
+more than P1's. If P2 shows no such advantage, that is evidence against the
+enrichment contributing, and should be reported as such.
+
+This also puts a floor under how well any few-shot system can do on P2 entity
+recall, and it applies equally to every LLM system, so it does not favour one.
+
 ## Access rule in force
 
 | Path | Who may use it, and for what |

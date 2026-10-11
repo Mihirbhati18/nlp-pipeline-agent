@@ -22,11 +22,13 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 11 Oct 2026 | G4 | Catalogue has exactly 12 unique configurations covering every factor combination, 4 of them two-stage; B1's configuration is in it; prompts stay inside the cap for all 12; definitions never dropped; two-stage makes 2 calls and stops at 1 on rejection; TF-IDF rejection costs no call; one counted repair retry; runtime failures recorded | 24 checks pass | `tests/test_catalogue.py` |
 | 11 Oct 2026 | G4 | Threshold tuning: separable case, ties break toward the lower threshold, reject-nothing reachable, criterion recorded; B0 makes no model calls, extracts no entities, entity F1 0 with unsupported rate N/A, refuses to predict before tuning, deterministic | 16 checks pass | `tests/test_thresholds_b0.py` |
 | 12 Oct 2026 | G4 | Repair parity across extraction strategies: a broken two-stage stage one gets exactly one repair, the repair asks only for an intent and offers exactly the labels its prompt offered, a failed repair still ends invalid, the retry is counted, disabling repair disables it everywhere, and all three strategies make exactly one call plus one repair | 10 checks pass | `tests/test_catalogue_repair_parity.py` |
+| 12 Oct 2026 | G6 | Data access guard: train and dev available, the test split locked before the freeze with no back door, every split of the held-out project locked, release requires the freeze commit and returns a new handle leaving the original locked, refused accesses not recorded as accesses | 15 checks pass | `tests/test_access.py` |
+| 12 Oct 2026 | G6 | Analyzer: clean spec passes; duplicate intents, duplicate entity types, the reserved OOS label, an empty inventory or description, impossible constraints, and pool labels outside the inventory are all rejected; missing examples reported without blocking; constraints preserved; enrichment cannot add, rename or remove a declared name, and an undescribed name keeps no description; unparseable or failed enrichment reported without blocking | 25 checks pass | `tests/test_analyzer.py` |
 | 11 Oct 2026 | G5 | Selection rule: highest intent macro-F1 wins, ties break by entity F1 then lower p95 then config id, order-independent; a hard constraint beats a better headline score; no-eligible-candidate is explicit; a missing score is rejected not treated as zero; an unknown latency is recorded as unchecked | 13 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B4 search: a seed always draws the same configurations, different seeds differ, budget respected with no duplicates, draws only from the catalogue, exhaustive finds the catalogue best, random sometimes misses it, logical calls reported separately from physical, five-seed summary reports a spread and counts no-eligible seeds | 17 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B3 Kaggle assets: the uploaded split file carries no test IDs and no P3; its case IDs and hashes match the frozen manifests exactly; the notebook is valid JSON with compiling cells, never mentions P3 or test splits, verifies the G2 dataset hash, refuses to train on out-of-scope examples, exports predictions rather than metrics, and marks B3-full as an upper reference | 11 checks pass | `tests/test_b3_assets.py` |
 
-Reproduce with: `python -m pytest tests -q` (205 passed, 12 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (245 passed, 12 Oct 2026).
 
 ## Runs
 
@@ -46,7 +48,7 @@ Reproduce with: `python -m pytest tests -q` (205 passed, 12 Oct 2026).
 | S03 | G3 | Evaluator unit-test report including every span-rule case | **Ready to capture** - run `python -m pytest tests/test_span_rule.py tests/test_scorer.py tests/test_output_schema.py -v` | - |
 | S04 | G4 | All 12 catalogue configurations running; B0/B1 development outputs | **Ready to capture** - `python scripts/run_catalogue_check.py --model qwen2.5:3b --n 10` | - |
 | S05 | G5 | B2 timing record, B3-k score, B4 seed determinism | Pending | - |
-| S06 | G6 | Analyzer preserving intents and required entities; conflict flagged | Pending | - |
+| S06 | G6 | Analyzer preserving intents and required entities; conflict flagged | **Ready to capture** - `python -m pytest tests/test_analyzer.py tests/test_access.py -v` plus the live P1/P2 enrichment output | - |
 | S07 | G7 | Candidate plans with rationale; budget cap respected | Pending | - |
 | S08 | G8 | Development leaderboard and selection decision log | Pending | - |
 | S09 | G9 | Fresh process loading the exported artifact; normal/OOS/invalid requests | Pending | - |
