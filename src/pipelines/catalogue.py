@@ -269,6 +269,12 @@ class ConfigRunner:
             return self.selector.fixed()
         return self.selector.similarity(utterance)
 
+    def _stage_one_labels(self) -> list[str]:
+        """Labels stage one may return, matching what its prompt offered."""
+        if self.config.oos_policy == "llm_label":
+            return [*self.spec.intent_names, OOS_LABEL]
+        return list(self.spec.intent_names)
+
     def _parse(self, raw: str) -> ParsedOutput:
         return parse_output(
             raw,
@@ -311,6 +317,11 @@ class ConfigRunner:
                 )
 
         examples = self._examples(utterance)
+        # Whether the *first* attempt at every stage satisfied the contract.
+        # Schema validity before repair must reflect stage one too, otherwise a
+        # repaired two-stage run would report its raw output as valid and
+        # understate how often repair was needed.
+        first_attempt_valid = True
 
         if self.config.extraction == "two_stage":
             prompt, n_examples = render_prompt(
@@ -325,6 +336,35 @@ class ConfigRunner:
                 return self._failure(case, record.error, logical, physical, hits, tokens, events)
 
             first = self._parse(record.text)
+
+            # Stage one gets the same single repair retry a single-call
+            # configuration gets. Without this, two-stage strategies would
+            # score worse on schema validity purely because of where their
+            # failure happens, which would not be a property of the strategy.
+            if not first.schema_valid:
+                first_attempt_valid = False
+
+            if not first.schema_valid and self.allow_repair:
+                instruction = (
+                    f"Your previous reply was rejected: "
+                    f"{'; '.join(first.errors) or 'it was not valid JSON'}.\n"
+                    f'Reply with JSON only, exactly: {{"intent": "<one of: '
+                    f'{", ".join(self._stage_one_labels())}>"}}\n'
+                    "Add no other fields."
+                )
+                retry = self.client.generate_repair(f"{prompt}\n\n{instruction}\nAnswer:")
+                logical += 1
+                physical += 0 if retry.cache_hit else 1
+                hits += 1 if retry.cache_hit else 0
+                tokens += retry.prompt_tokens or 0
+                repaired = True
+                events.append({"kind": "repair_attempt", "case_id": case["case_id"],
+                               "stage": "intent"})
+                if not retry.error:
+                    repaired_first = self._parse(retry.text)
+                    if repaired_first.schema_valid:
+                        first = repaired_first
+
             if first.intent is None:
                 return self._invalid(case, first, logical, physical, hits, tokens, events)
             if first.status == STATUS_OOS:
@@ -361,7 +401,7 @@ class ConfigRunner:
                 return self._failure(case, record.error, logical, physical, hits, tokens, events)
             parsed = self._parse(record.text)
 
-        raw_valid = parsed.schema_valid
+        raw_valid = parsed.schema_valid and first_attempt_valid
 
         # One repair retry, which is a new counted call with its own cache entry.
         if not parsed.schema_valid and self.allow_repair:

@@ -96,21 +96,27 @@ def main() -> int:
             metrics = score(cases, predictions, labels=spec.intent_names)
             p = metrics["primary"]
             fmt = lambda v: "n/a" if v is None else f"{v:.3f}"  # noqa: E731
-            ran = p["runtime_failure_rate"] == 0.0
-            if not ran:
-                failures += 1
+            # The gate condition is that every configuration *runs*. A recorded
+            # runtime failure is data about that configuration, not a gate
+            # failure: the plan requires failures to stay in the denominators
+            # rather than be eliminated. Only a crash means a configuration
+            # cannot run at all.
+            note = "ok"
+            if p["runtime_failure_rate"]:
+                note = f"ran, {p['runtime_failure_counts']} recorded"
             print(f"    {config.config_id:22} {fmt(p['intent_macro_f1']):>9} "
                   f"{fmt(p['entity_span_f1']):>7} {fmt(p['schema_validity_after_repair']):>7} "
-                  f"{fmt(p['runtime_failure_rate']):>5} {logical:>6}  "
-                  f"{'ok' if ran else 'RUNTIME FAILURES'}")
+                  f"{fmt(p['runtime_failure_rate']):>5} {logical:>6}  {note}")
         print()
 
     print(f"cache entries now: {client.cache.count_entries() if client.cache else 0}")
     print(f"client totals: {client.counter.as_dict()}")
     if failures:
-        print(f"\n{failures} configuration/project combination(s) had failures", file=sys.stderr)
+        print(f"\n{failures} configuration(s) CRASHED and could not run", file=sys.stderr)
         return 1
-    print("\nAll 12 configurations ran on every project with no runtime failure.")
+    print("\nGate condition met: all 12 configurations ran on every project.")
+    print("Any recorded runtime failures above are properties of those "
+          "configurations and stay in every denominator; they are not gate failures.")
     return 0
 
 

@@ -270,7 +270,36 @@ class LLMClient:
 
 
 def resolve_model_digest(model: str, host: str = DEFAULT_HOST) -> str:
-    """Ask Ollama for the model's digest, recorded in every run manifest."""
+    """The model's manifest digest, recorded in every run manifest.
+
+    Ollama exposes the digest on ``/api/tags``, not on ``/api/show`` (checked
+    against 0.40.2). If it is absent there, fall back to the weights blob hash
+    named in the modelfile, which identifies the weights just as precisely.
+    An empty string would silently weaken every run record, so this raises
+    instead.
+    """
+    with urllib.request.urlopen(f"{host}/api/tags", timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    for entry in payload.get("models", []):
+        if entry.get("name") == model and entry.get("digest"):
+            return entry["digest"]
+
+    details = model_details(model, host)
+    if details.get("weights_blob_sha256"):
+        return details["weights_blob_sha256"]
+
+    raise RuntimeError(
+        f"could not resolve a digest for {model!r}; refusing to record a run "
+        "without one, because the model identity would be unverifiable"
+    )
+
+
+def model_details(model: str, host: str = DEFAULT_HOST) -> dict[str, Any]:
+    """Model facts the plan requires in every run manifest.
+
+    Parameter size and quantization matter because the comparison is only fair
+    if every LLM system uses the same model *and* the same quantization.
+    """
     request = urllib.request.Request(
         f"{host}/api/show",
         data=json.dumps({"model": model}).encode("utf-8"),
@@ -279,13 +308,22 @@ def resolve_model_digest(model: str, host: str = DEFAULT_HOST) -> str:
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         payload = json.loads(response.read().decode("utf-8"))
+
     details = payload.get("details", {}) or {}
-    return (
-        payload.get("digest")
-        or details.get("digest")
-        or details.get("parent_model")
-        or ""
-    )
+    blob = ""
+    for line in (payload.get("modelfile") or "").splitlines():
+        if line.startswith("FROM") and "sha256-" in line:
+            blob = line.split("sha256-")[-1].strip()
+            break
+
+    return {
+        "family": details.get("family"),
+        "parameter_size": details.get("parameter_size"),
+        "quantization_level": details.get("quantization_level"),
+        "context_length": details.get("context_length"),
+        "format": details.get("format"),
+        "weights_blob_sha256": blob,
+    }
 
 
 def ollama_version(host: str = DEFAULT_HOST) -> str:

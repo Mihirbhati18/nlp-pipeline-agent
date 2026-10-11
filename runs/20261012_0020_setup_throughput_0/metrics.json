@@ -1,0 +1,23 @@
+{
+  "results": [
+    {
+      "model": "qwen2.5:3b",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+      "n_requests": 50,
+      "median_s": 0.4179501499966136,
+      "p95_s": 0.5904486999970686,
+      "mean_prompt_tokens": 1028.36,
+      "mean_output_tokens": 29.86,
+      "json_validity": 1.0,
+      "identical_output_rate": 1.0,
+      "runtime_failures": 0,
+      "estimated_hours_for_expected_budget": 2.438042541646913,
+      "fits_two_overnight_batches": true,
+      "meets_json_floor": true
+    }
+  ],
+  "chosen_model": "qwen2.5:3b",
+  "decision_reason": "qwen2.5:3b is the largest candidate meeting both rules: JSON validity 1.00 and an estimated 2.4 h for the expected 21,000-call budget.",
+  "wall_clock_s": 46.661420822143555,
+  "metric_definitions_version": "1.2"
+}

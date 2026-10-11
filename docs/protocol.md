@@ -8,17 +8,37 @@ Status: **draft, not frozen.** Created 11 October 2026.
 
 ## 1. Runtime model
 
+Measured at G0 on 12 October 2026, run `20261012_0020_setup_throughput_0`.
+
 | Field | Value |
 |---|---|
-| Model name and tag | _decided at G0 by measurement_ |
-| Model digest | _recorded automatically in every run manifest_ |
-| Quantization | _as pulled; recorded at G0_ |
-| Ollama version | _recorded at G0_ |
+| Model name and tag | `qwen2.5:3b` (**provisional**: the plan's rule picks the largest eligible model, and `llama3.1:8b` has not been measured yet) |
+| Model digest | `357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b` |
+| Weights blob SHA-256 | `5ee4f07cdb9beadbbb293e85803c569b01bd37ed059d2715faa7bb405f31caa6` |
+| Parameter size | 3.1B |
+| Quantization | Q4_K_M |
+| Ollama version | 0.40.2 |
 | Temperature | 0.0 |
 | Seed | 0 |
 | Output format | JSON |
 | Max output tokens | 512 |
-| Identical-output rate on repeat | _measured at G0; reported as a limitation if below 100%_ |
+| **Identical-output rate on repeat** | **1.00 (50 of 50)** - fully deterministic, so no determinism limitation needs reporting |
+
+### G0 measured throughput
+
+| Measure | Value |
+|---|---|
+| Requests | 50 full-size prompts (mean 1,028 input tokens, 16 examples), cache disabled |
+| Median latency | 0.42 s |
+| p95 latency | 0.59 s |
+| JSON validity | 1.00 |
+| Runtime failures | 0 |
+| Estimated time for the expected 21,000-call budget | **2.4 h** |
+
+The plan's section 2A worried the expected budget might take 17-35 h and not fit
+two overnight batches. Measured, it is about 2.4 h, so compute is not a
+constraint on this project. Cold start is separate and was about 69 s for the
+first request after the model is loaded from disk.
 
 One runtime model serves B1, B2, B4, A1 and all ablations. The Architect's
 planning calls may use a free API model; that provider, model ID and date are

@@ -1,0 +1,22 @@
+{
+  "run_id": "20261012_0020_setup_throughput_0",
+  "project": "setup",
+  "system": "throughput",
+  "seed": 0,
+  "purpose": "G0 day-1 throughput and determinism test",
+  "models": [
+    "qwen2.5:3b"
+  ],
+  "n_requests": 50,
+  "ollama_version": "0.40.2",
+  "cache_enabled": false,
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "format": "json"
+  },
+  "budgets": {
+    "expected_calls": 21000
+  },
+  "prompt_source": "hand-written MASSIVE-style stand-in; not a scored result"
+}
