@@ -43,12 +43,13 @@ changes after a run is logged as a new row; earlier rows are never edited away.
 | 36 | 12 Oct 2026 | **CPU-only PyTorch, not the CUDA build.** | The CUDA wheel is 2.5 GB and was downloading at 255 KB/s (a 2h44m estimate) before a DNS failure aborted it; the CPU wheel is about 200 MB. XLM-R base at batch 16 and sequence length 64 trains in minutes on 8 CPU cores, and might not have fitted in 4 GB of VRAM anyway. Training time is recorded per run either way. |
 | 37 | 12 Oct 2026 | The Architect **counts reasoned and fallback choices separately**, and runs on a documented fallback ordering when no planning model is available or its reply is unusable. | A result must never silently credit reasoning that did not happen. A run whose record shows `reasoned_choices: 0` is a plain-search run wearing the Architect's name, and the paper must treat it as such. |
 | 38 | 12 Oct 2026 | A configuration id the planning model invents is **discarded and replaced by a fallback**, never executed. | Plan section 6 restricts the Architect to the fixed trusted catalogue: no generated code runs. The discard is recorded in the findings so the model's unreliability is visible rather than hidden. |
+| 39 | 13 Oct 2026 | **`qwen2.5:3b` is confirmed as the runtime model, and `llama3.1:8b` is not evaluated.** The plan's largest-eligible rule is applied over a single candidate, and that is recorded in `protocol.md` as a stated limitation. | Two days of attempts failed on bandwidth: a connection at 25-60 KB/s for long stretches, one `ollama pull` ending in `max retries exceeded: unexpected EOF`, a corrupt resumable download, and partial data lost on restart. The 3B meets both section 2A criteria (JSON validity 1.00, expected budget about 2.4 h) and is fully deterministic. The 4 GB VRAM would not hold an 8B at Q4_K_M anyway. Crucially, every LLM system shares this one model, so the comparison the research questions depend on is unaffected; only the absolute scores would move with a larger model. |
 
 ## Open decisions
 
 | # | Question | Decide by |
 |---|---|---|
-| A | Runtime model: confirm `qwen2.5:3b` or switch to `llama3.1:8b` | ~~End of G0~~ **Partly answered 12 Oct**: the 3B is measured and eligible. The 8B must still be measured, because the rule picks the largest eligible model. Download in progress |
+| A | Runtime model | ~~Open~~ **Closed 13 Oct: `qwen2.5:3b`.** The 8B candidate was abandoned on bandwidth grounds and the limitation is recorded in `protocol.md` (decision 39) |
 | B | Confirm or adjust `delta_I`, `epsilon_E`, `S_min`, `L_max` in `protocol.md` | 16 Oct, before any test access |
 | C | Free-API provider for the Architect's planning calls (Gemini or Groq) | Before G7 |
 | D | Whether the 18 Oct buffer day exists | Depends on the confirmed DA3 cutoff |

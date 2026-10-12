@@ -26,11 +26,12 @@ Filename convention: `S06_20261014_analyzer-check_RUN-ID.png`, stored in
 | 12 Oct 2026 | G6 | Analyzer: clean spec passes; duplicate intents, duplicate entity types, the reserved OOS label, an empty inventory or description, impossible constraints, and pool labels outside the inventory are all rejected; missing examples reported without blocking; constraints preserved; enrichment cannot add, rename or remove a declared name, and an undescribed name keeps no description; unparseable or failed enrichment reported without blocking | 25 checks pass | `tests/test_analyzer.py` |
 | 12 Oct 2026 | G7 | Architect: exactly 3 initial + 1 revision evaluated, over-proposals cut and logged, duplicates refused, hallucinated configuration ids discarded and replaced by a recorded fallback, every attempt carries a rationale and its source, reasoned and fallback choices counted separately, planning calls separated from runtime calls, a crashed candidate still consumes its slot and is excluded from selection, no-eligible-candidate reported explicitly, and the revision prompt provably contains the development error report | 23 checks pass | `tests/test_architect.py` |
 | 12 Oct 2026 | G5 | B3 BIO decoding: adjacent same-type entities not merged, a type change mid-entity is a boundary, orphan I- tags still produce an entity, tags on special tokens ignored, decoded text always a substring of the utterance, whitespace-only spans dropped | 14 checks pass, 1 skipped pending torch | `tests/test_b3_encoder.py` |
+| 13 Oct 2026 | G8 | Full design run: A1 and B4 are handed the same evaluator closure, evaluation never produces a latency figure, design cost includes Analyzer and planning calls, a known score table selects the known winner, a contradictory specification stops the design before any candidate, an impossible constraint yields an explicit no-eligible outcome, the no-Analyzer ablation skips enrichment, and a design run provably never touches the test split | 15 checks pass | `tests/test_design_run.py` |
 | 11 Oct 2026 | G5 | Selection rule: highest intent macro-F1 wins, ties break by entity F1 then lower p95 then config id, order-independent; a hard constraint beats a better headline score; no-eligible-candidate is explicit; a missing score is rejected not treated as zero; an unknown latency is recorded as unchecked | 13 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B4 search: a seed always draws the same configurations, different seeds differ, budget respected with no duplicates, draws only from the catalogue, exhaustive finds the catalogue best, random sometimes misses it, logical calls reported separately from physical, five-seed summary reports a spread and counts no-eligible seeds | 17 checks pass | `tests/test_selection_b4.py` |
 | 11 Oct 2026 | G5 | B3 Kaggle assets: the uploaded split file carries no test IDs and no P3; its case IDs and hashes match the frozen manifests exactly; the notebook is valid JSON with compiling cells, never mentions P3 or test splits, verifies the G2 dataset hash, refuses to train on out-of-scope examples, exports predictions rather than metrics, and marks B3-full as an upper reference | 11 checks pass | `tests/test_b3_assets.py` |
 
-Reproduce with: `python -m pytest tests -q` (282 passed, 1 skipped, 12 Oct 2026).
+Reproduce with: `python -m pytest tests -q` (298 passed, 1 skipped, 13 Oct 2026).
 
 ## Runs
 
@@ -39,6 +40,10 @@ Reproduce with: `python -m pytest tests -q` (282 passed, 1 skipped, 12 Oct 2026)
 | `20261011_1614_P1_B0_0` | G4 | B0 / P1 development | complete | Intent macro-F1 0.780, OOS F1 0.510, entity F1 0 (no extraction by design). Threshold 0.3482 tuned on this same split, so optimistic |
 | `20261011_1614_P2_B0_0` | G4 | B0 / P2 development | complete | Intent macro-F1 0.730, OOS F1 0.510, entity F1 0. Threshold 0.2944, same bias note |
 | `20261012_0020_setup_throughput_0` | G0 | qwen2.5:3b throughput and determinism | complete | 50 full-size requests x 2 passes, cache disabled. Median 0.42 s, p95 0.59 s, JSON validity 1.00, **identical-output rate 1.00**, 0 failures, expected budget about 2.4 h |
+| `20261013_0043_P1_B1_0` | G8 | B1 / P1 development | complete | intent 0.927, entity 0.610, OOS 0.870, schema 1.000 |
+| `20261013_0049_P1_A1_0` | G8 | A1 / P1 development | complete | selected `twostage-sim-llm`, intent 0.958; 4/4 choices reasoned; 453 logical calls, 2 planning |
+| `20261013_0056_P1_B4-random_seeds` | G8 | B4-random / P1 development | complete | 5 seeds: mean 0.954, sd 0.004, range 0.951-0.958 |
+| `20261013_0056_P1_B4-exhaustive_0` | G8 | B4-exhaustive / P1 development | complete | all 12 configurations; ceiling 0.958 (`twostage-sim-llm`) |
 
 ## Screenshots
 
@@ -52,7 +57,7 @@ Reproduce with: `python -m pytest tests -q` (282 passed, 1 skipped, 12 Oct 2026)
 | S05 | G5 | B2 timing record, B3-k score, B4 seed determinism | Pending | - |
 | S06 | G6 | Analyzer preserving intents and required entities; conflict flagged | **Ready to capture** - `python -m pytest tests/test_analyzer.py tests/test_access.py -v` plus the live P1/P2 enrichment output | - |
 | S07 | G7 | Candidate plans with rationale; budget cap respected | **Ready to capture** - `python -m pytest tests/test_architect.py -v` | - |
-| S08 | G8 | Development leaderboard and selection decision log | Pending | - |
+| S08 | G8 | Development leaderboard and selection decision log | **Ready to capture** - `runs/20261013_0056_P1_B4-exhaustive_0/events.jsonl` gives the 12-configuration leaderboard, and the A1 run's events give the decision log | - |
 | S09 | G9 | Fresh process loading the exported artifact; normal/OOS/invalid requests | Pending | - |
 | S10 | G10 | Freeze commit, protocol.md thresholds, exact test call budget | Pending | - |
 | S11 | G11 | Final comparison tables with confidence intervals | Pending | - |

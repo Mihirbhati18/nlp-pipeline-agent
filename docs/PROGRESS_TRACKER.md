@@ -13,18 +13,16 @@ Last updated: 11 October 2026.
 ### Start here next session
 
 1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 282 passed, 1 skipped.
-2. Check the two downloads that were interrupted by shutting down. Both resume:
-   - `ollama list` - if `llama3.1:8b` is missing, run `ollama pull llama3.1:8b`. It resumes from the partial blobs already on disk.
-   - `python -c "import torch"` - if that fails, run `python -m pip install torch --index-url https://download.pytorch.org/whl/cpu` and then `python -m pip install transformers==4.46.3`.
+2. Nothing needs downloading: `qwen2.5:3b`, torch 2.14.1+cpu and transformers 4.46.3 are installed.
 3. Then, in order:
-   - `python scripts/throughput_test.py --models qwen2.5:3b llama3.1:8b` to confirm the runtime model by the plan's largest-eligible rule.
    - `python scripts/run_b3_local.py` for the B3 baseline.
    - Build G8: wire the Architect to the real catalogue so A1 produces numbers.
 4. Nothing is lost by stopping. All work is committed, and the prediction cache in `cache/` means model answers already computed are never recomputed.
 
-Next task: install Ollama, pull two candidate models, run
-`python scripts/throughput_test.py --models qwen2.5:3b llama3.1:8b`, and record
-the chosen runtime model in `protocol.md`. Then G3, the evaluator.
+State confirmed on 13 October: `qwen2.5:3b`, `torch` 2.14.1+cpu and
+`transformers` 4.46.3 are all installed, so B3 and every LLM system can run
+with no further download. `llama3.1:8b` is **not** installed and its partial
+blobs did not survive the restart, so measuring it means a fresh 4.9 GB pull.
 
 ## Blocking inputs needed from the user
 
@@ -34,13 +32,13 @@ the chosen runtime model in `protocol.md`. Then G3, the evaluator.
 | 2 | Confirmed DA3 cutoff date and time | Decides whether the 18 Oct buffer day exists | Open |
 | 3 | Team size and member names | Needed for `contributions.md` and the contribution matrix | Open |
 | 4 | Do the DA1 artifacts exist (15-paper table, 5 gaps, diagrams)? | Decides whether related work is written fresh or reused | **Answered 12 Oct: not reused.** Related work is written fresh against Prompt2Model, DSPy and MASSIVE |
-| 5 | Launch B3 on Kaggle | B3 is the published-baseline comparison and part of the minimum submittable result | Open - your action. Notebook and split export are ready |
+| 5 | B2: configure a pipeline by hand, timed, 2 h per project | The RQ2 comparison, and part of the minimum submittable result. Only you can do it, because it measures human effort | Open - your action |
 
 ## Gate status
 
 | Gate | Deliverable | Test condition | Status | Evidence |
 |---|---|---|---|---|
-| G0 | DA status check; Ollama installed; 50-request throughput + determinism test; runtime model chosen; Overleaf IEEE skeleton | Every unresolved decision listed; model chosen by the section 2A rule | **Done except the model-size comparison and Overleaf** — `qwen2.5:3b` measured: median 0.42 s, p95 0.59 s, JSON validity 1.00, determinism 1.00, budget about 2.4 h. `llama3.1:8b` downloading so the "largest eligible" rule can be applied honestly | S00 ready |
+| G0 | DA status check; Ollama installed; 50-request throughput + determinism test; runtime model chosen; Overleaf IEEE skeleton | Every unresolved decision listed; model chosen by the section 2A rule | **Done except Overleaf** - `qwen2.5:3b` confirmed 13 Oct: median 0.42 s, p95 0.59 s, JSON validity 1.00, determinism 1.00, budget about 2.4 h. The 8B candidate was abandoned on bandwidth grounds and the limitation is recorded in `protocol.md` | S00 ready |
 | G1 | Repository structure, dependency lock, LLM client with cache and call counter, run-folder helper | Fresh environment runs a small test; cache hit/miss counted correctly; no secrets in logs | **Done** — 25 automated checks pass, committed | S01 pending |
 | G2 | MASSIVE en-US; P1–P3 and OOS pool; k-shot pools and dev/test IDs; frozen project descriptions committed | Label/schema integrity, span conversion and leakage checks pass; descriptions committed before any LLM run | **Done** — 16,521/16,521 spans convert with 0 mismatches; 43 data checks pass; descriptions committed before any model call; see `DATA_REPORT.md` | S02 ready to capture |
 | G3 | Scoring, span-location rule, latency and failure handling | Hand-computed fixtures and all span-rule cases match | **Done** - 46 checks pass; every expected metric value computed by hand | S03 ready to capture |
@@ -48,8 +46,8 @@ the chosen runtime model in `protocol.md`. Then G3, the evaluator.
 | G5 | B2 manual (timed); B3-k and B3-full; B4 search code | B3 reproduces a sensible official-split score; B4 deterministic per seed | **Mostly done** - B3 notebook and local scorer written and validated end to end (synthetic runs deleted), awaiting a real Kaggle run; B4-random and B4-exhaustive built and tested with the shared selection rule. Remaining: B2 manual configuration (timed, needs a model) | S05 |
 | G6 | Analyzer producing a validated ProjectSpec | Matches gold specification fixtures; conflicts flagged | **Done** - validation blocks on real contradictions and reports gaps without blocking; enrichment described 12/12 P1 and 10/10 P2 intents and every entity type in 2 calls per project; test and held-out data withheld by a guard that raises | S06 ready |
 | G7 | Architect candidate choice within the 4-evaluation budget | Valid catalogue entries; budget cap respected; rationale logged | **Done** - 3 initial + 1 revision enforced in code; only real catalogue entries run; rationale and reasoned-vs-fallback source recorded per attempt; revision reads the development error report | S07 ready |
-| G8 | Candidate evaluation and selection; fill P1/P2 dev cache | Synthetic score tables select the correct candidate; no-eligible handled | **Next** - the selection rule already exists and is tested; what remains is wiring the Architect to the real catalogue so A1 produces numbers, then filling the P1/P2 development cache | S08 |
-| G9 | Export/reload pipeline; request interface and demo | Fresh process loads artifact; normal/OOS/invalid requests work | Not started | S09 |
+| G8 | Candidate evaluation and selection; fill P1/P2 dev cache | Synthetic score tables select the correct candidate; no-eligible handled | **Done for P1** - A1, B1, B4-random (5 seeds) and B4-exhaustive all ran on P1 development data; 15 new checks; see `FINDINGS.md` F1 for the headline comparison. P2 running | S08 ready |
+| G9 | Export/reload pipeline; request interface and demo | Fresh process loads artifact; normal/OOS/invalid requests work | **Next** | S09 |
 | G10 | Freeze: thresholds, budgets, exact test call count, minimum-result check | Test answers unopened; P3 untouched; one freeze commit | Not started | S10 |
 | G11 | Final evaluation on P1/P2, then P3; uncached timing runs | Matching manifests, complete predictions, scored failures | Not started | S11 |
 | G12 | Reproduction, paper, figures, submission | Metrics recompute from saved predictions; every claim traces to a run | Not started | S12 |
@@ -70,3 +68,4 @@ write and commit its description in G2.
 | 12 Oct 2026 (G0, G4 gate) | `qwen2.5:3b` installed after a corrupt GGUF attempt was discarded; client fixed to read the model digest from `/api/tags` and record quantization; G0 throughput test run (median 0.42 s, p95 0.59 s, JSON validity 1.00, determinism 1.00, budget about 2.4 h); G4 gate met with all 12 configurations running on P1 and P2 | Two real bugs found by the gate on live data: two-stage configurations got no repair retry where single-call ones did, and `schema_valid_raw` ignored the stage-one repair. Both fixed and covered by 10 new checks. A corrupt 3.72 GB GGUF download was detected by size and deleted | Measure `llama3.1:8b` when it finishes, then confirm the runtime model; build G6 Analyzer; start the Overleaf skeleton |
 | 12 Oct 2026 (G6) | Data access guard that refuses test and held-out data rather than relying on discipline; Project Analyzer split into model-free validation and two-call enrichment, with authoritative names protected from the model; verified live on P1 and P2 (all intents and entity types described, no blocking findings); 40 new checks (245 total) | None | Build G7 Architect, then G8 selection |
 | 12 Oct 2026 (G7) | NLP Architect: 3 initial candidates plus 1 revision that reads the development error report, hard budget enforcement, catalogue-only choices with hallucinated ids discarded, per-attempt rationale and reasoned-vs-fallback accounting, planning calls counted apart from runtime calls, explicit no-eligible outcome; B3 switched from Kaggle to local CPU training with its trainer and runner written; 37 new checks (282 total) | The CUDA PyTorch wheel (2.5 GB) failed on a DNS error at 255 KB/s and was abandoned for the CPU build (200 MB) | Confirm the runtime model against `llama3.1:8b`, run B3 locally, then wire G8 selection to the real catalogue |
+| 13 Oct 2026 (G8) | Runtime model confirmed as `qwen2.5:3b` with the 8B limitation recorded; full design run wired end to end (Analyzer, Architect, catalogue, shared selection) and run on real P1 data for A1, B1, B4-random over 5 seeds and B4-exhaustive; `FINDINGS.md` created; B3 switched to a prefetch-then-train flow after repeated download breaks; 16 new checks (298 total) | **A1 beats B1 by +3.1 points but beats B4-random by only +0.4, far below the 2.0-point threshold.** Recorded as finding F1: on P1 the agent's candidate choice shows no measurable search benefit, and the catalogue is a weak instrument for detecting search quality because 6 of 12 configurations lie within 6 points of the best | Finish P2 and B3; then G9 export and demo |

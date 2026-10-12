@@ -12,7 +12,7 @@ Measured at G0 on 12 October 2026, run `20261012_0020_setup_throughput_0`.
 
 | Field | Value |
 |---|---|
-| Model name and tag | `qwen2.5:3b` (**provisional**: the plan's rule picks the largest eligible model, and `llama3.1:8b` has not been measured yet) |
+| Model name and tag | `qwen2.5:3b` (**confirmed 13 Oct**; see the candidate note below) |
 | Model digest | `357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b` |
 | Weights blob SHA-256 | `5ee4f07cdb9beadbbb293e85803c569b01bd37ed059d2715faa7bb405f31caa6` |
 | Parameter size | 3.1B |
@@ -39,6 +39,30 @@ The plan's section 2A worried the expected budget might take 17-35 h and not fit
 two overnight batches. Measured, it is about 2.4 h, so compute is not a
 constraint on this project. Cold start is separate and was about 69 s for the
 first request after the model is loaded from disk.
+
+### Candidate set, and why only one size was measured
+
+Section 2A asks for a roughly 3B and a roughly 7-8B candidate, with the largest
+eligible one chosen. Only `qwen2.5:3b` was measured. `llama3.1:8b` was attempted
+twice over two days and abandoned on 13 October: the connection averaged
+25-60 KB/s for long stretches, one `ollama pull` failed with
+`max retries exceeded: unexpected EOF`, a resumable direct download produced a
+corrupt file, and the partial data did not survive a restart.
+
+The paper must therefore say: *one model size was evaluated; a larger candidate
+was not evaluated because of bandwidth limits, so the plan's largest-eligible
+rule was applied over a single candidate.* This is a stated limitation, not a
+claim that the 3B is the best choice.
+
+What is unaffected: every LLM-based system (B1, B2, B4, A1 and all ablations)
+uses this one model, the same quantization and the same settings, so the
+central comparison stays fair. A larger model would likely raise every
+system's absolute scores together; it is the differences between systems that
+the research questions turn on.
+
+Hardware context for the limitation: the laptop has 4 GB of VRAM, and an 8B
+model at Q4_K_M needs about 4.7 GB, so it could not have run fully on the GPU
+and would likely have been several times slower than the measured 0.42 s.
 
 One runtime model serves B1, B2, B4, A1 and all ablations. The Architect's
 planning calls may use a free API model; that provider, model ID and date are
