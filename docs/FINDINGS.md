@@ -10,83 +10,132 @@ caveats attached, rather than reconstructed later.
 
 ---
 
-## F1. The agent reaches the catalogue optimum, but plain search nearly matches it (13 Oct, P1)
+## F1. Plain random search matches or beats the agent at equal budget (13 Oct, P1 and P2)
 
-Run IDs: `20261013_0049_P1_A1_0`, `20261013_0056_P1_B4-random_seeds`,
-`20261013_0056_P1_B4-exhaustive_0`, `20261013_0043_P1_B1_0`.
+**Superseded an earlier version of this finding.** The first run gave B4 the
+*bare* specification while A1 used the Analyzer-enriched one, which was a bug:
+plan section 3 requires B4 to get the "same catalogue, same Analyzer output,
+same scorer". Fixed, and both projects re-run. The corrected numbers are below;
+the earlier ones understated B4.
 
-| System | P1 intent macro-F1 | Notes |
+| System | P1 intent macro-F1 | P2 intent macro-F1 |
 |---|---|---|
-| B0 TF-IDF | 0.780 | no LLM, no entity extraction |
-| B1 generic prompt | 0.927 | one predeclared configuration, no search |
-| **A1 agent** | **0.958** | selected `twostage-sim-llm`, 4/4 choices reasoned |
-| **B4-random, 5 seeds** | **0.954 mean**, sd 0.004, range 0.951-0.958 | same 4-candidate budget |
-| B4-exhaustive | 0.958 | all 12; the development ceiling |
+| B0 TF-IDF, no LLM | 0.780 | 0.730 |
+| B1 generic prompt, no search | 0.927 | 0.804 |
+| **A1 agent** | **0.958** | **0.841** |
+| **B4-random, 5 seeds** | **0.959** mean, sd 0.009, range 0.951-0.974 | **0.878** mean, sd 0.017, range 0.861-0.898 |
+| B4-exhaustive ceiling | 0.974 (`schema-sim-llm`) | 0.898 (`schema-sim-llm`) |
 
-**What this says about the research questions.**
+### What the research questions get
 
-- **RQ1 (agent vs fixed generic pipeline):** A1 beats B1 by **+3.1 points**,
-  above the provisional `delta_I` of +2.0. Promising, pending the test run.
-- **RQ5 (agent vs plain search at equal budget):** A1 beats B4-random by
-  **+0.4 points**, far below `delta_I`, and B4-random reached the same ceiling
-  in 2 of its 5 seeds. On this project and this data, **the agent's choice of
-  candidates shows no measurable search benefit over random selection.**
+- **RQ1, agent vs fixed generic pipeline: positive.** A1 beats B1 by +3.1
+  points on P1 and +3.7 on P2, both above the provisional `delta_I` of +2.0.
+- **RQ5, agent vs plain search at equal budget: negative.** A1 ties B4-random
+  on P1 (-0.1) and **loses by 3.7 points on P2**, where it was beaten by all
+  five random seeds. The agent's candidate choice is not better than drawing
+  four configurations at random, and on one project it is measurably worse.
 
-Plan section 13 prescribes the response: *"If A1 does not beat B4 at equal
-budget, say the agent's choice adds no measurable search benefit and report the
-contribution as automation."* The honest framing is therefore automation,
-reliability of reaching the optimum, and setup effort, not search quality.
+Plan section 13 applies: *"If A1 does not beat B4 at equal budget, say the
+agent's choice adds no measurable search benefit and report the contribution as
+automation."* On this evidence the paper cannot claim search quality at all.
 
-**Why, and this is the more interesting part.** All 12 configurations on P1:
+### The mechanism, which is the useful part
 
-| Configuration | Intent F1 | Entity F1 |
+The best configuration on **both** projects is `schema-sim-llm`:
+schema-guided extraction, similarity-selected examples, LLM out-of-scope label.
+**A1 never tried it on either project.**
+
+What A1 tried instead:
+
+| Project | A1's four candidates | How many used similarity selection |
 |---|---|---|
-| twostage-sim-llm | 0.958 | 0.597 |
-| joint-sim-llm | 0.951 | 0.678 |
-| schema-sim-llm | 0.951 | 0.678 |
-| joint-fixed-llm | 0.927 | 0.610 |
-| schema-fixed-llm | 0.927 | 0.610 |
-| twostage-fixed-llm | 0.901 | 0.587 |
-| joint-sim-tfidf | 0.862 | 0.620 |
-| schema-sim-tfidf | 0.862 | 0.620 |
-| twostage-sim-tfidf | 0.858 | 0.586 |
-| joint-fixed-tfidf | 0.849 | 0.520 |
-| schema-fixed-tfidf | 0.849 | 0.520 |
-| twostage-fixed-tfidf | 0.839 | 0.544 |
+| P1 | twostage-sim-llm, joint-fixed-llm, schema-fixed-llm, joint-sim-tfidf | 2 of 4 |
+| P2 | joint-fixed-llm, twostage-fixed-llm, schema-fixed-llm, joint-sim-tfidf | 1 of 4 |
 
-Two structural facts follow:
+On P2 the mean intent macro-F1 is **0.827 for similarity** selection against
+**0.778 for fixed**, yet A1 chose fixed in three of its four candidates. Its
+stated reasoning favoured schema-guided prompts and call efficiency, and it
+systematically under-weighted example selection, which is the factor that
+actually mattered. Random sampling has no such bias: it draws similarity
+variants about half the time and so lands in the better region reliably.
 
-1. **One factor dominates.** Every `llm_label` configuration scores 0.901 or
-   above; every `tfidf_threshold` configuration scores 0.862 or below. That is
-   a gap of roughly 9 points, far larger than anything the search contributes.
-   The out-of-scope policy, not the extraction strategy or the example
-   selection, is the decision that matters on P1.
-2. **The good options are clustered.** Six of twelve configurations lie within
-   6 points of the best. Drawing 4 of 12 at random therefore lands near the top
-   most of the time. The catalogue is a **weak instrument for detecting search
-   quality**: it cannot separate a good chooser from a lucky one, because
-   almost any choice is nearly as good.
+So the failure is not randomness beating reasoning by luck. It is a
+**systematic bias in the reasoning**, visible in the recorded rationales, which
+costs A1 real points on P2.
 
-Point 2 is itself a finding worth reporting. A search baseline only
-discriminates when the search space has meaningful spread, and this one does
-not. It also suggests that if a future version wanted to test search quality
-properly, the catalogue would need configurations that genuinely fail.
+### A positive finding in the same data: the Analyzer's enrichment helps
 
-**Caveats attached to the numbers above.**
+Fixing the bug above made the comparison fair, and it also produced a clean
+before-and-after for enrichment, because without descriptions the
+schema-guided configurations are identical to the joint ones:
 
-- Development scores, and A1 and B4 both selected on this same split, so both
-  are optimistically biased. The bias applies equally, so the *comparison*
-  between them is fairer than either absolute number.
-- One project only. P2 is not yet run, and P3 is held out until after the
-  freeze.
-- No confidence intervals yet. The +0.4-point gap is well inside the kind of
-  variation a paired bootstrap would show on 100 cases, so it should not be
-  described as a difference at all until tested.
-- Entity F1 does **not** follow intent F1: the best intent configuration
-  (`twostage-sim-llm`, 0.597) is *worse* at entities than `joint-sim-llm`
-  (0.678). The selection rule ranks on intent macro-F1 first, so it knowingly
-  trades entity quality away here. That trade-off is in the ranking rule and
-  must be stated, not hidden.
+| Project | Ceiling on the bare specification | Ceiling with Analyzer enrichment |
+|---|---|---|
+| P1 | 0.958 (`twostage-sim-llm`) | **0.974** (`schema-sim-llm`) |
+| P2 | 0.886 (`joint-sim-llm`) | **0.898** (`schema-sim-llm`) |
+
+Enrichment raised the attainable ceiling on both projects, by +1.6 and +1.2
+points, and in both cases the new best configuration is a schema-guided one
+that only becomes distinct once descriptions exist. That is direct evidence for
+the Analyzer component, independent of the Architect's failure.
+
+It also means that on the bare specification **four of the twelve
+configurations are behavioural duplicates** of four others, so the catalogue
+really offers eight distinct behaviours until enrichment separates them. This
+partly explains the clustering noted below.
+
+### Why the catalogue is a weak instrument for search quality
+
+All 12 configurations, P1 then P2, on the enriched specification. The
+out-of-scope policy dominates: every `llm_label` configuration beats every
+`tfidf_threshold` one on both projects, a gap of roughly 9 points, far larger
+than anything the search contributes. Six of twelve sit within a few points of
+the best, so four random draws usually land near the top.
+
+A search baseline can only discriminate when the space has spread. This one has
+one dominant factor and a cluster of near-equivalent good options. If a future
+version wanted to test search quality properly, the catalogue would need
+configurations that genuinely fail.
+
+### Caveats that must travel with these numbers
+
+- Development scores. A1 and B4 both selected on this same split, so both are
+  optimistically biased; the bias applies to both, so the comparison between
+  them is sounder than either absolute figure.
+- No confidence intervals yet. The P1 gap (-0.1) is noise. The P2 gap (-3.7,
+  with A1 below all five seeds) is large enough to take seriously, but needs a
+  paired bootstrap on test data before being stated as a result.
+- Two projects. P3 stays untouched until after the freeze.
+- The selection rule ranks on intent macro-F1 first and so trades entity
+  quality away: on P1 it picked `twostage-sim-llm` (entity 0.597) over
+  `joint-sim-llm` (entity 0.678). That is a property of the declared rule, and
+  belongs in the paper rather than being quietly omitted.
+
+### What this means for the claim
+
+The honest framing left is: the framework **automates** pipeline design,
+reaches a better configuration than a fixed generic pipeline (RQ1), and its
+Analyzer enrichment raises the attainable ceiling. Its candidate *selection*
+does not beat random search at the same budget, and on P2 it is worse. If B2
+shows comparable quality to a human at much lower human effort, that becomes
+the strongest supported claim.
+
+---
+
+## F1b. A fairness bug found and fixed (13 Oct)
+
+For the first P1 and P2 runs, `scripts/run_design.py` passed the bare
+specification to B4 while A1 used the enriched one. The same configuration
+therefore scored differently for the two systems: `schema-fixed-llm` scored
+0.841 for A1 and 0.804 for B4 on P2.
+
+It was caught by noticing that discrepancy in the two run folders. Plan
+section 3 requires B4 to receive the same Analyzer output, so B4 now runs the
+Analyzer too. The faulty runs are superseded, not deleted, and the corrected
+runs are the ones to cite.
+
+Note the direction: the bug **flattered A1**, and A1 still lost on P2 once it
+was fixed.
 
 ---
 
@@ -103,6 +152,16 @@ system should clear it. Recorded in the B0 run summaries.
 5 of P2's 26 declared entity types never appear in its k-shot pool, covering
 10.7% of its development gold entities. P1 and P3 are unaffected. Details and
 the falsifiable prediction this generates are in `DATA_REPORT.md`.
+
+**Prediction outcome (13 Oct): partly supported.** The prediction was that
+schema-guided configurations and enrichment should help P2's entity recall
+more than P1's. Enrichment did raise the ceiling on both projects and made a
+schema-guided configuration the best on both (F1), so the direction holds. But
+the gain was larger on P1 (+1.6 points) than on P2 (+1.2), which is the
+opposite of the ordering predicted. On the bare specification the
+schema-guided and joint configurations scored identically on entity F1 on both
+projects, confirming they are duplicates without descriptions. The prediction
+should be retested on the frozen test split before any claim is made.
 
 ---
 

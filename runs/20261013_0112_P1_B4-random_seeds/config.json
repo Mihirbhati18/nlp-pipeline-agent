@@ -1,0 +1,394 @@
+{
+  "run_id": "20261013_0112_P1_B4-random_seeds",
+  "project": "P1",
+  "system": "B4-random",
+  "seed": "seeds",
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "model_details": {
+    "family": "qwen2",
+    "parameter_size": "3.1B",
+    "quantization_level": "Q4_K_M",
+    "context_length": null,
+    "format": "gguf",
+    "weights_blob_sha256": "5ee4f07cdb9beadbbb293e85803c569b01bd37ed059d2715faa7bb405f31caa6"
+  },
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "latency_note": "no latency is reported: this run uses the prediction cache. Latency comes only from the uncached timing runs.",
+  "score_note": "development scores are selection scores, not results. The reported figures come from the frozen test runs after G10.",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "constraints": {
+    "min_entity_f1": null,
+    "max_p95_latency_s": null,
+    "min_schema_validity": null
+  },
+  "oos_threshold": {
+    "threshold": 0.3564234098194579,
+    "dev_macro_f1_at_threshold": 0.5882352941176471,
+    "n_candidate_thresholds": 101,
+    "criterion": "F1 on the binary in-scope/out-of-scope decision, dev only (no intent prediction exists before the model call)",
+    "tuned_on": "development split only"
+  },
+  "summary": {
+    "n_seeds": 5,
+    "selected_config_ids": [
+      "twostage-sim-llm",
+      "joint-sim-llm",
+      "schema-sim-llm",
+      "joint-sim-llm",
+      "twostage-sim-llm"
+    ],
+    "selected_intent_macro_f1": [
+      0.9584757834757834,
+      0.9511396011396012,
+      0.9743589743589743,
+      0.9511396011396012,
+      0.9584757834757834
+    ],
+    "mean_intent_macro_f1": 0.9587179487179487,
+    "stdev_intent_macro_f1": 0.009481846802558288,
+    "min_intent_macro_f1": 0.9511396011396012,
+    "max_intent_macro_f1": 0.9743589743589743,
+    "seeds_with_no_eligible_candidate": [],
+    "mean_logical_calls": 448.2,
+    "note": "B4-random is a distribution over seeds. Comparing A1 against a single seed's draw would be comparing against noise."
+  },
+  "per_seed": [
+    {
+      "variant": "B4-random",
+      "seed": 0,
+      "budget_used": 4,
+      "attempted": [
+        "twostage-sim-llm",
+        "schema-sim-tfidf",
+        "joint-fixed-llm",
+        "twostage-fixed-llm"
+      ],
+      "selection": {
+        "selected": "twostage-sim-llm",
+        "no_eligible_candidate": false,
+        "reason": "twostage-sim-llm has the highest intent macro-F1 (0.9585) among 4 eligible candidate(s)",
+        "eligible": [
+          "twostage-sim-llm",
+          "joint-fixed-llm",
+          "twostage-fixed-llm",
+          "schema-sim-tfidf"
+        ],
+        "rejections": [],
+        "ranking": [
+          {
+            "config_id": "twostage-sim-llm",
+            "intent_macro_f1": 0.9584757834757834,
+            "entity_span_f1": 0.596774193548387,
+            "schema_validity": 1.0,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-fixed-llm",
+            "intent_macro_f1": 0.9268060643060643,
+            "entity_span_f1": 0.6095238095238094,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "twostage-fixed-llm",
+            "intent_macro_f1": 0.9014652014652015,
+            "entity_span_f1": 0.5871559633027522,
+            "schema_validity": 1.0,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "schema-sim-tfidf",
+            "intent_macro_f1": 0.8691530691530691,
+            "entity_span_f1": 0.6168224299065421,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          }
+        ],
+        "unchecked_constraints": [],
+        "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+      },
+      "design_cost": {
+        "logical_calls": 534,
+        "physical_calls": 75
+      }
+    },
+    {
+      "variant": "B4-random",
+      "seed": 1,
+      "budget_used": 4,
+      "attempted": [
+        "joint-sim-llm",
+        "schema-fixed-tfidf",
+        "joint-fixed-tfidf",
+        "twostage-fixed-llm"
+      ],
+      "selection": {
+        "selected": "joint-sim-llm",
+        "no_eligible_candidate": false,
+        "reason": "joint-sim-llm has the highest intent macro-F1 (0.9511) among 4 eligible candidate(s)",
+        "eligible": [
+          "joint-sim-llm",
+          "twostage-fixed-llm",
+          "joint-fixed-tfidf",
+          "schema-fixed-tfidf"
+        ],
+        "rejections": [],
+        "ranking": [
+          {
+            "config_id": "joint-sim-llm",
+            "intent_macro_f1": 0.9511396011396012,
+            "entity_span_f1": 0.6782608695652174,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "twostage-fixed-llm",
+            "intent_macro_f1": 0.9014652014652015,
+            "entity_span_f1": 0.5871559633027522,
+            "schema_validity": 1.0,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-fixed-tfidf",
+            "intent_macro_f1": 0.8493881118881118,
+            "entity_span_f1": 0.52,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "schema-fixed-tfidf",
+            "intent_macro_f1": 0.8448093573093572,
+            "entity_span_f1": 0.5046728971962616,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          }
+        ],
+        "unchecked_constraints": [],
+        "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+      },
+      "design_cost": {
+        "logical_calls": 431,
+        "physical_calls": 74
+      }
+    },
+    {
+      "variant": "B4-random",
+      "seed": 2,
+      "budget_used": 4,
+      "attempted": [
+        "joint-fixed-llm",
+        "joint-fixed-tfidf",
+        "schema-sim-llm",
+        "twostage-fixed-tfidf"
+      ],
+      "selection": {
+        "selected": "schema-sim-llm",
+        "no_eligible_candidate": false,
+        "reason": "schema-sim-llm has the highest intent macro-F1 (0.9744) among 4 eligible candidate(s)",
+        "eligible": [
+          "schema-sim-llm",
+          "joint-fixed-llm",
+          "joint-fixed-tfidf",
+          "twostage-fixed-tfidf"
+        ],
+        "rejections": [],
+        "ranking": [
+          {
+            "config_id": "schema-sim-llm",
+            "intent_macro_f1": 0.9743589743589743,
+            "entity_span_f1": 0.706896551724138,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-fixed-llm",
+            "intent_macro_f1": 0.9268060643060643,
+            "entity_span_f1": 0.6095238095238094,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-fixed-tfidf",
+            "intent_macro_f1": 0.8493881118881118,
+            "entity_span_f1": 0.52,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "twostage-fixed-tfidf",
+            "intent_macro_f1": 0.83875777000777,
+            "entity_span_f1": 0.5436893203883495,
+            "schema_validity": 0.98,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          }
+        ],
+        "unchecked_constraints": [],
+        "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+      },
+      "design_cost": {
+        "logical_calls": 421,
+        "physical_calls": 100
+      }
+    },
+    {
+      "variant": "B4-random",
+      "seed": 3,
+      "budget_used": 4,
+      "attempted": [
+        "joint-sim-tfidf",
+        "schema-fixed-tfidf",
+        "schema-fixed-llm",
+        "joint-sim-llm"
+      ],
+      "selection": {
+        "selected": "joint-sim-llm",
+        "no_eligible_candidate": false,
+        "reason": "joint-sim-llm has the highest intent macro-F1 (0.9511) among 4 eligible candidate(s)",
+        "eligible": [
+          "joint-sim-llm",
+          "schema-fixed-llm",
+          "joint-sim-tfidf",
+          "schema-fixed-tfidf"
+        ],
+        "rejections": [],
+        "ranking": [
+          {
+            "config_id": "joint-sim-llm",
+            "intent_macro_f1": 0.9511396011396012,
+            "entity_span_f1": 0.6782608695652174,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "schema-fixed-llm",
+            "intent_macro_f1": 0.9496794871794871,
+            "entity_span_f1": 0.5882352941176471,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-sim-tfidf",
+            "intent_macro_f1": 0.8617586117586117,
+            "entity_span_f1": 0.62,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "schema-fixed-tfidf",
+            "intent_macro_f1": 0.8448093573093572,
+            "entity_span_f1": 0.5046728971962616,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          }
+        ],
+        "unchecked_constraints": [],
+        "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+      },
+      "design_cost": {
+        "logical_calls": 348,
+        "physical_calls": 0
+      }
+    },
+    {
+      "variant": "B4-random",
+      "seed": 4,
+      "budget_used": 4,
+      "attempted": [
+        "joint-sim-tfidf",
+        "twostage-fixed-llm",
+        "joint-fixed-tfidf",
+        "twostage-sim-llm"
+      ],
+      "selection": {
+        "selected": "twostage-sim-llm",
+        "no_eligible_candidate": false,
+        "reason": "twostage-sim-llm has the highest intent macro-F1 (0.9585) among 4 eligible candidate(s)",
+        "eligible": [
+          "twostage-sim-llm",
+          "twostage-fixed-llm",
+          "joint-sim-tfidf",
+          "joint-fixed-tfidf"
+        ],
+        "rejections": [],
+        "ranking": [
+          {
+            "config_id": "twostage-sim-llm",
+            "intent_macro_f1": 0.9584757834757834,
+            "entity_span_f1": 0.596774193548387,
+            "schema_validity": 1.0,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "twostage-fixed-llm",
+            "intent_macro_f1": 0.9014652014652015,
+            "entity_span_f1": 0.5871559633027522,
+            "schema_validity": 1.0,
+            "p95_s": 1.18,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-sim-tfidf",
+            "intent_macro_f1": 0.8617586117586117,
+            "entity_span_f1": 0.62,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          },
+          {
+            "config_id": "joint-fixed-tfidf",
+            "intent_macro_f1": 0.8493881118881118,
+            "entity_span_f1": 0.52,
+            "schema_validity": 1.0,
+            "p95_s": 0.59,
+            "p95_source": "estimated"
+          }
+        ],
+        "unchecked_constraints": [],
+        "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+      },
+      "design_cost": {
+        "logical_calls": 507,
+        "physical_calls": 0
+      }
+    }
+  ],
+  "data_sources": {
+    "manifest": "data/manifests/P1.json",
+    "description": "configs/descriptions/P1.md",
+    "kshot": "data/processed/P1/kshot.jsonl",
+    "dev": "data/processed/P1/dev.jsonl",
+    "test": "data/processed/P1/holdout/test.jsonl"
+  }
+}

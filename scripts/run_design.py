@@ -32,6 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.analyzer.access import access_for  # noqa: E402
+from src.analyzer.analyzer import Analyzer  # noqa: E402
 from src.analyzer.spec import load_cases, load_spec  # noqa: E402
 from src.architect.design_run import (  # noqa: E402
     estimate_p95,
@@ -154,6 +155,11 @@ def main() -> int:
                     "config": config.as_dict(),
                     "oos_threshold": threshold.as_dict(),
                     "search": "none: B1 is fixed to one predeclared configuration",
+                    "spec": (
+                        "bare specification: B1 receives the declared labels and schema "
+                        "but no Analyzer enrichment, which is what makes it the "
+                        "no-project-specific-design baseline"
+                    ),
                     "data_access": access.as_dict(),
                     "data_sources": spec.source,
                 }),
@@ -232,8 +238,18 @@ def main() -> int:
 
         # ---- B4: plain search at the same budget --------------------
         if "B4-random" in systems or "B4-exhaustive" in systems:
+            # Plan section 3: B4 gets the "same catalogue, same Analyzer
+            # output, same scorer". So B4 must run against the *enriched*
+            # specification, exactly as A1 does. Giving it the bare
+            # specification would make the schema-guided configurations behave
+            # differently for the two systems, and B4 would be competing with a
+            # handicap rather than only lacking the Architect's judgement.
+            b4_analysis = Analyzer(client=client).analyze(spec, pool)
+            if not b4_analysis.ok:
+                print("  B4 skipped: the project specification is contradictory")
+                continue
             evaluate = make_config_evaluator(
-                spec, client, pool, dev, threshold.threshold
+                b4_analysis.spec, client, pool, dev, threshold.threshold
             )
             estimator = lambda c: estimate_p95(c, SINGLE_CALL_P95_S)  # noqa: E731
 

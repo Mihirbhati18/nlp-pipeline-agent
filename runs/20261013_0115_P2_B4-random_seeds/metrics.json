@@ -1,0 +1,27 @@
+{
+  "b4_random_summary": {
+    "n_seeds": 5,
+    "selected_config_ids": [
+      "twostage-sim-llm",
+      "joint-sim-llm",
+      "schema-sim-llm",
+      "joint-sim-llm",
+      "twostage-sim-llm"
+    ],
+    "selected_intent_macro_f1": [
+      0.8605666718902013,
+      0.886489898989899,
+      0.8976010101010101,
+      0.886489898989899,
+      0.8605666718902013
+    ],
+    "mean_intent_macro_f1": 0.8783428303722421,
+    "stdev_intent_macro_f1": 0.01684941068216048,
+    "min_intent_macro_f1": 0.8605666718902013,
+    "max_intent_macro_f1": 0.8976010101010101,
+    "seeds_with_no_eligible_candidate": [],
+    "mean_logical_calls": 443.6,
+    "note": "B4-random is a distribution over seeds. Comparing A1 against a single seed's draw would be comparing against noise."
+  },
+  "metric_definitions_version": "1.2"
+}
