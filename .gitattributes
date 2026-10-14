@@ -1,0 +1,3 @@
+# Exported pipeline packages are hash-verified on load; line-ending
+# conversion would change their bytes and make them refuse to load.
+artifacts/** -text

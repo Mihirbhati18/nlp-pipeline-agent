@@ -1,0 +1,237 @@
+{
+  "config": {
+    "calls_per_request": 2,
+    "config_id": "twostage-sim-llm",
+    "example_selection": "similarity",
+    "extraction": "two_stage",
+    "oos_policy": "llm_label"
+  },
+  "config_id": "twostage-sim-llm",
+  "format_version": "1",
+  "max_request_chars": 500,
+  "model": {
+    "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+    "name": "qwen2.5:3b",
+    "settings": {
+      "format": "json",
+      "num_predict": 512,
+      "seed": 0,
+      "stop": [],
+      "temperature": 0.0
+    }
+  },
+  "oos_threshold": 0.3564234098194579,
+  "project_id": "P1",
+  "source": {
+    "design_cost": {
+      "analyzer_calls": 2,
+      "candidate_calls": 451,
+      "logical_calls": 453,
+      "physical_calls": 2,
+      "planning_calls": 2,
+      "wall_time_s": 0.6
+    },
+    "note": "development scores are selection scores; reported results come from the frozen test runs",
+    "run_id": "20261013_0110_P1_A1_0",
+    "selection_split": "dev",
+    "system": "A1"
+  },
+  "spec": {
+    "constraints": {
+      "max_p95_latency_s": null,
+      "min_schema_validity": null,
+      "notes": ""
+    },
+    "description_text": "# P1 — Home assistant\n\nWritten 11 October 2026, before any development run. Frozen: any edit after\nthis commit is a protocol change and must be logged in `docs/decisions.md`.\nAuthor-written, which is recorded as a limitation in the paper.\n\n## Purpose\n\nA voice and text assistant built into a home speaker. It handles two things\nfor the household: alarms, and control of the connected devices in the house.\n\n## Users\n\nPeople at home speaking or typing short, casual requests, often while doing\nsomething else. They do not know the product's internal vocabulary and will\nphrase the same thing many ways (\"lights off\", \"kill the lights\", \"turn the\nlamp off in here\").\n\n## Supported requests\n\nAlarms: set an alarm, remove an alarm, and ask what alarms exist.\n\nDevices: switch lights on and off, change a light's colour, dim or brighten a\nlight, start or stop the cleaning robot, start the coffee machine, and switch a\nsmart plug or socket on or off.\n\n## What it must pull out of a request\n\nThe time or date an alarm refers to; which room or place in the house is meant;\nwhich kind of device is meant; a colour; and how much to change something by.\nAnything the user names that the assistant cannot act on should not be invented\ninto one of these fields.\n\n## Out of scope\n\nAnything that is not an alarm or a device in the house. Weather, news, music,\ngeneral questions, cooking, social posts and shopping are other products'\njobs. The assistant should say it cannot handle those rather than guess at the\nclosest supported action.\n\n## Constraints\n\nIt replies while the user is still standing there, so responses must feel\nimmediate. It runs on modest hardware in the home and uses one small local\nlanguage model. Every reply must be machine-readable by the device firmware\nthat consumes it, because a malformed reply means the device does nothing.\nActing on the wrong device is worse than admitting the request was not\nunderstood.\n\n## What success looks like\n\nCommon requests are understood regardless of phrasing; the room or device\nnamed by the user is the one acted on; and requests outside the two supported\nareas are refused rather than forced into a supported action.\n",
+    "enriched": true,
+    "entity_types": [
+      {
+        "description": "Type of alarm (e.g., time, date)",
+        "name": "alarm_type"
+      },
+      {
+        "description": "Business name for devices (e.g., coffee machine)",
+        "name": "business_name"
+      },
+      {
+        "description": "Type of business (e.g., coffee machine, cleaning robot)",
+        "name": "business_type"
+      },
+      {
+        "description": "Amount to change (e.g., brightness, colour intensity)",
+        "name": "change_amount"
+      },
+      {
+        "description": "Type of coffee (e.g., espresso, cappuccino)",
+        "name": "coffee_type"
+      },
+      {
+        "description": "Color type (e.g., RGB, HSL)",
+        "name": "color_type"
+      },
+      {
+        "description": "Date for alarm (e.g., day, month, year)",
+        "name": "date"
+      },
+      {
+        "description": "Type of device (e.g., light, socket, cleaning robot)",
+        "name": "device_type"
+      },
+      {
+        "description": "Event name for devices (e.g., start, stop)",
+        "name": "event_name"
+      },
+      {
+        "description": "General frequency for devices (e.g., daily, weekly)",
+        "name": "general_frequency"
+      },
+      {
+        "description": "Place in the house (e.g., kitchen, bedroom)",
+        "name": "house_place"
+      },
+      {
+        "description": "Order type for devices (e.g., on, off, dim, bright)",
+        "name": "order_type"
+      },
+      {
+        "description": "Name of the place (e.g., living room, bathroom)",
+        "name": "place_name"
+      },
+      {
+        "description": "Setting for devices (e.g., volume, brightness)",
+        "name": "player_setting"
+      },
+      {
+        "description": "Relation to other entities (e.g., off, on, dimmer)",
+        "name": "relation"
+      },
+      {
+        "description": "Time for alarm (e.g., hour, minute)",
+        "name": "time"
+      },
+      {
+        "description": "Time zone for time and date",
+        "name": "time_zone"
+      },
+      {
+        "description": "Time of day for alarm (e.g., morning, evening)",
+        "name": "timeofday"
+      }
+    ],
+    "intents": [
+      {
+        "description": "Query alarms and their details.",
+        "name": "alarm_query"
+      },
+      {
+        "description": "Remove an existing alarm.",
+        "name": "alarm_remove"
+      },
+      {
+        "description": "Set a new alarm.",
+        "name": "alarm_set"
+      },
+      {
+        "description": "Start the cleaning robot.",
+        "name": "iot_cleaning"
+      },
+      {
+        "description": "Start the coffee machine.",
+        "name": "iot_coffee"
+      },
+      {
+        "description": "Change the color of a light.",
+        "name": "iot_hue_lightchange"
+      },
+      {
+        "description": "Dim a light.",
+        "name": "iot_hue_lightdim"
+      },
+      {
+        "description": "Turn off a light.",
+        "name": "iot_hue_lightoff"
+      },
+      {
+        "description": "Turn on a light.",
+        "name": "iot_hue_lighton"
+      },
+      {
+        "description": "Increase the brightness of a light.",
+        "name": "iot_hue_lightup"
+      },
+      {
+        "description": "Turn off a smart device.",
+        "name": "iot_wemo_off"
+      },
+      {
+        "description": "Turn on a smart device.",
+        "name": "iot_wemo_on"
+      }
+    ],
+    "name": "Home assistant",
+    "project_id": "P1",
+    "slots_by_intent": {
+      "alarm_query": [
+        "date",
+        "timeofday"
+      ],
+      "alarm_remove": [
+        "alarm_type",
+        "date",
+        "time",
+        "timeofday"
+      ],
+      "alarm_set": [
+        "date",
+        "time",
+        "timeofday"
+      ],
+      "iot_cleaning": [
+        "device_type",
+        "general_frequency",
+        "house_place",
+        "time"
+      ],
+      "iot_coffee": [
+        "business_type",
+        "coffee_type",
+        "device_type",
+        "time"
+      ],
+      "iot_hue_lightchange": [
+        "change_amount",
+        "color_type",
+        "house_place"
+      ],
+      "iot_hue_lightdim": [
+        "change_amount",
+        "house_place"
+      ],
+      "iot_hue_lightoff": [
+        "house_place"
+      ],
+      "iot_hue_lighton": [
+        "device_type",
+        "house_place"
+      ],
+      "iot_hue_lightup": [
+        "change_amount",
+        "house_place"
+      ],
+      "iot_wemo_off": [
+        "device_type"
+      ],
+      "iot_wemo_on": [
+        "device_type",
+        "house_place"
+      ]
+    },
+    "source": {
+      "description": "configs/descriptions/P1.md",
+      "dev": "data/processed/P1/dev.jsonl",
+      "kshot": "data/processed/P1/kshot.jsonl",
+      "manifest": "data/manifests/P1.json",
+      "test": "data/processed/P1/holdout/test.jsonl"
+    }
+  }
+}

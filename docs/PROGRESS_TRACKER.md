@@ -8,15 +8,14 @@ Last updated: 11 October 2026.
 
 ## Current position
 
-**G0-G4, G6 and G7 complete. G5 has B3 and B4 built; only B2 remains. `qwen2.5:3b` installed and measured. 12 October, with the 13-15 Oct targets largely done.**
+**G0-G4 and G6-G9 complete. G5: B4 done, B3 training once XLM-R weights land, B2 waiting on you. 14 October.**
 
 ### Start here next session
 
-1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 282 passed, 1 skipped.
-2. Nothing needs downloading: `qwen2.5:3b`, torch 2.14.1+cpu and transformers 4.46.3 are installed.
-3. Then, in order:
-   - `python scripts/run_b3_local.py` for the B3 baseline.
-   - Build G8: wire the Architect to the real catalogue so A1 produces numbers.
+1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 325 passed.
+2. If `runs/` has no B3 folders: `bash scripts/fetch_xlmr_weights.sh` (resumable, hash-verified), then `HF_HUB_OFFLINE=1 python scripts/run_b3_local.py`.
+3. B2 (yours): fill `configs/b2/P1_worksheet.md`, then `python scripts/run_b2.py check --project P1` and `finish`.
+4. Then G10: the freeze.
 4. Nothing is lost by stopping. All work is committed, and the prediction cache in `cache/` means model answers already computed are never recomputed.
 
 State confirmed on 13 October: `qwen2.5:3b`, `torch` 2.14.1+cpu and
@@ -47,7 +46,7 @@ blobs did not survive the restart, so measuring it means a fresh 4.9 GB pull.
 | G6 | Analyzer producing a validated ProjectSpec | Matches gold specification fixtures; conflicts flagged | **Done** - validation blocks on real contradictions and reports gaps without blocking; enrichment described 12/12 P1 and 10/10 P2 intents and every entity type in 2 calls per project; test and held-out data withheld by a guard that raises | S06 ready |
 | G7 | Architect candidate choice within the 4-evaluation budget | Valid catalogue entries; budget cap respected; rationale logged | **Done** - 3 initial + 1 revision enforced in code; only real catalogue entries run; rationale and reasoned-vs-fallback source recorded per attempt; revision reads the development error report | S07 ready |
 | G8 | Candidate evaluation and selection; fill P1/P2 dev cache | Synthetic score tables select the correct candidate; no-eligible handled | **Done for P1** - A1, B1, B4-random (5 seeds) and B4-exhaustive all ran on P1 development data; 15 new checks; see `FINDINGS.md` F1 for the headline comparison. P2 running | S08 ready |
-| G9 | Export/reload pipeline; request interface and demo | Fresh process loads artifact; normal/OOS/invalid requests work | **Next** | S09 |
+| G9 | Export/reload pipeline; request interface and demo | Fresh process loads artifact; normal/OOS/invalid requests work | **Done** - A1's selections exported as hash-verified packages (`artifacts/P1/twostage-sim-llm-ff3d548a0af2`, `artifacts/P2/schema-fixed-llm-d754b7d4ad80`), each tied to its A1 run folder and refused if the re-run selection differs; a modified file refuses to load; a different installed model refuses to serve; invalid requests rejected before any model call; demo on both projects; 27 new checks (325 total) | S09 ready: `python scripts/demo.py --project P1` |
 | G10 | Freeze: thresholds, budgets, exact test call count, minimum-result check | Test answers unopened; P3 untouched; one freeze commit | Not started | S10 |
 | G11 | Final evaluation on P1/P2, then P3; uncached timing runs | Matching manifests, complete predictions, scored failures | Not started | S11 |
 | G12 | Reproduction, paper, figures, submission | Metrics recompute from saved predictions; every claim traces to a run | Not started | S12 |
@@ -69,3 +68,4 @@ write and commit its description in G2.
 | 12 Oct 2026 (G6) | Data access guard that refuses test and held-out data rather than relying on discipline; Project Analyzer split into model-free validation and two-call enrichment, with authoritative names protected from the model; verified live on P1 and P2 (all intents and entity types described, no blocking findings); 40 new checks (245 total) | None | Build G7 Architect, then G8 selection |
 | 12 Oct 2026 (G7) | NLP Architect: 3 initial candidates plus 1 revision that reads the development error report, hard budget enforcement, catalogue-only choices with hallucinated ids discarded, per-attempt rationale and reasoned-vs-fallback accounting, planning calls counted apart from runtime calls, explicit no-eligible outcome; B3 switched from Kaggle to local CPU training with its trainer and runner written; 37 new checks (282 total) | The CUDA PyTorch wheel (2.5 GB) failed on a DNS error at 255 KB/s and was abandoned for the CPU build (200 MB) | Confirm the runtime model against `llama3.1:8b`, run B3 locally, then wire G8 selection to the real catalogue |
 | 13 Oct 2026 (G8) | Runtime model confirmed as `qwen2.5:3b` with the 8B limitation recorded; full design run wired end to end (Analyzer, Architect, catalogue, shared selection) and run on real P1 data for A1, B1, B4-random over 5 seeds and B4-exhaustive; `FINDINGS.md` created; B3 switched to a prefetch-then-train flow after repeated download breaks; 16 new checks (298 total) | **A1 beats B1 by +3.1 points but beats B4-random by only +0.4, far below the 2.0-point threshold.** Recorded as finding F1: on P1 the agent's candidate choice shows no measurable search benefit, and the catalogue is a weak instrument for detecting search quality because 6 of 12 configurations lie within 6 points of the best | Finish P2 and B3; then G9 export and demo |
+| 14 Oct 2026 (G9) | Session moved from the terminal to the desktop app and resumed from the transcript. Runtime package format with SHA-256 integrity checks, model-digest check before the first call, explicit response statuses (ok, out_of_scope, invalid_output, error, invalid_request); `export_pipeline.py` exports A1's selections from a fully cached re-run (0 uncached calls) and ties each to its A1 run folder; `demo.py` shows normal, out-of-scope and invalid requests on both projects; 27 new checks (325 total) | XLM-R's chunked (xet) download stalled at 0 bytes on a ~140 KB/s connection; replaced with a curl byte-range download verified against the published SHA-256 | Finish B3; B2 by the user; G10 freeze |

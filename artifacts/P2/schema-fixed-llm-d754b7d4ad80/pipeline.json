@@ -1,0 +1,258 @@
+{
+  "config": {
+    "calls_per_request": 1,
+    "config_id": "schema-fixed-llm",
+    "example_selection": "fixed",
+    "extraction": "schema_guided",
+    "oos_policy": "llm_label"
+  },
+  "config_id": "schema-fixed-llm",
+  "format_version": "1",
+  "max_request_chars": 500,
+  "model": {
+    "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+    "name": "qwen2.5:3b",
+    "settings": {
+      "format": "json",
+      "num_predict": 512,
+      "seed": 0,
+      "stop": [],
+      "temperature": 0.0
+    }
+  },
+  "oos_threshold": 0.33301670934986183,
+  "project_id": "P2",
+  "source": {
+    "design_cost": {
+      "analyzer_calls": 2,
+      "candidate_calls": 452,
+      "logical_calls": 454,
+      "physical_calls": 2,
+      "planning_calls": 2,
+      "wall_time_s": 0.5
+    },
+    "note": "development scores are selection scores; reported results come from the frozen test runs",
+    "run_id": "20261013_0112_P2_A1_0",
+    "selection_split": "dev",
+    "system": "A1"
+  },
+  "spec": {
+    "constraints": {
+      "max_p95_latency_s": null,
+      "min_schema_validity": null,
+      "notes": ""
+    },
+    "description_text": "# P2 — Productivity assistant\n\nWritten 11 October 2026, before any development run. Frozen: any edit after\nthis commit is a protocol change and must be logged in `docs/decisions.md`.\nAuthor-written, which is recorded as a limitation in the paper.\n\n## Purpose\n\nAn assistant inside a work productivity suite. It takes a typed or spoken\ninstruction and turns it into an action in the user's calendar, mailbox or\nlists, so the user does not have to open the app and click through it.\n\n## Users\n\nWorking people at a desk or on a phone, usually mid-task and in a hurry. They\ndictate naturally and often pack several details into one sentence: who, what,\nwhen and where all at once.\n\n## Supported requests\n\nCalendar: create an event, cancel or delete an event, and ask what is on the\ncalendar.\n\nEmail: send an email, search or ask about mail, add a contact, and look up a\ncontact's details.\n\nLists: create a list or add items to one, ask what is on a list, and remove\nitems from a list.\n\n## What it must pull out of a request\n\nDates and times; the name of an event; the name of a list; a person, and a\nperson's relationship to the user (\"my manager\", \"mum\"); an email address; a\nmail folder; a place or business; how often something recurs; and the kind of\npersonal detail being asked for when the user asks about a contact.\n\nMany requests carry several of these at once, and a missed detail means the\nwrong action is taken, so recall of these fields matters as much as getting\nthe action right.\n\n## Out of scope\n\nAnything that is not calendar, email or lists. Playing media, weather, news,\ngeneral knowledge questions, transport, food ordering and device control belong\nto other parts of the suite, and should be refused rather than mapped onto the\nnearest supported action.\n\n## Constraints\n\nRequests run against the user's real mailbox and calendar, so a wrong action is\nexpensive to undo and a confidently wrong answer is worse than a refusal. Every\nreply must be machine-readable by the suite's backend. It uses one small local\nlanguage model, for privacy reasons: the user's mail and calendar content must\nnot leave the machine. The user is waiting for the result, so it must feel\nresponsive, though a short pause is acceptable for a long instruction.\n\n## What success looks like\n\nThe right one of the three areas and the right action within it; every detail\nthe user gave is carried through rather than dropped; and requests belonging to\nother parts of the suite are refused clearly.\n",
+    "enriched": true,
+    "entity_types": [
+      {
+        "description": "Name of the application or service",
+        "name": "app_name"
+      },
+      {
+        "description": "Name of the artist or creator",
+        "name": "artist_name"
+      },
+      {
+        "description": "Name of a business or organization",
+        "name": "business_name"
+      },
+      {
+        "description": "Type of business or organization",
+        "name": "business_type"
+      },
+      {
+        "description": "Date and time information",
+        "name": "date"
+      },
+      {
+        "description": "Type of device",
+        "name": "device_type"
+      },
+      {
+        "description": "Type of drink",
+        "name": "drink_type"
+      },
+      {
+        "description": "Email address",
+        "name": "email_address"
+      },
+      {
+        "description": "Email folder name",
+        "name": "email_folder"
+      },
+      {
+        "description": "Name of the event",
+        "name": "event_name"
+      },
+      {
+        "description": "General frequency of an action or occurrence",
+        "name": "general_frequency"
+      },
+      {
+        "description": "Name of a house or place",
+        "name": "house_place"
+      },
+      {
+        "description": "Name of a list",
+        "name": "list_name"
+      },
+      {
+        "description": "Type of meal",
+        "name": "meal_type"
+      },
+      {
+        "description": "Type of media",
+        "name": "media_type"
+      },
+      {
+        "description": "Descriptor of music genre or style",
+        "name": "music_descriptor"
+      },
+      {
+        "description": "Genre of music",
+        "name": "music_genre"
+      },
+      {
+        "description": "Name of a person",
+        "name": "person"
+      },
+      {
+        "description": "Personal details about a person",
+        "name": "personal_info"
+      },
+      {
+        "description": "Name of a place",
+        "name": "place_name"
+      },
+      {
+        "description": "Relationship to the user",
+        "name": "relation"
+      },
+      {
+        "description": "Name of a song",
+        "name": "song_name"
+      },
+      {
+        "description": "Type of sport",
+        "name": "sport_type"
+      },
+      {
+        "description": "Time information",
+        "name": "time"
+      },
+      {
+        "description": "Time of day",
+        "name": "timeofday"
+      },
+      {
+        "description": "Type of transportation",
+        "name": "transport_type"
+      }
+    ],
+    "intents": [
+      {
+        "description": "Retrieve calendar information.",
+        "name": "calendar_query"
+      },
+      {
+        "description": "Remove calendar event.",
+        "name": "calendar_remove"
+      },
+      {
+        "description": "Set calendar event.",
+        "name": "calendar_set"
+      },
+      {
+        "description": "Add contact to mailbox.",
+        "name": "email_addcontact"
+      },
+      {
+        "description": "Query mailbox for information.",
+        "name": "email_query"
+      },
+      {
+        "description": "Query contact details.",
+        "name": "email_querycontact"
+      },
+      {
+        "description": "Send email.",
+        "name": "email_sendemail"
+      },
+      {
+        "description": "Create or add item to list.",
+        "name": "lists_createoradd"
+      },
+      {
+        "description": "Query list contents.",
+        "name": "lists_query"
+      },
+      {
+        "description": "Remove item from list.",
+        "name": "lists_remove"
+      }
+    ],
+    "name": "Productivity assistant",
+    "project_id": "P2",
+    "slots_by_intent": {
+      "calendar_query": [
+        "date",
+        "event_name",
+        "time"
+      ],
+      "calendar_remove": [
+        "date",
+        "event_name",
+        "time"
+      ],
+      "calendar_set": [
+        "date",
+        "event_name",
+        "general_frequency",
+        "person",
+        "relation",
+        "time"
+      ],
+      "email_addcontact": [
+        "email_address",
+        "person",
+        "personal_info"
+      ],
+      "email_query": [
+        "business_name",
+        "date",
+        "person",
+        "time"
+      ],
+      "email_querycontact": [
+        "person",
+        "personal_info"
+      ],
+      "email_sendemail": [
+        "date",
+        "event_name",
+        "person",
+        "relation"
+      ],
+      "lists_createoradd": [
+        "date",
+        "event_name",
+        "list_name",
+        "relation"
+      ],
+      "lists_query": [
+        "list_name"
+      ],
+      "lists_remove": [
+        "list_name"
+      ]
+    },
+    "source": {
+      "description": "configs/descriptions/P2.md",
+      "dev": "data/processed/P2/dev.jsonl",
+      "kshot": "data/processed/P2/kshot.jsonl",
+      "manifest": "data/manifests/P2.json",
+      "test": "data/processed/P2/holdout/test.jsonl"
+    }
+  }
+}
