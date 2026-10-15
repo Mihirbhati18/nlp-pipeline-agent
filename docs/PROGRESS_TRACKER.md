@@ -29,7 +29,7 @@ blobs did not survive the restart, so measuring it means a fresh 4.9 GB pull.
 |---|---|---|---|
 | 1 | Were DA1 and DA2 submitted and accepted? | An owed DA2 would have reprioritised everything | **Answered 11 Oct: both submitted and accepted.** The plan's schedule stands |
 | 2 | Confirmed DA3 cutoff date and time | Decides whether the 18 Oct buffer day exists | **Answered 15 Oct: 19 Oct 2026.** No buffer day; schedule compressed (decision 40). Exact time on the 19th still unconfirmed |
-| 3 | Team size and member names | Needed for `contributions.md` and the contribution matrix | **Answered 15 Oct:** Mihir Bhati (24BCE5341), Ahan Sharan (24BCE5334). Roles still to be filled in `contributions.md` |
+| 3 | Team size and member names | Needed for `contributions.md` and the contribution matrix | **Answered 15 Oct:** Mihir Bhati (24BCE5341), Ahana Sharan (24BCE5334). Equal contribution on all parts |
 | 4 | Do the DA1 artifacts exist (15-paper table, 5 gaps, diagrams)? | Decides whether related work is written fresh or reused | **Answered 12 Oct: not reused.** Related work is written fresh against Prompt2Model, DSPy and MASSIVE |
 | 5 | B2: configure a pipeline by hand, timed, 2 h per project | The RQ2 comparison, part of the minimum submittable result, and now the strongest remaining claim given finding F1. Only you can do it, because it measures human effort | **Ready for you**: `configs/b2/P1_worksheet.md` is created. Fill in sections 2-5, then `python scripts/run_b2.py check --project P1` and `finish` |
 

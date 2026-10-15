@@ -7,8 +7,8 @@ handout's stated ranges (2-3 and 1-3).
 
 | Member | Registration no. | Role | Gates / modules owned | Evidence |
 |---|---|---|---|---|
-| Mihir Bhati | 24BCE5341 | _to be filled_ | | |
-| Ahan Sharan | 24BCE5334 | _to be filled_ | | |
+| Mihir Bhati | 24BCE5341 | Equal contribution: worked jointly on all parts | All gates (G0-G12), all modules, the paper | Shared; see git history and the session log in `PROGRESS_TRACKER.md` |
+| Ahana Sharan | 24BCE5334 | Equal contribution: worked jointly on all parts | All gates (G0-G12), all modules, the paper | Shared; see git history and the session log in `PROGRESS_TRACKER.md` |
 
 ## AI assistance
 
