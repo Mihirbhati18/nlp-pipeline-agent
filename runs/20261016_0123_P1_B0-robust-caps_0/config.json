@@ -1,0 +1,17 @@
+{
+  "run_id": "20261016_0123_P1_B0-robust-caps_0",
+  "project": "P1",
+  "system": "B0-robust-caps",
+  "seed": 20261016,
+  "split": "dev",
+  "variant": "caps",
+  "purpose": "robustness to rewritten development requests",
+  "rewritten_requests": [
+    "TURN THE LIGHTS OFF PLEASE",
+    "MAKE A ROOM DARKER",
+    "SET AN ALARM AT SIX IN THE MORNING",
+    "IT'S TOO DARK HERE",
+    "TURN OFF THE SMART PLUG"
+  ],
+  "config_id": "tfidf-logreg"
+}

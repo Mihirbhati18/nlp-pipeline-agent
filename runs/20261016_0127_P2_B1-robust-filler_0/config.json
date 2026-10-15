@@ -1,0 +1,17 @@
+{
+  "run_id": "20261016_0127_P2_B1-robust-filler_0",
+  "project": "P2",
+  "system": "B1-robust-filler",
+  "seed": 20261016,
+  "split": "dev",
+  "variant": "filler",
+  "purpose": "robustness to rewritten development requests",
+  "rewritten_requests": [
+    "hey, could you please please put to my calendar daily stand-up to ten am, thanks",
+    "hey, could you please can you erase the past event i visited, thanks",
+    "hey, could you please remove all the events and schedules, thanks",
+    "hey, could you please latest events, thanks",
+    "hey, could you please do i have anything going on this saturday between two and four p. m., thanks"
+  ],
+  "config_id": "joint-fixed-llm"
+}

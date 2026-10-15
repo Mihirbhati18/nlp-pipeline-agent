@@ -224,3 +224,13 @@ Full write-up: `reports/DEV_ANALYSIS.md`. Headlines:
   about 0.3 s more than B1.
 - **A1's main error is entity over-extraction** (22 spurious entities per
   project); intent errors are rare and there are no invalid outputs.
+
+---
+
+## F6. Robustness to typos, capitals and filler words (16 Oct, P1 and P2)
+
+The LLM systems (A1, B1) lose at most 7.1 intent points when requests are
+rewritten with typos, capitals or filler words; B0's word matching loses up to
+26.9. A1 keeps its lead over B1 in every condition except P2 capitals (a tie),
+but on P2 it degrades more than B1 under typos and capitals. Details:
+`reports/DEV_ANALYSIS.md` section 5.

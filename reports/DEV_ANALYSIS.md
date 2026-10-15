@@ -96,6 +96,53 @@ Counted over the 100 development cases per project.
   errors across its 26 entity types, 5 of which never appear in the examples.
 - **No invalid outputs and no failures** on either project.
 
+## 5. Robustness to messy requests
+
+`python scripts/run_robustness.py` rewrites all 100 development requests per
+project three ways (fixed seed) and re-scores. Raw numbers in
+`reports/robustness.json`; each rewritten set is its own run folder
+(`runs/20261016_*-robust-*`, 18 in total). Examples of rewritten requests:
+"tunr the lights off please", "TURN THE LIGHTS OFF PLEASE", "hey, could you
+please turn the lights off please, thanks".
+
+Intent macro-F1, with the change from clean in brackets:
+
+| System | Project | Clean | Typos | CAPITALS | Filler words |
+|---|---|---|---|---|---|
+| A1 agent | P1 | 0.958 | 0.949 (-0.9) | 0.972 (+1.4) | 0.958 (0.0) |
+| B1 generic prompt | P1 | 0.927 | 0.907 (-2.0) | 0.928 (+0.1) | 0.956 (+2.9) |
+| B0 word matching | P1 | 0.780 | 0.645 (-13.5) | 0.780 (0.0) | 0.712 (-6.8) |
+| A1 agent | P2 | 0.841 | 0.770 (-7.1) | 0.800 (-4.1) | 0.854 (+1.3) |
+| B1 generic prompt | P2 | 0.804 | 0.756 (-4.8) | 0.799 (-0.5) | 0.811 (+0.7) |
+| B0 word matching | P2 | 0.730 | 0.625 (-10.5) | 0.730 (0.0) | 0.461 (-26.9) |
+
+- **The language-model systems cope with messy input.** A1's worst drop is
+  7.1 points (P2 typos); on P1 it never loses more than 1 point.
+- **Word matching breaks down:** B0 loses up to 13.5 points on typos and 26.9
+  on filler words, because extra words dilute its word-overlap score. It is
+  unaffected by capitals only because it lowercases everything.
+- **A1 is not more robust than B1 everywhere:** on P2 it loses more to typos
+  (-7.1 against -4.8) and capitals (-4.1 against -0.5). Its lead over B1
+  holds in every condition except P2 capitals, where they tie.
+- Entity F1 moves more than intent under rewriting (A1 P1 filler: 0.597 to
+  0.526), consistent with entity extraction being A1's weak point.
+
+## 6. Reproduction check
+
+`python scripts/reproduce_metrics.py` re-scores every run folder that saved
+its predictions and compares each primary metric with the recorded
+`metrics.json`. **All 20 checkable runs match exactly** (B0, B1, B3-k, B3-full
+and every ablation). It first exposed a logging gap: B0 and B3 set raw schema
+validity in memory but did not write it to their logs. Both runners now log
+it, and the check applies the same documented rule to the older logs.
+
+## Figures
+
+`python scripts/make_figures.py` draws six figures into `reports/figures/`
+from the run folders, with `SOURCES.md` naming the run behind every value:
+main comparison, intent against entity, the 12-design landscape, ablations,
+error analysis and robustness.
+
 ## What changes for the freeze
 
 1. Report the Architect's reasoning as **not contributing** on development

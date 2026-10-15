@@ -1,0 +1,224 @@
+{
+  "generated": "2026-10-16 01:18",
+  "seed": 20261016,
+  "projects": {
+    "P1": {
+      "a1_config": "twostage-sim-llm",
+      "systems": {
+        "A1": {
+          "clean": {
+            "intent_macro_f1": 0.9584757834757834,
+            "entity_span_f1": 0.596774193548387,
+            "oos_f1": 0.9090909090909091,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.9488247863247863,
+            "entity_span_f1": 0.5826771653543307,
+            "oos_f1": 0.9302325581395349,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0119_P1_A1-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.9723646723646724,
+            "entity_span_f1": 0.5692307692307693,
+            "oos_f1": 0.9523809523809523,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0120_P1_A1-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.9576109076109076,
+            "entity_span_f1": 0.5263157894736842,
+            "oos_f1": 0.9523809523809523,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0121_P1_A1-robust-filler_0"
+          }
+        },
+        "B1": {
+          "clean": {
+            "intent_macro_f1": 0.9268060643060643,
+            "entity_span_f1": 0.6095238095238094,
+            "oos_f1": 0.8695652173913044,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.9074608262108261,
+            "entity_span_f1": 0.5504587155963302,
+            "oos_f1": 0.888888888888889,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0122_P1_B1-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.9276607651607651,
+            "entity_span_f1": 0.5137614678899083,
+            "oos_f1": 0.9090909090909091,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0123_P1_B1-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.9559294871794872,
+            "entity_span_f1": 0.5982905982905983,
+            "oos_f1": 0.9268292682926829,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0123_P1_B1-robust-filler_0"
+          }
+        },
+        "B0": {
+          "clean": {
+            "intent_macro_f1": 0.7801180301180302,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.5098039215686274,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.6451784326784327,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.45161290322580644,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0123_P1_B0-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.7801180301180302,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.5098039215686274,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0123_P1_B0-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.7124412624412625,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.46153846153846156,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0123_P1_B0-robust-filler_0"
+          }
+        }
+      },
+      "examples": {
+        "typo": [
+          "tunr the lights off please",
+          "make a room dakrer",
+          "set an alamr at six in the morning"
+        ],
+        "caps": [
+          "TURN THE LIGHTS OFF PLEASE",
+          "MAKE A ROOM DARKER",
+          "SET AN ALARM AT SIX IN THE MORNING"
+        ],
+        "filler": [
+          "hey, could you please turn the lights off please, thanks",
+          "hey, could you please make a room darker, thanks",
+          "hey, could you please set an alarm at six in the morning, thanks"
+        ]
+      }
+    },
+    "P2": {
+      "a1_config": "schema-fixed-llm",
+      "systems": {
+        "A1": {
+          "clean": {
+            "intent_macro_f1": 0.8411507936507937,
+            "entity_span_f1": 0.3648648648648648,
+            "oos_f1": 0.7346938775510204,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.7695961907030019,
+            "entity_span_f1": 0.41333333333333333,
+            "oos_f1": 0.6666666666666667,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0124_P2_A1-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.7998105652517418,
+            "entity_span_f1": 0.37762237762237755,
+            "oos_f1": 0.7058823529411764,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0125_P2_A1-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.8540295815295815,
+            "entity_span_f1": 0.46987951807228917,
+            "oos_f1": 0.75,
+            "schema_validity_after_repair": 0.99,
+            "run_id": "20261016_0125_P2_A1-robust-filler_0"
+          }
+        },
+        "B1": {
+          "clean": {
+            "intent_macro_f1": 0.8035547948783244,
+            "entity_span_f1": 0.4507042253521127,
+            "oos_f1": 0.6909090909090908,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.7561294261294261,
+            "entity_span_f1": 0.43356643356643354,
+            "oos_f1": 0.6551724137931034,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0126_P2_B1-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.7989796314796315,
+            "entity_span_f1": 0.380952380952381,
+            "oos_f1": 0.679245283018868,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0127_P2_B1-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.8106516849163908,
+            "entity_span_f1": 0.4320987654320988,
+            "oos_f1": 0.7826086956521738,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0127_P2_B1-robust-filler_0"
+          }
+        },
+        "B0": {
+          "clean": {
+            "intent_macro_f1": 0.7299601379013143,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.5098039215686274,
+            "schema_validity_after_repair": 1.0
+          },
+          "typo": {
+            "intent_macro_f1": 0.624853969559852,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.43333333333333335,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0127_P2_B0-robust-typo_0"
+          },
+          "caps": {
+            "intent_macro_f1": 0.7299601379013143,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.5098039215686274,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0127_P2_B0-robust-caps_0"
+          },
+          "filler": {
+            "intent_macro_f1": 0.46124553808764335,
+            "entity_span_f1": 0.0,
+            "oos_f1": 0.3291139240506329,
+            "schema_validity_after_repair": 1.0,
+            "run_id": "20261016_0127_P2_B0-robust-filler_0"
+          }
+        }
+      },
+      "examples": {
+        "typo": [
+          "plesae put to my calendar daily stand-up to ten am",
+          "can you erase the past evetn i visited",
+          "remove all the evetns and schedules"
+        ],
+        "caps": [
+          "PLEASE PUT TO MY CALENDAR DAILY STAND-UP TO TEN AM",
+          "CAN YOU ERASE THE PAST EVENT I VISITED",
+          "REMOVE ALL THE EVENTS AND SCHEDULES"
+        ],
+        "filler": [
+          "hey, could you please please put to my calendar daily stand-up to ten am, thanks",
+          "hey, could you please can you erase the past event i visited, thanks",
+          "hey, could you please remove all the events and schedules, thanks"
+        ]
+      }
+    }
+  }
+}

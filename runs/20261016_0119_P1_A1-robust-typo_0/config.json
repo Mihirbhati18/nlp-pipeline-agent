@@ -1,0 +1,17 @@
+{
+  "run_id": "20261016_0119_P1_A1-robust-typo_0",
+  "project": "P1",
+  "system": "A1-robust-typo",
+  "seed": 20261016,
+  "split": "dev",
+  "variant": "typo",
+  "purpose": "robustness to rewritten development requests",
+  "rewritten_requests": [
+    "tunr the lights off please",
+    "make a room dakrer",
+    "set an alamr at six in the morning",
+    "it's too dark hree",
+    "trun off the smart plug"
+  ],
+  "config_id": "twostage-sim-llm"
+}
