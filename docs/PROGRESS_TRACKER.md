@@ -12,7 +12,7 @@ Last updated: 11 October 2026.
 
 ### Start here next session
 
-1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 325 passed.
+1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 336 passed. For a full evidence check: `python scripts/show_evidence.py`.
 2. B3 is done; nothing needs downloading.
 3. B2 (yours): fill `configs/b2/P1_worksheet.md`, then `python scripts/run_b2.py check --project P1` and `finish`.
 4. Then G10: the freeze.
@@ -71,3 +71,4 @@ write and commit its description in G2.
 | 14 Oct 2026 (G9) | Session moved from the terminal to the desktop app and resumed from the transcript. Runtime package format with SHA-256 integrity checks, model-digest check before the first call, explicit response statuses (ok, out_of_scope, invalid_output, error, invalid_request); `export_pipeline.py` exports A1's selections from a fully cached re-run (0 uncached calls) and ties each to its A1 run folder; `demo.py` shows normal, out-of-scope and invalid requests on both projects; 27 new checks (325 total) | XLM-R's chunked (xet) download stalled at 0 bytes on a ~140 KB/s connection; replaced with a curl byte-range download verified against the published SHA-256 | Finish B3; B2 by the user; G10 freeze |
 | 15 Oct 2026 (B3) | XLM-R weights downloaded and SHA-256 verified on a stable connection; B3-k and B3-full trained on CPU and scored for P1 and P2 (finding F4); B2 example helper added; team and the 19 Oct deadline recorded | None | B2 by the user; G10 freeze |
 | 16 Oct 2026 (dev analysis) | Development-stage ablations (no Analyzer, no reasoning, no selection, one candidate, no repair) as run folders; uncached timing for A1 and B1; paired bootstrap 95% intervals; A1 error analysis by the plan's categories; `reports/DEV_ANALYSIS.md`; 8 new checks (333 total) | **The Architect's fallback order beats its reasoning on P2**, and no development difference is statistically reliable at 100 cases (finding F5) | B2 by the user; G10 freeze |
+| 16 Oct 2026 (evidence) | Reproduction check (all 38 checkable runs recompute exactly from saved predictions); robustness test with typos, capitals and filler words (18 run folders, finding F6); six figures drawn from run folders with a sources list; `show_evidence.py` runs every check in one command and saves `reports/EVIDENCE_SUMMARY.md`; prediction logs now tracked; 3 new checks (336 total) | The reproduction check found that B0 and B3 never logged raw schema validity; both runners fixed | B2 by the user; G10 freeze |
