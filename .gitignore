@@ -18,10 +18,9 @@ cache/
 data/processed/
 data/raw/
 
-# Run outputs are immutable evidence but large; keep metrics/summaries tracked
-# and ignore bulk prediction dumps. Reconsider before the G12 reproduction.
-runs/*/predictions.jsonl
-runs/*/timing.jsonl
+# Run outputs are immutable evidence. Prediction and timing logs are tracked
+# (about 1.2 MB in total on 16 Oct) so scripts/reproduce_metrics.py can
+# recompute every result from a fresh clone.
 
 # Secrets: free-API keys for the Architect's planning calls only.
 .env

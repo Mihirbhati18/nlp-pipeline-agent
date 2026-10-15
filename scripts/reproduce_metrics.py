@@ -68,6 +68,14 @@ def check_run(run: Path) -> tuple[str, str]:
 
     spec = load_spec(project)
     cases = load_cases(spec.source["dev"])
+    variant = config.get("variant")
+    if variant:
+        # Robustness runs were scored on rewritten requests. Rebuild exactly
+        # the same rewrites (fixed seed) so the gold spans match what was scored.
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from run_robustness import perturb
+
+        cases = perturb(cases, variant)
     with open(run / "predictions.jsonl", encoding="utf-8") as handle:
         predictions = [rebuild(json.loads(line)) for line in handle if line.strip()]
 
