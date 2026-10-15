@@ -1,0 +1,6 @@
+{
+  "latency_n": 50,
+  "cold_start_s": 0.5577482000226155,
+  "note": "warm-up observations are logged but excluded from the figures",
+  "metric_definitions_version": "1.2"
+}

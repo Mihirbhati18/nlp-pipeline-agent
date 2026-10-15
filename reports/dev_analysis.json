@@ -1,0 +1,834 @@
+{
+  "generated": "2026-10-16 01:00",
+  "split": "dev",
+  "projects": {
+    "P1": {
+      "a1": {
+        "config": "twostage-sim-llm",
+        "primary": {
+          "intent_macro_f1": 0.9584757834757834,
+          "intent_accuracy_in_scope": 0.9375,
+          "entity_span_precision": 0.5441176470588235,
+          "entity_span_recall": 0.6607142857142857,
+          "entity_span_f1": 0.596774193548387,
+          "entity_counts": {
+            "tp": 37,
+            "fp": 31,
+            "fn": 19
+          },
+          "oos_precision": 0.8333333333333334,
+          "oos_recall": 1.0,
+          "oos_f1": 0.9090909090909091,
+          "oos_counts": {
+            "tp": 20,
+            "fp": 4,
+            "fn": 0
+          },
+          "false_rejection_rate_in_scope": 0.05,
+          "schema_validity_after_repair": 1.0,
+          "schema_validity_before_repair": 0.99,
+          "unsupported_extraction_rate": 0.10294117647058823,
+          "unsupported_extraction_counts": {
+            "unsupported_items": 7,
+            "predicted_items": 68
+          },
+          "runtime_failure_rate": 0.0,
+          "runtime_failure_counts": {
+            "ok": 76,
+            "oos": 24
+          },
+          "retries": 1,
+          "fallback_rate": 0.0,
+          "latency_median_s": null,
+          "latency_p95_s": null,
+          "latency_n_timed": 0,
+          "cold_start_s": null,
+          "design_cost": null
+        }
+      },
+      "ablations": {
+        "A1-noAnalyzer": {
+          "run_id": "20261016_0100_P1_A1-noAnalyzer_0",
+          "config": "twostage-sim-llm",
+          "removes": "Analyzer enrichment: bare specification, no descriptions",
+          "primary": {
+            "intent_macro_f1": 0.9584757834757834,
+            "intent_accuracy_in_scope": 0.9375,
+            "entity_span_precision": 0.5441176470588235,
+            "entity_span_recall": 0.6607142857142857,
+            "entity_span_f1": 0.596774193548387,
+            "entity_counts": {
+              "tp": 37,
+              "fp": 31,
+              "fn": 19
+            },
+            "oos_precision": 0.8333333333333334,
+            "oos_recall": 1.0,
+            "oos_f1": 0.9090909090909091,
+            "oos_counts": {
+              "tp": 20,
+              "fp": 4,
+              "fn": 0
+            },
+            "false_rejection_rate_in_scope": 0.05,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 0.99,
+            "unsupported_extraction_rate": 0.10294117647058823,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 7,
+              "predicted_items": 68
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 76,
+              "oos": 24
+            },
+            "retries": 1,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 177,
+            "physical": 0
+          }
+        },
+        "A1-noReasoning": {
+          "run_id": "20261016_0100_P1_A1-noReasoning_0",
+          "config": "twostage-sim-llm",
+          "removes": "Architect reasoning: documented fallback ordering, no planning calls",
+          "primary": {
+            "intent_macro_f1": 0.9584757834757834,
+            "intent_accuracy_in_scope": 0.9375,
+            "entity_span_precision": 0.5441176470588235,
+            "entity_span_recall": 0.6607142857142857,
+            "entity_span_f1": 0.596774193548387,
+            "entity_counts": {
+              "tp": 37,
+              "fp": 31,
+              "fn": 19
+            },
+            "oos_precision": 0.8333333333333334,
+            "oos_recall": 1.0,
+            "oos_f1": 0.9090909090909091,
+            "oos_counts": {
+              "tp": 20,
+              "fp": 4,
+              "fn": 0
+            },
+            "false_rejection_rate_in_scope": 0.05,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 0.99,
+            "unsupported_extraction_rate": 0.10294117647058823,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 7,
+              "predicted_items": 68
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 76,
+              "oos": 24
+            },
+            "retries": 1,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 177,
+            "physical": 0
+          }
+        },
+        "A1-noSelection": {
+          "run_id": "20261016_0100_P1_A1-noSelection_0",
+          "config": "joint-fixed-llm",
+          "removes": "evaluation-driven selection: the Architect's first choice, unscored",
+          "primary": {
+            "intent_macro_f1": 0.9268060643060643,
+            "intent_accuracy_in_scope": 0.9,
+            "entity_span_precision": 0.6530612244897959,
+            "entity_span_recall": 0.5714285714285714,
+            "entity_span_f1": 0.6095238095238094,
+            "entity_counts": {
+              "tp": 32,
+              "fp": 17,
+              "fn": 24
+            },
+            "oos_precision": 0.7692307692307693,
+            "oos_recall": 1.0,
+            "oos_f1": 0.8695652173913044,
+            "oos_counts": {
+              "tp": 20,
+              "fp": 6,
+              "fn": 0
+            },
+            "false_rejection_rate_in_scope": 0.075,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 1.0,
+            "unsupported_extraction_rate": 0.04081632653061224,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 2,
+              "predicted_items": 49
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 74,
+              "oos": 26
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        },
+        "A1-oneCandidate": {
+          "run_id": "20261016_0100_P1_A1-oneCandidate_0",
+          "config": "joint-fixed-llm",
+          "removes": "candidate search: one predeclared configuration, enriched specification",
+          "primary": {
+            "intent_macro_f1": 0.9268060643060643,
+            "intent_accuracy_in_scope": 0.9,
+            "entity_span_precision": 0.6530612244897959,
+            "entity_span_recall": 0.5714285714285714,
+            "entity_span_f1": 0.6095238095238094,
+            "entity_counts": {
+              "tp": 32,
+              "fp": 17,
+              "fn": 24
+            },
+            "oos_precision": 0.7692307692307693,
+            "oos_recall": 1.0,
+            "oos_f1": 0.8695652173913044,
+            "oos_counts": {
+              "tp": 20,
+              "fp": 6,
+              "fn": 0
+            },
+            "false_rejection_rate_in_scope": 0.075,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 1.0,
+            "unsupported_extraction_rate": 0.04081632653061224,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 2,
+              "predicted_items": 49
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 74,
+              "oos": 26
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        },
+        "A1-noRepair": {
+          "run_id": "20261016_0100_P1_A1-noRepair_0",
+          "config": "twostage-sim-llm",
+          "removes": "post-validation repair: raw outputs only",
+          "primary": {
+            "intent_macro_f1": 0.9584757834757834,
+            "intent_accuracy_in_scope": 0.9375,
+            "entity_span_precision": 0.5362318840579711,
+            "entity_span_recall": 0.6607142857142857,
+            "entity_span_f1": 0.5920000000000001,
+            "entity_counts": {
+              "tp": 37,
+              "fp": 32,
+              "fn": 19
+            },
+            "oos_precision": 0.8333333333333334,
+            "oos_recall": 1.0,
+            "oos_f1": 0.9090909090909091,
+            "oos_counts": {
+              "tp": 20,
+              "fp": 4,
+              "fn": 0
+            },
+            "false_rejection_rate_in_scope": 0.05,
+            "schema_validity_after_repair": 0.99,
+            "schema_validity_before_repair": 0.99,
+            "unsupported_extraction_rate": 0.10144927536231885,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 7,
+              "predicted_items": 69
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 76,
+              "oos": 24
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 176,
+            "physical": 0
+          }
+        }
+      },
+      "bootstrap": {
+        "A1 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.03166971916971917,
+            "ci_low": -0.040333740333740264,
+            "ci_high": 0.12146557146557146,
+            "share_a_better": 0.854
+          },
+          "entity_span_f1": {
+            "difference": -0.012749615975422346,
+            "ci_low": -0.15414553603019232,
+            "ci_high": 0.1298617807778849,
+            "share_a_better": 0.467
+          }
+        },
+        "A1 vs ceiling (schema-sim-llm)": {
+          "intent_macro_f1": {
+            "difference": -0.0158831908831909,
+            "ci_low": -0.06527777777777777,
+            "ci_high": 0.013716063348416352,
+            "share_a_better": 0.154
+          },
+          "entity_span_f1": {
+            "difference": -0.110122358175751,
+            "ci_low": -0.2328923157802505,
+            "ci_high": 0.011585567692816934,
+            "share_a_better": 0.034
+          }
+        },
+        "A1 vs B3-k (20261015_2240_P1_B3-k_0)": {
+          "intent_macro_f1": {
+            "difference": 0.049294224294224254,
+            "ci_low": -0.017838261955908985,
+            "ci_high": 0.13737550575785873,
+            "share_a_better": 0.936
+          },
+          "entity_span_f1": {
+            "difference": -0.053632310516653514,
+            "ci_low": -0.1755485893416926,
+            "ci_high": 0.049815770081061306,
+            "share_a_better": 0.178
+          }
+        }
+      },
+      "errors": {
+        "counts": {
+          "spurious entity": 22,
+          "missed entity": 15,
+          "unsupported value (text not in the request)": 7,
+          "incorrect out-of-scope rejection": 4,
+          "confused intent": 1,
+          "wrong entity type": 1,
+          "wrong entity boundary": 1
+        },
+        "top_confusions": [
+          {
+            "gold": "iot_hue_lighton",
+            "predicted": "iot_hue_lightchange",
+            "count": 1
+          }
+        ],
+        "examples": {
+          "spurious entity": [
+            "turn the lights off please -> house_place='lights'",
+            "it's too dark here -> house_place='here'",
+            "make coffee now -> time='now'"
+          ],
+          "missed entity": [
+            "make a room darker -> house_place='room'",
+            "at one p. m. today start the robot vacuum cleaner -> time='one p. m.'",
+            "at one p. m. today start the robot vacuum cleaner -> date='today'"
+          ],
+          "incorrect out-of-scope rejection": [
+            "turn on the t. v. socket when i arrive home",
+            "i need some more lights",
+            "start new smart socket"
+          ],
+          "confused intent": [
+            "hey alexa turn on disco lights in my apartment and let the party begin -> iot_hue_lightchange (gold iot_hue_lighton)"
+          ],
+          "unsupported value (text not in the request)": [
+            "what alarms are upcoming -> date='today'",
+            "tell me my alarms -> date='today'",
+            "what time is my wake up alarm set for -> date='tomorrow'"
+          ],
+          "wrong entity type": [
+            "please have vacuum go for one hour -> 'one hour' as general_frequency (gold time)"
+          ],
+          "wrong entity boundary": [
+            "turn my lights to some random color -> color_type='some random color'"
+          ]
+        }
+      },
+      "timing": {
+        "A1": {
+          "run_id": "20261016_0101_P1_A1-timing_0",
+          "config": "twostage-sim-llm",
+          "n": 50,
+          "median_s": 0.769758999987971,
+          "p95_s": 0.9515058000106364
+        },
+        "B1": {
+          "run_id": "20261016_0101_P1_B1-timing_0",
+          "config": "joint-fixed-llm",
+          "n": 50,
+          "median_s": 0.43619940005009994,
+          "p95_s": 0.5931303999968804
+        }
+      }
+    },
+    "P2": {
+      "a1": {
+        "config": "schema-fixed-llm",
+        "primary": {
+          "intent_macro_f1": 0.8411507936507937,
+          "intent_accuracy_in_scope": 0.8,
+          "entity_span_precision": 0.3698630136986301,
+          "entity_span_recall": 0.36,
+          "entity_span_f1": 0.3648648648648648,
+          "entity_counts": {
+            "tp": 27,
+            "fp": 46,
+            "fn": 48
+          },
+          "oos_precision": 0.6206896551724138,
+          "oos_recall": 0.9,
+          "oos_f1": 0.7346938775510204,
+          "oos_counts": {
+            "tp": 18,
+            "fp": 11,
+            "fn": 2
+          },
+          "false_rejection_rate_in_scope": 0.1375,
+          "schema_validity_after_repair": 1.0,
+          "schema_validity_before_repair": 0.98,
+          "unsupported_extraction_rate": 0.08,
+          "unsupported_extraction_counts": {
+            "unsupported_items": 6,
+            "predicted_items": 75
+          },
+          "runtime_failure_rate": 0.0,
+          "runtime_failure_counts": {
+            "ok": 71,
+            "oos": 29
+          },
+          "retries": 2,
+          "fallback_rate": 0.0,
+          "latency_median_s": null,
+          "latency_p95_s": null,
+          "latency_n_timed": 0,
+          "cold_start_s": null,
+          "design_cost": null
+        }
+      },
+      "ablations": {
+        "A1-noAnalyzer": {
+          "run_id": "20261016_0102_P2_A1-noAnalyzer_0",
+          "config": "twostage-fixed-llm",
+          "removes": "Analyzer enrichment: bare specification, no descriptions",
+          "primary": {
+            "intent_macro_f1": 0.8121872735108029,
+            "intent_accuracy_in_scope": 0.775,
+            "entity_span_precision": 0.574468085106383,
+            "entity_span_recall": 0.36,
+            "entity_span_f1": 0.4426229508196721,
+            "entity_counts": {
+              "tp": 27,
+              "fp": 20,
+              "fn": 48
+            },
+            "oos_precision": 0.6551724137931034,
+            "oos_recall": 0.95,
+            "oos_f1": 0.7755102040816326,
+            "oos_counts": {
+              "tp": 19,
+              "fp": 10,
+              "fn": 1
+            },
+            "false_rejection_rate_in_scope": 0.125,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 0.98,
+            "unsupported_extraction_rate": 0.06382978723404255,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 3,
+              "predicted_items": 47
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 71,
+              "oos": 29
+            },
+            "retries": 2,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 174,
+            "physical": 0
+          }
+        },
+        "A1-noReasoning": {
+          "run_id": "20261016_0102_P2_A1-noReasoning_0",
+          "config": "joint-sim-llm",
+          "removes": "Architect reasoning: documented fallback ordering, no planning calls",
+          "primary": {
+            "intent_macro_f1": 0.886489898989899,
+            "intent_accuracy_in_scope": 0.8375,
+            "entity_span_precision": 0.5070422535211268,
+            "entity_span_recall": 0.48,
+            "entity_span_f1": 0.4931506849315068,
+            "entity_counts": {
+              "tp": 36,
+              "fp": 35,
+              "fn": 39
+            },
+            "oos_precision": 0.6333333333333333,
+            "oos_recall": 0.95,
+            "oos_f1": 0.7599999999999999,
+            "oos_counts": {
+              "tp": 19,
+              "fp": 11,
+              "fn": 1
+            },
+            "false_rejection_rate_in_scope": 0.1375,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 1.0,
+            "unsupported_extraction_rate": 0.05555555555555555,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 4,
+              "predicted_items": 72
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 70,
+              "oos": 30
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        },
+        "A1-noSelection": {
+          "run_id": "20261016_0102_P2_A1-noSelection_0",
+          "config": "joint-fixed-llm",
+          "removes": "evaluation-driven selection: the Architect's first choice, unscored",
+          "primary": {
+            "intent_macro_f1": 0.8035547948783244,
+            "intent_accuracy_in_scope": 0.7375,
+            "entity_span_precision": 0.47761194029850745,
+            "entity_span_recall": 0.4266666666666667,
+            "entity_span_f1": 0.4507042253521127,
+            "entity_counts": {
+              "tp": 32,
+              "fp": 35,
+              "fn": 43
+            },
+            "oos_precision": 0.5428571428571428,
+            "oos_recall": 0.95,
+            "oos_f1": 0.6909090909090908,
+            "oos_counts": {
+              "tp": 19,
+              "fp": 16,
+              "fn": 1
+            },
+            "false_rejection_rate_in_scope": 0.2,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 1.0,
+            "unsupported_extraction_rate": 0.029411764705882353,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 2,
+              "predicted_items": 68
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 65,
+              "oos": 35
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        },
+        "A1-oneCandidate": {
+          "run_id": "20261016_0102_P2_A1-oneCandidate_0",
+          "config": "joint-fixed-llm",
+          "removes": "candidate search: one predeclared configuration, enriched specification",
+          "primary": {
+            "intent_macro_f1": 0.8035547948783244,
+            "intent_accuracy_in_scope": 0.7375,
+            "entity_span_precision": 0.47761194029850745,
+            "entity_span_recall": 0.4266666666666667,
+            "entity_span_f1": 0.4507042253521127,
+            "entity_counts": {
+              "tp": 32,
+              "fp": 35,
+              "fn": 43
+            },
+            "oos_precision": 0.5428571428571428,
+            "oos_recall": 0.95,
+            "oos_f1": 0.6909090909090908,
+            "oos_counts": {
+              "tp": 19,
+              "fp": 16,
+              "fn": 1
+            },
+            "false_rejection_rate_in_scope": 0.2,
+            "schema_validity_after_repair": 1.0,
+            "schema_validity_before_repair": 1.0,
+            "unsupported_extraction_rate": 0.029411764705882353,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 2,
+              "predicted_items": 68
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 65,
+              "oos": 35
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        },
+        "A1-noRepair": {
+          "run_id": "20261016_0102_P2_A1-noRepair_0",
+          "config": "schema-fixed-llm",
+          "removes": "post-validation repair: raw outputs only",
+          "primary": {
+            "intent_macro_f1": 0.8411507936507937,
+            "intent_accuracy_in_scope": 0.8,
+            "entity_span_precision": 0.36486486486486486,
+            "entity_span_recall": 0.36,
+            "entity_span_f1": 0.36241610738255037,
+            "entity_counts": {
+              "tp": 27,
+              "fp": 47,
+              "fn": 48
+            },
+            "oos_precision": 0.6071428571428571,
+            "oos_recall": 0.85,
+            "oos_f1": 0.7083333333333333,
+            "oos_counts": {
+              "tp": 17,
+              "fp": 11,
+              "fn": 3
+            },
+            "false_rejection_rate_in_scope": 0.1375,
+            "schema_validity_after_repair": 0.98,
+            "schema_validity_before_repair": 0.98,
+            "unsupported_extraction_rate": 0.07692307692307693,
+            "unsupported_extraction_counts": {
+              "unsupported_items": 6,
+              "predicted_items": 78
+            },
+            "runtime_failure_rate": 0.0,
+            "runtime_failure_counts": {
+              "ok": 72,
+              "oos": 28
+            },
+            "retries": 0,
+            "fallback_rate": 0.0,
+            "latency_median_s": null,
+            "latency_p95_s": null,
+            "latency_n_timed": 0,
+            "cold_start_s": null,
+            "design_cost": null
+          },
+          "calls": {
+            "logical": 100,
+            "physical": 0
+          }
+        }
+      },
+      "bootstrap": {
+        "A1 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.03759599877246933,
+            "ci_low": -0.018758169934640523,
+            "ci_high": 0.10437590187590184,
+            "share_a_better": 0.917
+          },
+          "entity_span_f1": {
+            "difference": -0.08583936048724788,
+            "ci_low": -0.15458845789971626,
+            "ci_high": -0.024808429118773956,
+            "share_a_better": 0.002
+          }
+        },
+        "A1 vs ceiling (schema-sim-llm)": {
+          "intent_macro_f1": {
+            "difference": -0.05645021645021642,
+            "ci_low": -0.13819314425721752,
+            "ci_high": 0.005744347671592265,
+            "share_a_better": 0.036
+          },
+          "entity_span_f1": {
+            "difference": -0.11835661164520234,
+            "ci_low": -0.21161672216056232,
+            "ci_high": -0.027831932773109247,
+            "share_a_better": 0.001
+          }
+        },
+        "A1 vs B3-k (20261015_2308_P2_B3-k_0)": {
+          "intent_macro_f1": {
+            "difference": 0.008382712059182729,
+            "ci_low": -0.10430612960024732,
+            "ci_high": 0.1225521319638967,
+            "share_a_better": 0.56
+          },
+          "entity_span_f1": {
+            "difference": -0.0826875826875828,
+            "ci_low": -0.22499999999999998,
+            "ci_high": 0.05308352849336462,
+            "share_a_better": 0.091
+          }
+        }
+      },
+      "errors": {
+        "counts": {
+          "spurious entity": 22,
+          "missed entity": 19,
+          "incorrect out-of-scope rejection": 11,
+          "wrong entity type": 10,
+          "wrong entity boundary": 8,
+          "unsupported value (text not in the request)": 6,
+          "confused intent": 5,
+          "missed out-of-scope (answered an off-topic request)": 2
+        },
+        "top_confusions": [
+          {
+            "gold": "calendar_remove",
+            "predicted": "calendar_query",
+            "count": 2
+          },
+          {
+            "gold": "calendar_set",
+            "predicted": "calendar_query",
+            "count": 1
+          },
+          {
+            "gold": "lists_createoradd",
+            "predicted": "calendar_set",
+            "count": 1
+          },
+          {
+            "gold": "email_sendemail",
+            "predicted": "email_addcontact",
+            "count": 1
+          }
+        ],
+        "examples": {
+          "wrong entity boundary": [
+            "please put to my calendar daily stand-up to ten am -> event_name='daily stand-up'",
+            "remove today's meeting at evening -> date='today'",
+            "remind me to pick up the laundry next monday -> date='next monday'"
+          ],
+          "missed entity": [
+            "please put to my calendar daily stand-up to ten am -> general_frequency='daily'",
+            "do i have anything going on this saturday between two and four p. m. -> time='four p. m.'",
+            "please remind me about swatishs birthday -> person='swatishs'"
+          ],
+          "spurious entity": [
+            "can you erase the past event i visited -> event_name='visited'",
+            "do i have anything going on this saturday between two and four p. m. -> timeofday='four'",
+            "what to do next on events -> general_frequency='next'"
+          ],
+          "wrong entity type": [
+            "do i have anything going on this saturday between two and four p. m. -> 'two' as timeofday (gold time)",
+            "what time does the dinner party start tonight -> 'tonight' as date (gold timeofday)",
+            "remove thursday's lunch from my calendar -> 'lunch' as event_name (gold meal_type)"
+          ],
+          "confused intent": [
+            "when is my meeting -> calendar_query (gold calendar_set)",
+            "clear event from calendar and refresh -> calendar_query (gold calendar_remove)",
+            "clear my schedule for today -> calendar_query (gold calendar_remove)"
+          ],
+          "unsupported value (text not in the request)": [
+            "when is my meeting -> date=''",
+            "clear event from calendar and refresh -> date=''",
+            "clear event from calendar and refresh -> event_name=''"
+          ],
+          "incorrect out-of-scope rejection": [
+            "when is bruno mars coming to sacramento",
+            "please tell me how can i remove the item",
+            "remove last played song"
+          ],
+          "missed out-of-scope (answered an off-topic request)": [
+            "please add this song to my playlist favorites -> lists_createoradd",
+            "can you send a tweet to lif saying that their app crashed -> email_sendemail"
+          ]
+        }
+      },
+      "timing": {
+        "A1": {
+          "run_id": "20261016_0102_P2_A1-timing_0",
+          "config": "schema-fixed-llm",
+          "n": 50,
+          "median_s": 0.43332939996616915,
+          "p95_s": 0.769754400011152
+        },
+        "B1": {
+          "run_id": "20261016_0102_P2_B1-timing_0",
+          "config": "joint-fixed-llm",
+          "n": 50,
+          "median_s": 0.40660080005181953,
+          "p95_s": 0.794592600024771
+        }
+      }
+    }
+  }
+}

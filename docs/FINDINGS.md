@@ -205,3 +205,22 @@ Development data, same shared scorer and span rule as every other system.
 
 Runs: `20261015_2240_P1_B3-k_0`, `20261015_2257_P1_B3-full_0`,
 `20261015_2308_P2_B3-k_0`, `20261015_2354_P2_B3-full_0`.
+
+---
+
+## F5. Ablations, intervals, timing and errors (16 Oct, P1 and P2)
+
+Full write-up: `reports/DEV_ANALYSIS.md`. Headlines:
+
+- **The Architect's reasoning adds nothing on development data and hurts on
+  P2.** With no planning calls, its fallback order reaches the same design on
+  P1 and a better one on P2 (0.886 against 0.841 intent, 0.493 against 0.365
+  entity). Evaluation-driven selection is the component that helps (+3.1, +3.7
+  over the unscored first choice).
+- **No development difference is statistically reliable.** Every paired
+  bootstrap 95% interval (A1 against B1, B3-k and the ceiling) includes zero
+  at 100 cases per project.
+- **All pipelines answer within 1 s at p95**; A1's two-stage design on P1 costs
+  about 0.3 s more than B1.
+- **A1's main error is entity over-extraction** (22 spurious entities per
+  project); intent errors are rare and there are no invalid outputs.

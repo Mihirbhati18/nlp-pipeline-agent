@@ -1,0 +1,24 @@
+{
+  "run_id": "20261016_0100_P1_A1-noRepair_0",
+  "project": "P1",
+  "system": "A1-noRepair",
+  "seed": 0,
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "score_note": "development-stage ablation; the reported ablations come from the frozen test runs",
+  "full_system_selected": "twostage-sim-llm",
+  "ablation": "A1-noRepair",
+  "config_id": "twostage-sim-llm",
+  "removes": "post-validation repair: raw outputs only",
+  "allow_repair": false,
+  "enriched_spec": true
+}

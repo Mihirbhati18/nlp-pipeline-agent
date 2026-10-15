@@ -1,0 +1,134 @@
+{
+  "run_id": "20261016_0102_P2_A1-noReasoning_0",
+  "project": "P2",
+  "system": "A1-noReasoning",
+  "seed": 0,
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "score_note": "development-stage ablation; the reported ablations come from the frozen test runs",
+  "full_system_selected": "schema-fixed-llm",
+  "ablation": "A1-noReasoning",
+  "config_id": "joint-sim-llm",
+  "removes": "Architect reasoning: documented fallback ordering, no planning calls",
+  "allow_repair": true,
+  "enriched_spec": true,
+  "design": {
+    "project_id": "P2",
+    "budget": 4,
+    "budget_used": 4,
+    "reasoned_choices": 0,
+    "fallback_choices": 4,
+    "attempts": [
+      {
+        "config_id": "joint-fixed-llm",
+        "rationale": "fallback ordering: no usable proposal",
+        "source": "fallback",
+        "stage": "initial",
+        "intent_macro_f1": 0.8035547948783244,
+        "entity_span_f1": 0.4507042253521127,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "twostage-sim-llm",
+        "rationale": "fallback ordering: no usable proposal",
+        "source": "fallback",
+        "stage": "initial",
+        "intent_macro_f1": 0.8605666718902013,
+        "entity_span_f1": 0.3939393939393939,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "schema-sim-tfidf",
+        "rationale": "fallback ordering: no usable proposal",
+        "source": "fallback",
+        "stage": "initial",
+        "intent_macro_f1": 0.8023105652517417,
+        "entity_span_f1": 0.43749999999999994,
+        "schema_validity": 0.99,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "joint-sim-llm",
+        "rationale": "fallback ordering: no usable proposal",
+        "source": "fallback",
+        "stage": "revision",
+        "intent_macro_f1": 0.886489898989899,
+        "entity_span_f1": 0.4931506849315068,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      }
+    ],
+    "selection": {
+      "selected": "joint-sim-llm",
+      "no_eligible_candidate": false,
+      "reason": "joint-sim-llm has the highest intent macro-F1 (0.8865) among 4 eligible candidate(s)",
+      "eligible": [
+        "joint-sim-llm",
+        "twostage-sim-llm",
+        "joint-fixed-llm",
+        "schema-sim-tfidf"
+      ],
+      "rejections": [],
+      "ranking": [
+        {
+          "config_id": "joint-sim-llm",
+          "intent_macro_f1": 0.886489898989899,
+          "entity_span_f1": 0.4931506849315068,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "twostage-sim-llm",
+          "intent_macro_f1": 0.8605666718902013,
+          "entity_span_f1": 0.3939393939393939,
+          "schema_validity": 1.0,
+          "p95_s": 1.18,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "joint-fixed-llm",
+          "intent_macro_f1": 0.8035547948783244,
+          "entity_span_f1": 0.4507042253521127,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "schema-sim-tfidf",
+          "intent_macro_f1": 0.8023105652517417,
+          "entity_span_f1": 0.43749999999999994,
+          "schema_validity": 0.99,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        }
+      ],
+      "unchecked_constraints": [],
+      "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+    },
+    "findings": [
+      "no planning model available; fallback ordering used",
+      "no planning model available; fallback ordering used"
+    ],
+    "design_cost": {
+      "logical_calls": 449,
+      "physical_calls": 0,
+      "planning_calls": 0
+    }
+  }
+}

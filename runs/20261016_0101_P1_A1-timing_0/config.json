@@ -1,0 +1,28 @@
+{
+  "run_id": "20261016_0101_P1_A1-timing_0",
+  "project": "P1",
+  "system": "A1",
+  "seed": 0,
+  "split": "dev-timing",
+  "purpose": "uncached latency measurement; the only source of latency figures",
+  "config": {
+    "config_id": "twostage-sim-llm",
+    "extraction": "two_stage",
+    "example_selection": "similarity",
+    "oos_policy": "llm_label",
+    "calls_per_request": 2
+  },
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": false,
+  "oos_threshold": 0.3564234098194579,
+  "n_cases": 50,
+  "warmup": 5
+}

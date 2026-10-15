@@ -1,0 +1,131 @@
+{
+  "run_id": "20261016_0102_P2_A1-noAnalyzer_0",
+  "project": "P2",
+  "system": "A1-noAnalyzer",
+  "seed": 0,
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "score_note": "development-stage ablation; the reported ablations come from the frozen test runs",
+  "full_system_selected": "schema-fixed-llm",
+  "ablation": "A1-noAnalyzer",
+  "config_id": "twostage-fixed-llm",
+  "removes": "Analyzer enrichment: bare specification, no descriptions",
+  "allow_repair": true,
+  "enriched_spec": false,
+  "design": {
+    "project_id": "P2",
+    "budget": 4,
+    "budget_used": 4,
+    "reasoned_choices": 4,
+    "fallback_choices": 0,
+    "attempts": [
+      {
+        "config_id": "joint-fixed-llm",
+        "rationale": "Effective for users who often pack multiple details into one sentence, leveraging the model's ability to answer 'none_of_the_above' when no match is found.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.8035547948783244,
+        "entity_span_f1": 0.4507042253521127,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "twostage-fixed-llm",
+        "rationale": "Reduces the number of calls by separating intent and fields, which might be more efficient for users in a hurry with complex requests.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.8121872735108029,
+        "entity_span_f1": 0.4426229508196721,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "schema-fixed-llm",
+        "rationale": "Provides clear, detailed prompts for each intent and field, aiding in understanding complex requests without relying on examples.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.8035547948783244,
+        "entity_span_f1": 0.4507042253521127,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "joint-sim-tfidf",
+        "rationale": "Combines the clarity of schema-guided prompts with the similarity-based example selection to potentially improve intent and information F1 scores.",
+        "source": "reasoned",
+        "stage": "revision",
+        "intent_macro_f1": 0.7901893531305296,
+        "entity_span_f1": 0.4393939393939394,
+        "schema_validity": 0.99,
+        "runtime_failure_rate": 0.01,
+        "error": null
+      }
+    ],
+    "selection": {
+      "selected": "twostage-fixed-llm",
+      "no_eligible_candidate": false,
+      "reason": "twostage-fixed-llm has the highest intent macro-F1 (0.8122) among 4 eligible candidate(s)",
+      "eligible": [
+        "twostage-fixed-llm",
+        "joint-fixed-llm",
+        "schema-fixed-llm",
+        "joint-sim-tfidf"
+      ],
+      "rejections": [],
+      "ranking": [
+        {
+          "config_id": "twostage-fixed-llm",
+          "intent_macro_f1": 0.8121872735108029,
+          "entity_span_f1": 0.4426229508196721,
+          "schema_validity": 1.0,
+          "p95_s": 1.18,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "joint-fixed-llm",
+          "intent_macro_f1": 0.8035547948783244,
+          "entity_span_f1": 0.4507042253521127,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "schema-fixed-llm",
+          "intent_macro_f1": 0.8035547948783244,
+          "entity_span_f1": 0.4507042253521127,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "joint-sim-tfidf",
+          "intent_macro_f1": 0.7901893531305296,
+          "entity_span_f1": 0.4393939393939394,
+          "schema_validity": 0.99,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        }
+      ],
+      "unchecked_constraints": [],
+      "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+    },
+    "findings": [],
+    "design_cost": {
+      "logical_calls": 450,
+      "physical_calls": 2,
+      "planning_calls": 2
+    }
+  }
+}
