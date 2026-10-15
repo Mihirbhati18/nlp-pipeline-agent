@@ -202,6 +202,7 @@ def main() -> int:
                         predicted_entities=prediction.entities,
                         closed_set_intent=raw["closed_set_intent"],
                         confidence=raw["confidence"],
+                        schema_valid_raw=True,
                         schema_valid_final=True,
                         cache_hit=False,
                     )

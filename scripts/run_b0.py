@@ -74,6 +74,7 @@ def main() -> int:
                     status=prediction.status,
                     predicted_intent=prediction.intent,
                     predicted_entities=[],
+                    schema_valid_raw=True,
                     schema_valid_final=True,
                     cache_hit=False,
                 )
