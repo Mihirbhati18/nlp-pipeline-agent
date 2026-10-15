@@ -171,3 +171,37 @@ should be retested on the frozen test split before any claim is made.
 limitation the plan anticipated does not need reporting. The expected
 21,000-call budget measured at about 2.4 h against a feared 17-35 h.
 Recorded in `protocol.md`.
+
+---
+
+## F4. The published baseline (B3, XLM-R) against the agent (15 Oct, P1 and P2)
+
+B3 fine-tunes XLM-R base, the reference baseline of the MASSIVE paper, for
+joint intent and slot tagging, trained locally on CPU. B3-k uses the same
+k = 10 per intent pool every other system gets and is the matched comparison.
+B3-full uses the full official train split and is an upper reference only.
+Development data, same shared scorer and span rule as every other system.
+
+| System | P1 intent | P1 entity | P1 OOS | P2 intent | P2 entity | P2 OOS |
+|---|---|---|---|---|---|---|
+| B1 generic prompt | 0.927 | 0.610 | 0.870 | 0.804 | 0.451 | 0.691 |
+| **A1 agent** | **0.958** | 0.597 | **0.909** | **0.841** | 0.365 | **0.735** |
+| **B3-k (matched, 10 per intent)** | 0.909 | **0.650** | 0.739 | 0.833 | **0.448** | 0.605 |
+| B3-full (upper reference: 1,159 / 3,180 cases) | 0.936 | 0.768 | 0.579 | 0.923 | 0.797 | 0.432 |
+
+- **At matched data, the agent beats the published baseline on intent** (+4.9
+  on P1, +0.8 on P2) **and on out-of-scope detection** (+17.0, +13.0), and
+  **loses on entity extraction** (-5.3, -8.3). Entity extraction is the
+  agent's consistent weak point, as in F1.
+- **B3-full wins on entities by a wide margin** (0.768 and 0.797) with 10-30x
+  more training data, as the plan expected. It is reported as an upper
+  reference, never a matched comparison.
+- **B3-full's out-of-scope detection is the worst of any system** (0.579 and
+  0.432): a classifier trained only on in-scope examples, with a confidence
+  threshold, rejects poorly. More training data made it more confident on
+  out-of-scope requests, not less.
+- The P2 intent gap between A1 and B3-k (+0.8) is small enough to sit inside
+  development-set noise; the frozen test run decides it.
+
+Runs: `20261015_2240_P1_B3-k_0`, `20261015_2257_P1_B3-full_0`,
+`20261015_2308_P2_B3-k_0`, `20261015_2354_P2_B3-full_0`.

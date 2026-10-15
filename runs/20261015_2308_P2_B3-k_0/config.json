@@ -1,0 +1,56 @@
+{
+  "run_id": "20261015_2308_P2_B3-k_0",
+  "project": "P2",
+  "system": "B3-k",
+  "seed": 0,
+  "split": "dev",
+  "model": "xlm-roberta-base",
+  "model_digest": "huggingface:xlm-roberta-base",
+  "settings": {
+    "model_name": "xlm-roberta-base",
+    "learning_rate": 3e-05,
+    "batch_size": 16,
+    "max_length": 64,
+    "epochs_kshot": 30,
+    "epochs_full": 5,
+    "seed": 0
+  },
+  "epochs": 30,
+  "n_training_cases": 100,
+  "training_seconds": 646.0,
+  "device": "cpu",
+  "torch_version": "2.14.1+cpu",
+  "cache_enabled": false,
+  "threshold": {
+    "threshold": 0.7708090543746948,
+    "dev_macro_f1_at_threshold": 0.7808807737330309,
+    "n_candidate_thresholds": 101,
+    "criterion": "macro-F1 over intents plus the out-of-scope class, dev only",
+    "tuned_on": "development split only"
+  },
+  "data_sources": {
+    "manifest": "data/manifests/P2.json",
+    "description": "configs/descriptions/P2.md",
+    "kshot": "data/processed/P2/kshot.jsonl",
+    "dev": "data/processed/P2/dev.jsonl",
+    "test": "data/processed/P2/holdout/test.jsonl"
+  },
+  "data_access": {
+    "project_id": "P2",
+    "held_out": false,
+    "freeze_released": false,
+    "freeze_commit": null,
+    "available_splits": [
+      "dev",
+      "kshot",
+      "test"
+    ],
+    "splits_accessed": [
+      "kshot",
+      "dev"
+    ]
+  },
+  "trained_where": "laptop GPU (local), not Kaggle",
+  "comparison_role": "matched comparison at k=10 per intent",
+  "bias_note": "the out-of-scope threshold was tuned on this same development split, so these development numbers are optimistic"
+}
