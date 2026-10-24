@@ -114,7 +114,7 @@ Available ids:
 **Your choice** (replace the placeholder with one id):
 
 ```
-CONFIG: <put one configuration id here>
+CONFIG: twostage-sim-llm
 ```
 
 ---
@@ -126,16 +126,16 @@ Analyzer writes its own version of exactly this. One short line each. Leave a
 line blank if you want no description for it.
 
 ```
-calendar_query: 
-calendar_remove: 
-calendar_set: 
-email_addcontact: 
-email_query: 
-email_querycontact: 
-email_sendemail: 
-lists_createoradd: 
-lists_query: 
-lists_remove: 
+calendar_query: Requests to view, search, or check existing calendar events and schedules.
+calendar_remove: Requests to cancel or delete an existing calendar event.
+calendar_set: Requests to create or schedule a new calendar event or appointment.
+email_addcontact: Requests to save a new person or email address as a contact.
+email_query: Requests to search, find, or check emails in the mailbox.
+email_querycontact: Requests to retrieve stored contact information about a person.
+email_sendemail: Requests to compose and send an email to a recipient.
+lists_createoradd: Requests to create a new list or add items to an existing list.
+lists_query: Requests to view or check items in an existing list.
+lists_remove: Requests to remove or delete items from an existing list.
 ```
 
 ---
@@ -147,29 +147,29 @@ Say what the field holds, in the project's own terms.
 ```
 app_name: 
 artist_name: 
-business_name: 
-business_type: 
-date: 
+business_name: Name of a business or organization explicitly mentioned in a calendar, email, or list request.
+business_type: Category of a business mentioned in a request, such as a clinic or restaurant.
+date: Calendar date, day, or relative date mentioned for an event or task.
 device_type: 
 drink_type: 
-email_address: 
-email_folder: 
-event_name: 
-general_frequency: 
+email_address: Email address specified as a recipient or contact detail.
+email_folder: Mailbox folder mentioned, such as inbox, sent, drafts, or spam.
+event_name: Name or title of a calendar event, meeting, or appointment.
+general_frequency: How often an event repeats, such as daily, weekly, or every Monday.
 house_place: 
-list_name: 
+list_name: Name of the list to create, view, or modify.
 meal_type: 
 media_type: 
 music_descriptor: 
 music_genre: 
-person: 
-personal_info: 
-place_name: 
-relation: 
+person: Name or identifying reference of a person mentioned in a request.
+personal_info: Type of contact information requested, such as phone number or email address.
+place_name: Location or venue mentioned for an event, such as an office or meeting room.
+relation: Relationship of a mentioned person to the user, such as manager, colleague, or mother.
 song_name: 
 sport_type: 
-time: 
-timeofday: 
+time: Specific clock time mentioned for an event, such as 10 AM or 3:30 PM.
+timeofday: Part of the day mentioned, such as morning, afternoon, or evening.
 transport_type: 
 ```
 
@@ -183,9 +183,9 @@ Write each answer on its own line inside the box below, after the colon;
 the notes under the box only explain the fields.
 
 ```
-ACTIVE_MINUTES: 0
-AI_ASSISTANCE: none
-NOTES:
+ACTIVE_MINUTES: 15
+AI_ASSISTANCE: Used ChatGPT to recommend an initial configuration and draft and explain the intent and entity descriptions.
+NOTES: Selected twostage-sim-llm because intent classification followed by field extraction may help preserve multiple details in complex productivity requests. Similar examples may improve recognition of varied wording, and LLM-based out-of-scope handling may recognize unsupported requests beyond lexical similarity. Trade-offs include two model calls, additional latency, and possible incorrect classifications. No development checks have been run yet. Active time estimated at 10-20 minutes; 15 recorded as the midpoint.
 ```
 
 - `ACTIVE_MINUTES`: minutes you actually spent working on this, excluding
@@ -205,3 +205,10 @@ result is appended below. Every check counts toward your effort and toward
 B2's design cost.
 
 <!-- checks appended below this line -->
+
+### Check 1 - 2026-10-24 16:30
+
+- configuration: `twostage-sim-llm`
+- descriptions written: 10 intents, 14 fields
+- intent macro-F1 **0.861**, entity F1 0.394, out-of-scope F1 0.783, schema validity 1.000
+- logical calls 174, physical 0

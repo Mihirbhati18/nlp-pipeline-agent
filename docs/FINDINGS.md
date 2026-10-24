@@ -259,3 +259,28 @@ timed, with assistance declared. Run `20261024_1622_P1_B2_0`.
   self-described NLP beginner on the team that built A1; assistance declared
   (internet and Claude's explanation of the options); P1 only. The result
   shows the agent beats a quick novice configuration, not an expert one.
+
+### F7 continued: P2, configured with ChatGPT's help (24 Oct)
+
+Run `20261024_1630_P2_B2_0`. The team member declared that ChatGPT
+recommended the configuration and drafted the descriptions.
+
+| System | Human time | Design | Intent | Entity | OOS |
+|---|---|---|---|---|---|
+| **B2, ChatGPT-assisted** | under 6 min measured (15 self-estimated) | twostage-sim-llm | **0.861** | **0.394** | **0.783** |
+| A1 agent | 0 (automatic) | schema-fixed-llm | 0.841 | 0.365 | 0.735 |
+| B1 generic prompt | 0 | joint-fixed-llm | 0.804 | 0.451 | 0.691 |
+
+- **On P2 the ChatGPT-assisted configuration beats the agent** on intent
+  (+2.0), entity (+2.9) and OOS (+4.8). The intent gap is well inside the
+  development-set noise measured in F5, so this is at best a tie for A1.
+- **Time:** the self-estimate was 10-20 minutes (15 recorded), but the
+  worksheet was created at 16:25:01 and finished at 16:30:43, so the measured
+  elapsed time bounds active time at **5.7 minutes**. The paper reports the
+  measured bound, not the estimate.
+- **The two B2 runs measure different things** and are reported separately:
+  P1 is a novice working by hand with explanations; P2 is a novice delegating
+  the decisions to a general-purpose AI assistant. Together they suggest the
+  agent clearly beats an unaided novice (P1: +10 intent points), but a person
+  with ChatGPT can match it in minutes (P2), which weakens the setup-effort
+  claim against AI-assisted developers.

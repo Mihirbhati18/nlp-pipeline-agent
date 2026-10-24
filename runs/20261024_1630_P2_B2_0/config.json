@@ -1,0 +1,100 @@
+{
+  "run_id": "20261024_1630_P2_B2_0",
+  "project": "P2",
+  "system": "B2",
+  "seed": 0,
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "config": {
+    "config_id": "twostage-sim-llm",
+    "extraction": "two_stage",
+    "example_selection": "similarity",
+    "oos_policy": "llm_label",
+    "calls_per_request": 2
+  },
+  "chosen_by": "human, by hand",
+  "oos_threshold": {
+    "threshold": 0.33301670934986183,
+    "dev_macro_f1_at_threshold": 0.4615384615384615,
+    "n_candidate_thresholds": 100,
+    "criterion": "F1 on the binary in-scope/out-of-scope decision, dev only (no intent prediction exists before the model call)",
+    "tuned_on": "development split only"
+  },
+  "descriptions_written": {
+    "intents": 10,
+    "intents_total": 10,
+    "entity_types": 14,
+    "entity_types_total": 26
+  },
+  "intent_descriptions": {
+    "calendar_query": "Requests to view, search, or check existing calendar events and schedules.",
+    "calendar_remove": "Requests to cancel or delete an existing calendar event.",
+    "calendar_set": "Requests to create or schedule a new calendar event or appointment.",
+    "email_addcontact": "Requests to save a new person or email address as a contact.",
+    "email_query": "Requests to search, find, or check emails in the mailbox.",
+    "email_querycontact": "Requests to retrieve stored contact information about a person.",
+    "email_sendemail": "Requests to compose and send an email to a recipient.",
+    "lists_createoradd": "Requests to create a new list or add items to an existing list.",
+    "lists_query": "Requests to view or check items in an existing list.",
+    "lists_remove": "Requests to remove or delete items from an existing list."
+  },
+  "entity_descriptions": {
+    "business_name": "Name of a business or organization explicitly mentioned in a calendar, email, or list request.",
+    "business_type": "Category of a business mentioned in a request, such as a clinic or restaurant.",
+    "date": "Calendar date, day, or relative date mentioned for an event or task.",
+    "email_address": "Email address specified as a recipient or contact detail.",
+    "email_folder": "Mailbox folder mentioned, such as inbox, sent, drafts, or spam.",
+    "event_name": "Name or title of a calendar event, meeting, or appointment.",
+    "general_frequency": "How often an event repeats, such as daily, weekly, or every Monday.",
+    "list_name": "Name of the list to create, view, or modify.",
+    "person": "Name or identifying reference of a person mentioned in a request.",
+    "personal_info": "Type of contact information requested, such as phone number or email address.",
+    "place_name": "Location or venue mentioned for an event, such as an office or meeting room.",
+    "relation": "Relationship of a mentioned person to the user, such as manager, colleague, or mother.",
+    "time": "Specific clock time mentioned for an event, such as 10 AM or 3:30 PM.",
+    "timeofday": "Part of the day mentioned, such as morning, afternoon, or evening."
+  },
+  "effort": {
+    "active_human_minutes": 15,
+    "budget_minutes": 120,
+    "over_budget": false,
+    "wall_clock_minutes_since_start": 5.7,
+    "development_checks": 1,
+    "note": "active human minutes are self-reported and exclude breaks and model waiting time. Wall clock is elapsed time since `start`, which includes both."
+  },
+  "ai_assistance": "Used ChatGPT to recommend an initial configuration and draft and explain the intent and entity descriptions.",
+  "notes": "Selected twostage-sim-llm because intent classification followed by field extraction may help preserve multiple details in complex productivity requests. Similar examples may improve recognition of varied wording, and LLM-based out-of-scope handling may recognize unsupported requests beyond lexical similarity. Trade-offs include two model calls, additional latency, and possible incorrect classifications. No development checks have been run yet. Active time estimated at 10-20 minutes; 15 recorded as the midpoint.",
+  "bias_note": "the same person built the automated system and this manual baseline, and already knows the data. This is a single, non-blind measurement of setup effort and must be reported as such.",
+  "worksheet": "configs/b2/P2_worksheet.md",
+  "data_access": {
+    "project_id": "P2",
+    "held_out": false,
+    "freeze_released": false,
+    "freeze_commit": null,
+    "available_splits": [
+      "dev",
+      "kshot",
+      "test"
+    ],
+    "splits_accessed": [
+      "kshot",
+      "dev"
+    ]
+  },
+  "data_sources": {
+    "manifest": "data/manifests/P2.json",
+    "description": "configs/descriptions/P2.md",
+    "kshot": "data/processed/P2/kshot.jsonl",
+    "dev": "data/processed/P2/dev.jsonl",
+    "test": "data/processed/P2/holdout/test.jsonl"
+  }
+}
