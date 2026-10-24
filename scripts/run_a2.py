@@ -1,19 +1,19 @@
 """Run A2 (decision 42) on development data and apply the keep-or-drop rule.
 
 A2 = A1 with the improved Architect (factor-wise reasoning, one-factor
-revision) and a larger planning model. Runtime predictions stay on the shared
-runtime model, so A2 is compared with A1, B1, B2, B3 and B4 on equal terms.
+revision), using the same runtime model for planning as every system uses for
+answers (decision 43). A2 is compared with A1, B1, B2, B3 and B4 on equal terms.
 
-The planning model only makes 2 calls per project, so a model too large for
-the GPU is still practical here: Ollama spills it to the CPU.
+``--planning-model`` runs the same search with a different planner as an
+ablation; such runs are recorded under a different system name.
 
 The keep-or-drop rule from decision 42 is applied and printed: A2 goes to the
 test set only if its development intent macro-F1 is at least A1's on every
 project run. The run folders record the outcome either way.
 
 Usage:
-    python scripts/run_a2.py                                # 7B planner
-    python scripts/run_a2.py --planning-model qwen2.5:3b    # search change only (ablation)
+    python scripts/run_a2.py                                # A2
+    python scripts/run_a2.py --planning-model qwen2.5:7b    # larger planner (ablation)
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ def a1_intent(project: str) -> float | None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="A2 design runs on development data")
     parser.add_argument("--model", default="qwen2.5:3b", help="runtime model (shared by every system)")
-    parser.add_argument("--planning-model", default="qwen2.5:7b")
+    parser.add_argument("--planning-model", default="qwen2.5:3b")
     parser.add_argument("--projects", nargs="+", default=["P1", "P2"])
     parser.add_argument("--host", default="http://127.0.0.1:11434")
     args = parser.parse_args()
@@ -62,7 +62,7 @@ def main() -> int:
 
     runtime = make_client(args.model, host=args.host, cache_dir=ROOT / "cache")
     planner = make_client(args.planning_model, host=args.host, cache_dir=ROOT / "cache")
-    system = "A2" if args.planning_model == "qwen2.5:7b" else f"A2-planner-{args.planning_model.replace(':', '-')}"
+    system = "A2" if args.planning_model == args.model else f"A2-planner-{args.planning_model.replace(':', '-')}"
     print(f"{system}: runtime {args.model} ({runtime.model_digest[:12]}), "
           f"planner {args.planning_model} ({planner.model_digest[:12]})\n")
 

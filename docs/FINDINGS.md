@@ -284,3 +284,30 @@ recommended the configuration and drafted the descriptions.
   agent clearly beats an unaided novice (P1: +10 intent points), but a person
   with ChatGPT can match it in minutes (P2), which weakens the setup-effort
   claim against AI-assisted developers.
+
+---
+
+## F8. A2, the improved Architect, on development data (24 Oct)
+
+A2 (decisions 42 and 43) keeps everything about A1 except how the Architect
+searches: the model ranks each design factor separately, three candidates are
+built one factor apart, and the revision changes one factor from the best so
+far. Same 3B model, same catalogue, same selection rule. Runs
+`20261024_1648_P1_A2_0` and `20261024_1648_P2_A2_0`.
+
+| System | P1 intent | P1 entity | P2 intent | P2 entity |
+|---|---|---|---|---|
+| A1 | 0.958 | 0.597 | 0.841 | 0.365 |
+| **A2** | **0.974** | **0.707** | **0.898** | **0.483** |
+| B4-random mean (5 seeds) | 0.959 | | 0.878 | |
+| Best of all 12 (B4-exhaustive) | 0.974 | | 0.898 | |
+
+- A2 selects `schema-sim-llm`, the development optimum, on both projects, and
+  passes the decision 42 keep rule, so it goes to the test set with A1.
+- **The model's own rankings were poor:** it preferred fixed examples and the
+  TF-IDF policy on both projects. The gain comes from the search structure,
+  which measured the alternative example selection anyway, and from the
+  revision, which switched the out-of-scope policy after reading the scores.
+- **These development numbers are not evidence of improvement:** A2 was
+  designed after studying them. Only the frozen test comparison of A1 and A2
+  counts, and both are reported whatever it shows.
