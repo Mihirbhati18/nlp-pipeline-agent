@@ -73,6 +73,16 @@ def main() -> int:
         "is exactly what the code computes.")
     failures += code != 0
 
+    # 2b. independent recomputation with scikit-learn
+    say("
+## 2b. Metrics recomputed independently with scikit-learn")
+    code, out = run([py, "scripts/verify_with_sklearn.py"])
+    tail = [l for l in out.strip().splitlines() if l.startswith("{")]
+    say(f"`python scripts/verify_with_sklearn.py` -> {tail[-1] if tail else out[-200:]}")
+    say("scikit-learn, the standard machine-learning library, recomputed intent macro-F1, accuracy and "
+        "out-of-scope precision, recall and F1 from the saved predictions without using our scorer.")
+    failures += code != 0
+
     # 3. run folders
     say("\n## 3. Recorded experiment runs")
     kinds = Counter()

@@ -1,0 +1,12 @@
+{
+  "run_id": "20261024_1654_P2_A1-selected_0",
+  "project": "P2",
+  "system": "A1",
+  "seed": 0,
+  "split": "dev",
+  "selected_config_id": "schema-fixed-llm",
+  "design_run": "20261013_0112_P2_A1_0",
+  "purpose": "per-request predictions of the selected pipeline, replayed from the cache",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+}
