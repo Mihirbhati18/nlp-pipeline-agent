@@ -1,0 +1,234 @@
+{
+  "run_id": "20261024_1647_P1_A2-planner-qwen2.5-3b_0",
+  "project": "P1",
+  "system": "A2-planner-qwen2.5-3b",
+  "seed": 0,
+  "split": "dev",
+  "architect_version": "v2",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "model_details": {
+    "family": "qwen2",
+    "parameter_size": "3.1B",
+    "quantization_level": "Q4_K_M",
+    "context_length": null,
+    "format": "gguf",
+    "weights_blob_sha256": "5ee4f07cdb9beadbbb293e85803c569b01bd37ed059d2715faa7bb405f31caa6"
+  },
+  "planning_model": "qwen2.5:3b",
+  "planning_model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "planning_model_details": {
+    "family": "qwen2",
+    "parameter_size": "3.1B",
+    "quantization_level": "Q4_K_M",
+    "context_length": null,
+    "format": "gguf",
+    "weights_blob_sha256": "5ee4f07cdb9beadbbb293e85803c569b01bd37ed059d2715faa7bb405f31caa6"
+  },
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "score_note": "A2 was designed after seeing these development results (decision 42); its development scores are not evidence of improvement. Only the frozen test comparison counts.",
+  "selected_config_id": "schema-sim-llm",
+  "oos_threshold": {
+    "threshold": 0.3564234098194579,
+    "dev_macro_f1_at_threshold": 0.5882352941176471,
+    "n_candidate_thresholds": 101,
+    "criterion": "F1 on the binary in-scope/out-of-scope decision, dev only (no intent prediction exists before the model call)",
+    "tuned_on": "development split only"
+  },
+  "data_access": {
+    "project_id": "P1",
+    "held_out": false,
+    "freeze_released": false,
+    "freeze_commit": null,
+    "available_splits": [
+      "dev",
+      "kshot",
+      "test"
+    ],
+    "splits_accessed": [
+      "kshot",
+      "dev"
+    ]
+  },
+  "data_sources": {
+    "manifest": "data/manifests/P1.json",
+    "description": "configs/descriptions/P1.md",
+    "kshot": "data/processed/P1/kshot.jsonl",
+    "dev": "data/processed/P1/dev.jsonl",
+    "test": "data/processed/P1/holdout/test.jsonl"
+  },
+  "project_id": "P1",
+  "no_eligible_candidate": false,
+  "analysis": {
+    "project_id": "P1",
+    "ok": true,
+    "enriched": true,
+    "n_intents": 12,
+    "n_entity_types": 18,
+    "described_intents": 12,
+    "described_entities": 18,
+    "findings": [
+      {
+        "kind": "entity_types_without_examples",
+        "message": "declared entity types never seen in the example pool: ['business_name', 'event_name', 'order_type', 'place_name', 'player_setting', 'relation', 'time_zone']",
+        "blocking": false
+      }
+    ],
+    "design_cost": {
+      "logical_calls": 2,
+      "physical_calls": 0
+    }
+  },
+  "design": {
+    "project_id": "P1",
+    "budget": 4,
+    "budget_used": 4,
+    "reasoned_choices": 4,
+    "fallback_choices": 0,
+    "attempts": [
+      {
+        "config_id": "schema-fixed-tfidf",
+        "rationale": "top choice on every factor: example_selection: Fixed examples ensure consistency and coverage, while similarity selection may miss relevant intents due to request variability. | extraction: Schema-guided extraction provides clear instructions for the model, which is crucial given the lack of examples for some fields. | oos_policy: Tfidf threshold policy is cheaper and can prevent unnecessary model calls, while LLM label can provide more nuanced responses.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.8448093573093572,
+        "entity_span_f1": 0.5046728971962616,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "schema-sim-tfidf",
+        "rationale": "top choices, other example selection: example_selection: Fixed examples ensure consistency and coverage, while similarity selection may miss relevant intents due to request variability.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.8691530691530691,
+        "entity_span_f1": 0.6168224299065421,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      },
+      {
+        "config_id": "twostage-fixed-tfidf",
+        "rationale": "top choices, runner-up extraction: extraction: Schema-guided extraction provides clear instructions for the model, which is crucial given the lack of examples for some fields.",
+        "source": "reasoned",
+        "stage": "initial",
+        "intent_macro_f1": 0.83875777000777,
+        "entity_span_f1": 0.5436893203883495,
+        "schema_validity": 0.98,
+        "runtime_failure_rate": 0.02,
+        "error": null
+      },
+      {
+        "config_id": "schema-sim-llm",
+        "rationale": "changed oos_policy=llm_label from schema-sim-tfidf: It aims to handle cases where the model may answer none_of_the_above, potentially improving the model's ability to reject invalid requests.",
+        "source": "reasoned",
+        "stage": "revision",
+        "intent_macro_f1": 0.9743589743589743,
+        "entity_span_f1": 0.706896551724138,
+        "schema_validity": 1.0,
+        "runtime_failure_rate": 0.0,
+        "error": null
+      }
+    ],
+    "selection": {
+      "selected": "schema-sim-llm",
+      "no_eligible_candidate": false,
+      "reason": "schema-sim-llm has the highest intent macro-F1 (0.9744) among 4 eligible candidate(s)",
+      "eligible": [
+        "schema-sim-llm",
+        "schema-sim-tfidf",
+        "schema-fixed-tfidf",
+        "twostage-fixed-tfidf"
+      ],
+      "rejections": [],
+      "ranking": [
+        {
+          "config_id": "schema-sim-llm",
+          "intent_macro_f1": 0.9743589743589743,
+          "entity_span_f1": 0.706896551724138,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "schema-sim-tfidf",
+          "intent_macro_f1": 0.8691530691530691,
+          "entity_span_f1": 0.6168224299065421,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "schema-fixed-tfidf",
+          "intent_macro_f1": 0.8448093573093572,
+          "entity_span_f1": 0.5046728971962616,
+          "schema_validity": 1.0,
+          "p95_s": 0.59,
+          "p95_source": "estimated"
+        },
+        {
+          "config_id": "twostage-fixed-tfidf",
+          "intent_macro_f1": 0.83875777000777,
+          "entity_span_f1": 0.5436893203883495,
+          "schema_validity": 0.98,
+          "p95_s": 1.18,
+          "p95_source": "estimated"
+        }
+      ],
+      "unchecked_constraints": [],
+      "rule": "highest intent macro-F1 among candidates meeting the declared floors; ties broken by entity F1, then by lower p95 latency, then by configuration id for determinism"
+    },
+    "findings": [],
+    "design_cost": {
+      "logical_calls": 395,
+      "physical_calls": 2,
+      "planning_calls": 2
+    }
+  },
+  "design_cost": {
+    "logical_calls": 397,
+    "physical_calls": 2,
+    "planning_calls": 2,
+    "analyzer_calls": 2,
+    "candidate_calls": 395,
+    "wall_time_s": 86.9
+  },
+  "evaluations": [
+    {
+      "config_id": "schema-fixed-tfidf",
+      "logical_calls": 74,
+      "physical_calls": 0,
+      "cache_hits": 74,
+      "seconds": 0.2
+    },
+    {
+      "config_id": "schema-sim-tfidf",
+      "logical_calls": 75,
+      "physical_calls": 0,
+      "cache_hits": 75,
+      "seconds": 0.2
+    },
+    {
+      "config_id": "twostage-fixed-tfidf",
+      "logical_calls": 146,
+      "physical_calls": 0,
+      "cache_hits": 146,
+      "seconds": 0.2
+    },
+    {
+      "config_id": "schema-sim-llm",
+      "logical_calls": 100,
+      "physical_calls": 0,
+      "cache_hits": 100,
+      "seconds": 0.2
+    }
+  ]
+}
