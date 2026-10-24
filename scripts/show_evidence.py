@@ -74,8 +74,7 @@ def main() -> int:
     failures += code != 0
 
     # 2b. independent recomputation with scikit-learn
-    say("
-## 2b. Metrics recomputed independently with scikit-learn")
+    say("\n## 2b. Metrics recomputed independently with scikit-learn")
     code, out = run([py, "scripts/verify_with_sklearn.py"])
     tail = [l for l in out.strip().splitlines() if l.startswith("{")]
     say(f"`python scripts/verify_with_sklearn.py` -> {tail[-1] if tail else out[-200:]}")

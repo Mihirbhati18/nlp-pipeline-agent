@@ -1,16 +1,20 @@
-# Evidence summary (16 Oct 2026 01:31)
+# Evidence summary (24 Oct 2026 16:55)
 
-Code version: `ab0c353 Robustness test, figures from run folders, and the analysis report` (22 commits in the history)
+Code version: `3b3b731 Independent scikit-learn verification; A1 and A2 predictions recorded so every headline number is checkable` (32 commits in the history)
 
 ## 1. Automated tests
-`python -m pytest tests` -> **336 passed in 15.32s**
+`python -m pytest tests` -> **371 passed in 13.91s**
 
 ## 2. Results recomputed from saved predictions
-`python scripts/reproduce_metrics.py` -> {'not checkable': 18, 'match': 38}
+`python scripts/reproduce_metrics.py` -> {'not checkable': 22, 'match': 44}
 Every run with saved predictions was re-scored; a 'match' means the recorded number is exactly what the code computes.
 
+## 2b. Metrics recomputed independently with scikit-learn
+`python scripts/verify_with_sklearn.py` -> {'agrees': 44, 'skipped': 1}
+scikit-learn, the standard machine-learning library, recomputed intent macro-F1, accuracy and out-of-scope precision, recall and F1 from the saved predictions without using our scorer.
+
 ## 3. Recorded experiment runs
-56 run folders in `runs/`, each with its config, manifest (git commit, model digest, data hashes) and metrics:
+66 run folders in `runs/`, each with its config, manifest (git commit, model digest, data hashes) and metrics:
 - A1: 5
 - A1-noAnalyzer: 2
 - A1-noReasoning: 2
@@ -20,7 +24,11 @@ Every run with saved predictions was re-scored; a 'match' means the recorded num
 - A1-robust-caps: 2
 - A1-robust-filler: 2
 - A1-robust-typo: 2
+- A1-selected: 2
 - A1-timing: 2
+- A2: 2
+- A2-planner-qwen2.5-3b: 2
+- A2-selected: 2
 - B0: 2
 - B0-robust-caps: 2
 - B0-robust-filler: 2
@@ -30,6 +38,7 @@ Every run with saved predictions was re-scored; a 'match' means the recorded num
 - B1-robust-filler: 2
 - B1-robust-typo: 2
 - B1-timing: 2
+- B2: 2
 - B3-full: 2
 - B3-k: 2
 - B4-exhaustive: 4
@@ -62,11 +71,11 @@ Loaded P1 (Home assistant) pipeline twostage-sim-llm, package ff3d548a0af2
 Model qwen2.5:3b @ 357c53fb659c | 12 intents, 18 entity types
 
 [normal] 'wake me up at six thirty tomorrow'
-  -> ok  intent=alarm_set  time='six thirty', date='tomorrow'  [2 model calls, 0.95s]
+  -> ok  intent=alarm_set  time='six thirty', date='tomorrow'  [2 model calls, 3.98s]
 [normal] 'turn the bedroom lights off'
-  -> ok  intent=iot_hue_lightoff  house_place='bedroom'  [2 model calls, 0.51s]
+  -> ok  intent=iot_hue_lightoff  house_place='bedroom'  [2 model calls, 0.73s]
 [out of scope] 'who won the football match last night'
-  -> out_of_scope  [1 model calls, 0.19s]
+  -> out_of_scope  [1 model calls, 0.31s]
 [invalid] ''
   -> invalid_request  error: request is empty  [0 model calls, 0.00s]
 [invalid] 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...'
