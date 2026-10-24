@@ -143,6 +143,8 @@ Say what the field holds, in the project's own terms.
 
 Fill these in before running `finish`. Be accurate rather than flattering;
 an honest number is the whole point of this baseline.
+Write each answer on its own line inside the box below, after the colon;
+the notes under the box only explain the fields.
 
 ```
 ACTIVE_MINUTES: 0
