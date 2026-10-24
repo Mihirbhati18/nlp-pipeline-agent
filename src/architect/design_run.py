@@ -40,6 +40,7 @@ from ..llm.client import LLMClient
 from ..pipelines.catalogue import Config, ConfigRunner
 from ..pipelines.examples import ExampleSelector
 from .architect import Architect, DesignResult
+from .architect_v2 import ArchitectV2
 
 # A two-stage configuration makes two calls per request, so its latency is
 # roughly twice a single-call configuration's. Used only to filter a declared
@@ -183,6 +184,7 @@ def run_design(
     single_call_p95_s: float | None = None,
     allow_repair: bool = True,
     enrich: bool = True,
+    architect_version: str = "v1",
 ) -> FullDesign:
     """Run the full A1 design for one project.
 
@@ -191,7 +193,12 @@ def run_design(
 
     ``planning_client=None`` is the no-reasoning path: the Architect falls back
     to its documented ordering, and the record shows ``reasoned_choices: 0``.
+
+    ``architect_version="v2"`` is A2 (decision 42): factor-wise reasoning and a
+    one-factor revision. ``"v1"``, the default, is A1's Architect, unchanged.
     """
+    if architect_version not in ("v1", "v2"):
+        raise ValueError(f"unknown architect version {architect_version!r}")
     started = time.perf_counter()
 
     # Only train and development paths are reachable; the guard refuses test.
@@ -228,7 +235,8 @@ def run_design(
         collect=collected, allow_repair=allow_repair,
     )
 
-    design = Architect(client=planning_client).design(
+    architect = Architect(client=planning_client) if architect_version == "v1" else ArchitectV2(client=planning_client)
+    design = architect.design(
         analysis.spec,
         pool,
         evaluate,
