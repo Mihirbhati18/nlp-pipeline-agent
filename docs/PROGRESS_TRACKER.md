@@ -14,8 +14,8 @@ Last updated: 11 October 2026.
 
 1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 336 passed. For a full evidence check: `python scripts/show_evidence.py`.
 2. B3 is done; nothing needs downloading.
-3. B2 (yours): fill `configs/b2/P1_worksheet.md`, then `python scripts/run_b2.py check --project P1` and `finish`.
-4. Then G10: the freeze.
+3. B2 is done for P1 (finding F7).
+4. Next: G10, the freeze.
 4. Nothing is lost by stopping. All work is committed, and the prediction cache in `cache/` means model answers already computed are never recomputed.
 
 State confirmed on 13 October: `qwen2.5:3b`, `torch` 2.14.1+cpu and
@@ -72,3 +72,4 @@ write and commit its description in G2.
 | 15 Oct 2026 (B3) | XLM-R weights downloaded and SHA-256 verified on a stable connection; B3-k and B3-full trained on CPU and scored for P1 and P2 (finding F4); B2 example helper added; team and the 19 Oct deadline recorded | None | B2 by the user; G10 freeze |
 | 16 Oct 2026 (dev analysis) | Development-stage ablations (no Analyzer, no reasoning, no selection, one candidate, no repair) as run folders; uncached timing for A1 and B1; paired bootstrap 95% intervals; A1 error analysis by the plan's categories; `reports/DEV_ANALYSIS.md`; 8 new checks (333 total) | **The Architect's fallback order beats its reasoning on P2**, and no development difference is statistically reliable at 100 cases (finding F5) | B2 by the user; G10 freeze |
 | 16 Oct 2026 (evidence) | Reproduction check (all 38 checkable runs recompute exactly from saved predictions); robustness test with typos, capitals and filler words (18 run folders, finding F6); six figures drawn from run folders with a sources list; `show_evidence.py` runs every check in one command and saves `reports/EVIDENCE_SUMMARY.md`; prediction logs now tracked; 3 new checks (336 total) | The reproduction check found that B0 and B3 never logged raw schema validity; both runners fixed | B2 by the user; G10 freeze |
+| 24 Oct 2026 (B2) | B2 manual configuration of P1 completed: 38 active minutes, 1 development check, assistance declared; intent 0.858 against A1's 0.958 (finding F7) | Ollama was not running after a restart and was started; the installed model digest is unchanged (357c53fb659c) | G10 freeze |

@@ -77,16 +77,16 @@ The twelve configurations combine three choices. Pick one id.
 
 Extraction strategy
   joint          one call returns the intent and the information together
-  twostage       one call for the intent, then one for that intent's fields
+  twostage       one call for the intent, then one for that intent's fields  ……..
   schema         one call, with your written descriptions included in the prompt
 
 Example selection
   fixed          the same one example per intent every time
-  sim            the examples most similar to each request
+  sim            the examples most similar to each request...……..
 
 Out-of-scope policy
   llm            the model may answer none_of_the_above
-  tfidf          a similarity threshold rejects a request before any model call
+  tfidf          a similarity threshold rejects a request before any model call......
 
 Configuration ids are <extraction>-<examples>-<oos>, for example joint-sim-llm.
 
@@ -104,10 +104,10 @@ Available ids:
   schema-sim-llm
   schema-sim-tfidf
 
-**Your choice** (replace the placeholder with one id):
+**twostage-sim-tfidf** (replace the placeholder with one id):
 
 ```
-CONFIG: <put one configuration id here>
+CONFIG: twostage-sim-tfidf
 ```
 
 ---
@@ -119,18 +119,18 @@ Analyzer writes its own version of exactly this. One short line each. Leave a
 line blank if you want no description for it.
 
 ```
-alarm_query: 
-alarm_remove: 
-alarm_set: 
-iot_cleaning: 
-iot_coffee: 
-iot_hue_lightchange: 
-iot_hue_lightdim: 
-iot_hue_lightoff: 
-iot_hue_lighton: 
-iot_hue_lightup: 
-iot_wemo_off: 
-iot_wemo_on: 
+alarm_query: Requests to check or list existing alarms.
+alarm_remove: Requests to cancel or delete an alarm.
+alarm_set: Requests to create or schedule a new alarm.
+iot_cleaning: Requests to start or stop the cleaning robot.
+iot_coffee: Requests to start the coffee machine.
+iot_hue_lightchange: Requests to change the colour of a light.
+iot_hue_lightdim: Requests to reduce the brightness of a light.
+iot_hue_lightoff: Requests to switch a light off.
+iot_hue_lighton: Requests to switch a light on.
+iot_hue_lightup: Requests to increase the brightness of a light.
+iot_wemo_off: Requests to switch a smart plug or socket off.
+iot_wemo_on: Requests to switch a smart plug or socket on.
 ```
 
 ---
@@ -140,25 +140,24 @@ iot_wemo_on:
 Say what the field holds, in the project's own terms.
 
 ```
-alarm_type: 
-business_name: 
-business_type: 
-change_amount: 
-coffee_type: 
-color_type: 
-date: 
-device_type: 
-event_name: 
-general_frequency: 
-house_place: 
-order_type: 
-place_name: 
-player_setting: 
-relation: 
-time: 
-time_zone: 
-timeofday: 
-```
+alarm_type: Type or label of an alarm mentioned by the user.
+business_name:
+business_type:
+change_amount: Amount or percentage by which a device setting should change.
+coffee_type:
+color_type: Colour requested for a connected light, such as red, blue, or green.
+date: Date or day mentioned for an alarm, such as tomorrow or Monday.
+device_type: Household device mentioned, such as a light, cleaning robot, coffee machine, or smart plug.
+event_name:
+general_frequency: Repetition frequency explicitly mentioned for an alarm, such as daily or every weekday.
+house_place: Room or location inside the home, such as bedroom, kitchen, or living room.
+order_type:
+place_name:
+player_setting:
+relation:
+time: Specific clock time mentioned for an alarm, such as 6 AM or 8:30 PM.
+time_zone:
+timeofday: Part of the day mentioned for an alarm, such as morning or evening.```
 
 ---
 
@@ -168,12 +167,12 @@ Fill these in before running `finish`. Be accurate rather than flattering;
 an honest number is the whole point of this baseline.
 
 ```
-ACTIVE_MINUTES: 0
-AI_ASSISTANCE: none
-NOTES:
+ACTIVE_MINUTES: 38
+AI_ASSISTANCE: used the internet and Claude's explanation of the configuration options and terms (plus the scripts/b2_examples.py example viewer) to understand them; chose the configuration and wrote all descriptions myself
+NOTES: I selected twostage-sim-tfidf because the two-stage approach first identifies the user's intent and then extracts the required information. Similarity-based examples help the model understand different ways of expressing commands. TF-IDF helps reject requests outside the supported tasks. A possible disadvantage is that the two-stage approach requires two model calls, which may increase response time. TF-IDF may also reject some valid requests with unusual wording.
 ```
 
-- `ACTIVE_MINUTES`: minutes you actually spent working on this, excluding
+- `38`: minutes you actually spent working on this, excluding
   breaks and excluding model waiting time.
 - `AI_ASSISTANCE`: `none`, or describe exactly what help you used and for what.
   The plan requires this because the same person builds the automated system
@@ -190,3 +189,10 @@ result is appended below. Every check counts toward your effort and toward
 B2's design cost.
 
 <!-- checks appended below this line -->
+
+### Check 1 - 2026-10-24 16:20
+
+- configuration: `twostage-sim-tfidf`
+- descriptions written: 12 intents, 9 fields
+- intent macro-F1 **0.858**, entity F1 0.586, out-of-scope F1 0.588, schema validity 1.000
+- logical calls 139, physical 0

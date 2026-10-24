@@ -1,0 +1,97 @@
+{
+  "run_id": "20261024_1622_P1_B2_0",
+  "project": "P1",
+  "system": "B2",
+  "seed": 0,
+  "split": "dev",
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "cache_enabled": true,
+  "config": {
+    "config_id": "twostage-sim-tfidf",
+    "extraction": "two_stage",
+    "example_selection": "similarity",
+    "oos_policy": "tfidf_threshold",
+    "calls_per_request": 2
+  },
+  "chosen_by": "human, by hand",
+  "oos_threshold": {
+    "threshold": 0.3564234098194579,
+    "dev_macro_f1_at_threshold": 0.5882352941176471,
+    "n_candidate_thresholds": 101,
+    "criterion": "F1 on the binary in-scope/out-of-scope decision, dev only (no intent prediction exists before the model call)",
+    "tuned_on": "development split only"
+  },
+  "descriptions_written": {
+    "intents": 12,
+    "intents_total": 12,
+    "entity_types": 9,
+    "entity_types_total": 18
+  },
+  "intent_descriptions": {
+    "alarm_query": "Requests to check or list existing alarms.",
+    "alarm_remove": "Requests to cancel or delete an alarm.",
+    "alarm_set": "Requests to create or schedule a new alarm.",
+    "iot_cleaning": "Requests to start or stop the cleaning robot.",
+    "iot_coffee": "Requests to start the coffee machine.",
+    "iot_hue_lightchange": "Requests to change the colour of a light.",
+    "iot_hue_lightdim": "Requests to reduce the brightness of a light.",
+    "iot_hue_lightoff": "Requests to switch a light off.",
+    "iot_hue_lighton": "Requests to switch a light on.",
+    "iot_hue_lightup": "Requests to increase the brightness of a light.",
+    "iot_wemo_off": "Requests to switch a smart plug or socket off.",
+    "iot_wemo_on": "Requests to switch a smart plug or socket on."
+  },
+  "entity_descriptions": {
+    "alarm_type": "Type or label of an alarm mentioned by the user.",
+    "change_amount": "Amount or percentage by which a device setting should change.",
+    "color_type": "Colour requested for a connected light, such as red, blue, or green.",
+    "date": "Date or day mentioned for an alarm, such as tomorrow or Monday.",
+    "device_type": "Household device mentioned, such as a light, cleaning robot, coffee machine, or smart plug.",
+    "general_frequency": "Repetition frequency explicitly mentioned for an alarm, such as daily or every weekday.",
+    "house_place": "Room or location inside the home, such as bedroom, kitchen, or living room.",
+    "time": "Specific clock time mentioned for an alarm, such as 6 AM or 8:30 PM.",
+    "timeofday": "Part of the day mentioned for an alarm, such as morning or evening."
+  },
+  "effort": {
+    "active_human_minutes": 38,
+    "budget_minutes": 120,
+    "over_budget": false,
+    "wall_clock_minutes_since_start": 16742.9,
+    "development_checks": 1,
+    "note": "active human minutes are self-reported and exclude breaks and model waiting time. Wall clock is elapsed time since `start`, which includes both."
+  },
+  "ai_assistance": "used the internet and Claude's explanation of the configuration options and terms (plus the scripts/b2_examples.py example viewer) to understand them; chose the configuration and wrote all descriptions myself",
+  "notes": "I selected twostage-sim-tfidf because the two-stage approach first identifies the user's intent and then extracts the required information. Similarity-based examples help the model understand different ways of expressing commands. TF-IDF helps reject requests outside the supported tasks. A possible disadvantage is that the two-stage approach requires two model calls, which may increase response time. TF-IDF may also reject some valid requests with unusual wording.",
+  "bias_note": "the same person built the automated system and this manual baseline, and already knows the data. This is a single, non-blind measurement of setup effort and must be reported as such.",
+  "worksheet": "configs/b2/P1_worksheet.md",
+  "data_access": {
+    "project_id": "P1",
+    "held_out": false,
+    "freeze_released": false,
+    "freeze_commit": null,
+    "available_splits": [
+      "dev",
+      "kshot",
+      "test"
+    ],
+    "splits_accessed": [
+      "kshot",
+      "dev"
+    ]
+  },
+  "data_sources": {
+    "manifest": "data/manifests/P1.json",
+    "description": "configs/descriptions/P1.md",
+    "kshot": "data/processed/P1/kshot.jsonl",
+    "dev": "data/processed/P1/dev.jsonl",
+    "test": "data/processed/P1/holdout/test.jsonl"
+  }
+}

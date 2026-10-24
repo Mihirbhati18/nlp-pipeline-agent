@@ -234,3 +234,28 @@ rewritten with typos, capitals or filler words; B0's word matching loses up to
 26.9. A1 keeps its lead over B1 in every condition except P2 capitals (a tie),
 but on P2 it degrades more than B1 under typos and capitals. Details:
 `reports/DEV_ANALYSIS.md` section 5.
+
+---
+
+## F7. Manual configuration (B2) against the agent (24 Oct, P1)
+
+One team member configured P1 by hand through `configs/b2/P1_worksheet.md`,
+timed, with assistance declared. Run `20261024_1622_P1_B2_0`.
+
+| System | Human configuration time | Design | Intent | Entity | OOS |
+|---|---|---|---|---|---|
+| **B2 manual** | **38 min** (1 development check) | twostage-sim-tfidf | 0.858 | 0.586 | 0.588 |
+| B1 generic prompt | 0 (predeclared) | joint-fixed-llm | 0.927 | 0.610 | 0.870 |
+| **A1 agent** | **0** (automatic) | twostage-sim-llm | **0.958** | 0.597 | **0.909** |
+
+- **RQ2: the agent beats the manual configuration** by +10.0 intent points
+  and +32.1 OOS points, with no human configuration time against 38 minutes.
+  Entity F1 is close (+1.1 for A1).
+- The gap comes mostly from the out-of-scope policy: B2 chose the TF-IDF
+  threshold, which every development run has shown to be the weaker policy
+  (F1). B2's written descriptions did not enter its prompts, because only
+  schema-guided designs use them.
+- **Caveats, recorded with the number:** a single, non-blind measurement by a
+  self-described NLP beginner on the team that built A1; assistance declared
+  (internet and Claude's explanation of the options); P1 only. The result
+  shows the agent beats a quick novice configuration, not an expert one.
