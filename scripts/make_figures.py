@@ -24,7 +24,8 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / "runs"
 OUT = ROOT / "reports" / "figures"
 
-AGENT = "#2563eb"   # the system under study
+AGENT = "#2563eb"   # the system under study (A2, the improved agent)
+A1_COL = "#93c5fd"  # the original agent
 OTHER = "#94a3b8"   # baselines
 REF = "#cbd5e1"     # references that are not matched comparisons
 INK = "#1e293b"
@@ -79,8 +80,9 @@ def save(fig, name: str, caption: str) -> None:
 
 def fig_main() -> None:
     systems = [("B0 word matching", "B0", OTHER), ("B1 generic prompt", "B1", OTHER),
-               ("B3-k published, matched", "B3-k", OTHER), ("A1 our agent", "A1", AGENT)]
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.2), sharey=True)
+               ("B2 manual\n(P2: with ChatGPT)", "B2", OTHER), ("B3-k published, matched", "B3-k", OTHER),
+               ("A1 original agent", "A1", A1_COL), ("A2 improved agent", "A2", AGENT)]
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), sharey=True)
     for ax, project in zip(axes, ("P1", "P2")):
         names, values, colours = [], [], []
         for label, system, colour in systems:
@@ -109,8 +111,8 @@ def fig_main() -> None:
         ax.set_ylim(0.6, 1.0)
         ax.set_title(f"{project}: {'Home assistant' if project == 'P1' else 'Productivity assistant'}")
     axes[0].set_ylabel("Intent macro-F1 (development)")
-    fig.suptitle("The agent beats a generic prompt and the matched published baseline, "
-                 "but not random search", fontsize=11, fontweight="bold")
+    fig.suptitle("The improved agent (A2) reaches the best design on both projects; "
+                 "the original (A1) does not beat random search", fontsize=11, fontweight="bold")
     save(fig, "fig1_main_comparison.png",
          "Intent macro-F1 on 100 development cases per project. B4-random is 5 seeds "
          "(bar = mean, whisker = min to max). Dashed line = best of all 12 designs.")
@@ -120,16 +122,16 @@ def fig_main() -> None:
 
 
 def fig_entity() -> None:
-    systems = [("B1", OTHER), ("A1", AGENT), ("B3-k", "#475569"), ("B3-full", REF)]
-    labels = {"B1": "B1 generic prompt", "A1": "A1 our agent", "B3-k": "B3-k published, matched",
-              "B3-full": "B3-full, all data\n(reference only)"}
+    systems = [("B1", OTHER), ("A1", A1_COL), ("A2", AGENT), ("B3-k", "#475569"), ("B3-full", REF)]
+    labels = {"B1": "B1 generic prompt", "A1": "A1 original agent", "A2": "A2 improved agent",
+              "B3-k": "B3-k published, matched", "B3-full": "B3-full, all data\n(reference only)"}
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
-    width = 0.2
+    width = 0.16
     for ax, metric, title in zip(axes, ("intent_macro_f1", "entity_span_f1"),
                                  ("Intent macro-F1", "Entity span F1")):
         for i, (system, colour) in enumerate(systems):
             values = [primary(p, system)[metric] for p in ("P1", "P2")]
-            xs = [x + (i - 1.5) * width for x in range(2)]
+            xs = [x + (i - 2) * width for x in range(2)]
             ax.bar(xs, values, width, color=colour, label=labels[system],
                    hatch="//" if system == "B3-full" else None, edgecolor="white")
             for x, v in zip(xs, values):
@@ -139,9 +141,9 @@ def fig_entity() -> None:
         ax.set_title(title)
     axes[0].set_ylabel("Score (development)")
     handles, names = axes[0].get_legend_handles_labels()
-    fig.legend(handles, names, loc="lower center", ncol=4, frameon=False, fontsize=8.5,
+    fig.legend(handles, names, loc="lower center", ncol=5, frameon=False, fontsize=8.5,
                bbox_to_anchor=(0.5, -0.08))
-    fig.suptitle("The agent is strong on intent but weakest on entity extraction",
+    fig.suptitle("A2 lifts entity extraction above B1 and B3-k; B3-full, with 10-30x more data, stays the reference",
                  fontsize=11, fontweight="bold")
     save(fig, "fig2_intent_vs_entity.png",
          "B3-full trains on 10 to 30 times more data and is an upper reference, not a matched comparison.")
