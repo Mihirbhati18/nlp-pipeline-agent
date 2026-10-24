@@ -1,0 +1,4 @@
+`python -m pytest tests` -> **371 passed in 13.91s**
+`python scripts/reproduce_metrics.py` -> {'not checkable': 22, 'match': 44}
+`python scripts/verify_with_sklearn.py` -> {'agrees': 44, 'skipped': 1}
+**Overall: all checks passed**

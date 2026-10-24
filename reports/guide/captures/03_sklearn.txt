@@ -1,0 +1,12 @@
+agrees     20261011_1614_P1_B0_0                        intent F1 0.780, accuracy 0.700, OOS F1 0.510
+agrees     20261011_1614_P2_B0_0                        intent F1 0.730, accuracy 0.650, OOS F1 0.510
+agrees     20261015_2240_P1_B3-k_0                      intent F1 0.909, accuracy 0.863, OOS F1 0.739
+agrees     20261015_2308_P2_B3-k_0                      intent F1 0.833, accuracy 0.775, OOS F1 0.605
+agrees     20261024_1622_P1_B2_0                        intent F1 0.858, accuracy 0.775, OOS F1 0.588
+agrees     20261024_1630_P2_B2_0                        intent F1 0.861, accuracy 0.825, OOS F1 0.783
+agrees     20261024_1654_P1_A1-selected_0               intent F1 0.958, accuracy 0.938, OOS F1 0.909
+agrees     20261024_1654_P1_A2-selected_0               intent F1 0.974, accuracy 0.950, OOS F1 0.909
+agrees     20261024_1654_P2_A1-selected_0               intent F1 0.841, accuracy 0.800, OOS F1 0.735
+agrees     20261024_1654_P2_A2-selected_0               intent F1 0.898, accuracy 0.850, OOS F1 0.776
+{'agrees': 44, 'skipped': 1}
+Each 'agrees' means scikit-learn computed exactly the number our scorer recorded (5 metrics per run, to 9 decimal places).

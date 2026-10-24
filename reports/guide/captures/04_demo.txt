@@ -1,0 +1,13 @@
+Loaded P1 (Home assistant) pipeline twostage-sim-llm, package ff3d548a0af2
+Model qwen2.5:3b @ 357c53fb659c | 12 intents, 18 entity types
+
+[normal] 'wake me up at six thirty tomorrow'
+  -> ok  intent=alarm_set  time='six thirty', date='tomorrow'  [2 model calls, 1.11s]
+[normal] 'turn the bedroom lights off'
+  -> ok  intent=iot_hue_lightoff  house_place='bedroom'  [2 model calls, 0.60s]
+[out of scope] 'who won the football match last night'
+  -> out_of_scope  [1 model calls, 0.29s]
+[invalid] ''
+  -> invalid_request  error: request is empty  [0 model calls, 0.00s]
+[invalid] 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...'
+  -> invalid_request  error: request is 600 characters; the limit is 500  [0 model calls, 0.00s]

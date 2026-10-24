@@ -1,0 +1,11 @@
+match          20261011_1614_P1_B0_0                      intent 0.780, entity 0.000, 100 predictions
+match          20261011_1614_P2_B0_0                      intent 0.730, entity 0.000, 100 predictions
+match          20261015_2240_P1_B3-k_0                    intent 0.909, entity 0.650, 100 predictions
+match          20261015_2308_P2_B3-k_0                    intent 0.833, entity 0.448, 100 predictions
+match          20261024_1622_P1_B2_0                      intent 0.858, entity 0.586, 100 predictions
+match          20261024_1630_P2_B2_0                      intent 0.861, entity 0.394, 100 predictions
+match          20261024_1654_P1_A1-selected_0             intent 0.958, entity 0.597, 100 predictions
+match          20261024_1654_P1_A2-selected_0             intent 0.974, entity 0.707, 100 predictions
+match          20261024_1654_P2_A1-selected_0             intent 0.841, entity 0.365, 100 predictions
+match          20261024_1654_P2_A2-selected_0             intent 0.898, entity 0.483, 100 predictions
+{'match': 44, 'not checkable': 22}
