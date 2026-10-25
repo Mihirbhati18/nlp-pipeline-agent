@@ -311,3 +311,29 @@ far. Same 3B model, same catalogue, same selection rule. Runs
 - **These development numbers are not evidence of improvement:** A2 was
   designed after studying them. Only the frozen test comparison of A1 and A2
   counts, and both are reported whatever it shows.
+
+---
+
+## F9. The plan's full success rule against B1, applied (25 Oct, development data)
+
+`PROJECT_PLAN.md` line 389: an agent succeeds against B1 only if its intent
+macro-F1 gain is at least delta_I (+2.0 points), its entity F1 drop is at most
+epsilon_E (2.0 points), schema validity meets S_min and p95 latency stays
+within L_max. Earlier findings (F1) checked only the intent part. Applied in
+full, from the `*-selected_0` and `*_B1_0` run folders:
+
+| System | Project | Intent change | Entity change | Schema validity | Passes? |
+|---|---|---|---|---|---|
+| A1 | P1 | +3.2 | -1.3 | 1.00 | yes |
+| A1 | P2 | +3.8 | **-8.6** | 1.00 | **no**: entity drop exceeds 2.0 |
+| A2 | P1 | +4.8 | +9.7 | 1.00 | yes |
+| A2 | P2 | +9.4 | +3.3 | 1.00 | yes |
+
+- **Correction to F1:** "A1 beats B1 on both projects" holds for intent only.
+  Under the preregistered rule, A1 fails on P2 because its entity F1 falls 8.6
+  points below B1's.
+- A2 passes on both projects on development data. Latency is checked at the
+  freeze: A1's measured p95 (0.95 s on P1, 0.77 s on P2) is within 2x B1's
+  (0.59 s and 0.79 s); A2 has not yet been timed.
+- These are development numbers; the rule is applied for the report on the
+  frozen test runs.
