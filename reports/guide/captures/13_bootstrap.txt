@@ -1,0 +1,27 @@
+==============================================================================
+Bootstrap: is A1 really better than B1 on P1, or could it be luck?
+  A1 answers: runs\20261024_1654_P1_A1-selected_0\predictions.jsonl
+  B1 answers: runs\20261013_0110_P1_B1_0\predictions.jsonl
+==============================================================================
+
+STEP 1. On the real 100 requests: A1 0.958 - B1 0.927 = difference +0.032
+
+STEP 2. Make a 'pretend' set of 100 requests by drawing request numbers at random,
+        allowing repeats. Score BOTH systems on that same pretend set. Three examples:
+
+  draw 1: requests #42, #20, #51, #84, #7, #10, #69, #13, #47, #75, ... (38 repeats, 38 never drawn)
+          A1 0.886  B1 0.951  difference -0.065
+  draw 2: requests #10, #98, #72, #74, #41, #44, #89, #45, #77, #64, ... (32 repeats, 32 never drawn)
+          A1 0.974  B1 0.960  difference +0.014
+  draw 3: requests #52, #51, #14, #62, #82, #52, #8, #25, #9, #27, ... (39 repeats, 39 never drawn)
+          A1 0.957  B1 0.910  difference +0.048
+
+STEP 3. Do this 1000 times (fixed seed 20261016), sort the 1,000 differences,
+        and keep the middle 95%: that range is the 95% confidence interval.
+
+  interval = [-0.040, +0.121]   A1 better in 85% of the 1,000 draws
+  recorded in reports/dev_analysis.json: [-0.040, +0.121]  -> same
+
+STEP 4. Read it: the interval includes 0, so with only 100 requests A1's lead over B1
+        could still be luck. That is why the paper does not call it significant yet.
+==============================================================================

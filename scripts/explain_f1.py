@@ -83,7 +83,9 @@ def main() -> int:
     for number, case in enumerate(in_scope, 1):
         answer = said(answers.get(case["case_id"]))
         right = answer == case["true_intent"]
-        rows.append((number, case["case_id"], case["utt"], case["true_intent"], answer, right))
+        # Robustness runs log the rewritten request they were asked; show that one.
+        utt = (answers.get(case["case_id"]) or {}).get("utt", case["utt"])
+        rows.append((number, case["case_id"], utt, case["true_intent"], answer, right))
 
     print(f"\nSTEP 3. Side by side (first {min(args.rows, len(rows))} of {len(rows)}; "
           "all of them are in the CSV file)\n")

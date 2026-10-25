@@ -1,0 +1,37 @@
+==============================================================================
+Error analysis: A1's mistakes on the P1 development requests, by category
+  source: reports/dev_analysis.json (written by scripts/run_dev_analysis.py)
+==============================================================================
+
+spurious entity: 22
+    e.g. turn the lights off please -> house_place='lights'
+    e.g. it's too dark here -> house_place='here'
+    e.g. make coffee now -> time='now'
+
+missed entity: 15
+    e.g. make a room darker -> house_place='room'
+    e.g. at one p. m. today start the robot vacuum cleaner -> time='one p. m.'
+    e.g. at one p. m. today start the robot vacuum cleaner -> date='today'
+
+unsupported value (text not in the request): 7
+    e.g. what alarms are upcoming -> date='today'
+    e.g. tell me my alarms -> date='today'
+    e.g. what time is my wake up alarm set for -> date='tomorrow'
+
+incorrect out-of-scope rejection: 4
+    e.g. turn on the t. v. socket when i arrive home
+    e.g. i need some more lights
+    e.g. start new smart socket
+
+confused intent: 1
+    e.g. hey alexa turn on disco lights in my apartment and let the party begin -> iot_hue_lightchange (gold iot_hue_lighton)
+
+wrong entity type: 1
+    e.g. please have vacuum go for one hour -> 'one hour' as general_frequency (gold time)
+
+wrong entity boundary: 1
+    e.g. turn my lights to some random color -> color_type='some random color'
+
+Intents mixed up most often:
+    correct iot_hue_lighton -> answered iot_hue_lightchange (1 times)
+==============================================================================

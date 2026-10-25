@@ -334,167 +334,347 @@ b.page_break()
 
 # =========================================================================
 b.h("Part C. Every experiment, one by one")
-b.p("Each experiment below has the same layout: **the idea**, **how it was done**, **the command**, how long it "
-    "takes, and **what to say**. Commands run from `D:\\MyClaudeProject\\nlp` with the Ollama app open. "
-    "Most finish quickly because the model's earlier answers are saved; each run creates a new dated folder "
-    "in `runs`, which shows the results repeat.")
+b.p("Each experiment has the same seven parts: **in one sentence**, **where its files are**, **how it works**, "
+    "**run it**, **what the output means**, **check it yourself** and **what to say**. All paths are inside "
+    "`D:\\MyClaudeProject\\nlp`. Before running anything: open the Ollama app, open PowerShell, and type "
+    "`cd D:\\MyClaudeProject\\nlp`.")
+b.callout("**Three tools do the \"check it yourself\" parts for you, on the real files:**\n"
+          "`python scripts/explain_f1.py --run <run folder name>`: puts the correct answers and a run's answers "
+          "side by side and works out its F1 (Part A5). It works for **any** run folder that has a predictions.jsonl.\n"
+          "`python scripts/explain_stats.py bootstrap | timing | errors`: shows how the confidence interval, "
+          "the speed figures and the error counts were worked out.\n"
+          "A **run folder name** is a folder inside `runs`, such as `20261013_0110_P1_B1_0`: the date and time "
+          "(13 Oct, 01:10), the project (P1), the system (B1) and the seed (0).")
 
 
-def experiment(number, name, idea, how, command, time, say, image=None, caption=None):
+def files_table(rows):
+    b.table(["What", "Where"], rows, [5.2, 11.4], font=9)
+
+
+def test(number, name, sentence, files, how, command, time, meaning=None, image=None, caption=None,
+         check=None, say=""):
     b.h(f"C{number}. {name}", 2)
-    b.p(f"**Idea:** {idea}")
-    b.p("**How it was done:**")
-    b.numbered(how) if isinstance(how, list) else b.p(how)
-    if command:
-        b.code(command)
-    b.p(f"**Time:** {time}", size=10)
+    b.p(f"**In one sentence:** {sentence}")
+    b.p("**Where its files are:**")
+    files_table(files)
+    b.p("**How it works:**")
+    b.numbered(how)
+    b.p(f"**Run it** ({time}):")
+    b.code(command)
     if image:
         b.image(IMG / image, caption)
+    if meaning:
+        b.p("**What the output means:**")
+        b.bullets(meaning)
+    if check:
+        b.p("**Check it yourself:**")
+        b.numbered(check)
     b.p(f"**Say:** \"{say}\"", size=10.5)
 
 
-experiment(1, "The data and the splits",
-           "Use real, public data, and split it once into examples, development data and locked test data.",
-           ["Downloaded MASSIVE 1.1 (Amazon): 16,521 English requests with their correct intents and entities.",
-            "Chose the domains for each project (P1 home assistant, P2 productivity, P3 ordering and travel).",
-            "Drew 10 examples per intent, 100 development requests and 300 test requests per project, using a fixed seed so the draw is identical every time.",
-            "Recorded every request ID and a fingerprint (hash) of every file, and checked no request appears in two places."],
-           "python scripts/prepare_data.py --check", "a few seconds; it only checks, it changes nothing",
-           "Each project's sizes are fixed and the leakage check passes: no request is shared between splits.",
-           "screen_data_check.png", "The data check (real output).")
+test(1, "The data and the splits",
+     "We used real, public data and split it once, with a fixed seed, into examples, development data and locked test data.",
+     [["The original dataset (downloaded)", "data\\raw\\massive-1.1.tar.gz (Amazon MASSIVE 1.1)"],
+      ["Which domains each project uses", "configs\\projects.json"],
+      ["The script that builds the splits", "scripts\\prepare_data.py"],
+      ["Code that turns the dataset's labels into positions", "src\\evaluation\\massive.py"],
+      ["Examples, development and test files", "data\\processed\\P1\\kshot.jsonl, dev.jsonl, holdout\\test.jsonl"],
+      ["The record of every split", "data\\manifests\\P1.json (counts, every request ID, file fingerprints)"],
+      ["The data report", "docs\\DATA_REPORT.md"],
+      ["Tests for it", "tests\\test_massive.py, tests\\test_data_splits.py"]],
+     ["Download MASSIVE: 16,521 English requests, each labelled by people with its intent and entities.",
+      "The dataset marks entities inside the text, like `wake me at [time : five am]`. Convert each one to its "
+      "exact position: \"five am\" starts at character 11 and ends at 18. All 16,521 converted with 0 errors.",
+      "For each project, keep only its domains (P1: alarms and smart-home devices).",
+      "Draw, using a fixed seed so the result is identical every time: 10 examples per intent (kshot.jsonl), "
+      "100 development requests (80 in scope + 20 off-topic) and 300 locked test requests.",
+      "Save every request ID and a fingerprint (SHA-256 hash) of every file in the manifest, then check that no "
+      "request appears in two files (the leakage check)."],
+     "python scripts/prepare_data.py --check", "a few seconds; it only checks, it changes nothing",
+     ["`kshot: 120`: 120 examples for P1's 12 intents (10 each).",
+      "`dev_total: 100`, `test_total: 300`: the development and test sizes.",
+      "`leakage id-check pass`: no request is in two files.",
+      "P3's test set is smaller (200) because the original dataset has fewer requests in its domains; the plan's fallback size was used and recorded."],
+     "screen_data_check.png", "The data check (real output).",
+     ["Open `data\\processed\\P1\\dev.jsonl` in Notepad. The status bar shows 100 lines: one request each.",
+      "Find \"make a room darker\". Its entity is `\"start\": 7, \"end\": 11`. Count the characters from 0: "
+      "m=0, a=1, k=2, e=3, space=4, a=5, space=6, r=7, o=8, o=9, m=10, so characters 7 to 10 spell \"room\" (the end number is one past the last letter).",
+      "Open `data\\manifests\\P1.json` and search (Ctrl+F) for `\"counts\"`: the sizes match the screen above. "
+      "Search for `\"sha256\"` to see each file's fingerprint."],
+     "The data is the public MASSIVE dataset. Every split is drawn with a fixed seed and checked for overlap, and the test data is locked.")
 
-experiment(2, "Model speed and repeatability",
-           "Before anything else, measure whether the AI model is fast enough and gives the same answer twice.",
-           ["Sent 50 full-size requests to the model with saved answers switched off, timing each one.",
-            "Sent the same 50 again and compared: 50 of 50 answers were identical.",
-            "Result: 0.42 s median per request, valid JSON every time."],
-           "python scripts/throughput_test.py --models qwen2.5:3b", "a few minutes (100 live requests)",
-           "The model answers in under half a second and is fully repeatable, so anyone re-running our experiments gets the same answers.")
+test(2, "Model speed and repeatability",
+     "Before any experiment, we measured whether the AI model is fast enough and gives the same answer every time.",
+     [["The script", "scripts\\throughput_test.py"],
+      ["The result folder", "runs\\20261012_0020_setup_throughput_0"],
+      ["Summary table", "runs\\20261012_0020_setup_throughput_0\\summary.md"],
+      ["Time for every request", "runs\\20261012_0020_setup_throughput_0\\timing.jsonl"]],
+     ["Switch off the saved answers, so every request really goes to the model.",
+      "Send 50 full-size requests and time each one with a stopwatch in the code.",
+      "Send the same 50 again and compare the two sets of answers word for word.",
+      "Count how many replies were valid JSON."],
+     "python scripts/throughput_test.py --models qwen2.5:3b", "a few minutes: 100 live requests",
+     ["median 0.42 s: half the requests took less than 0.42 seconds.",
+      "identical repeat 1.00: all 50 answers were the same the second time.",
+      "JSON valid 1.00: every reply was in the right format."],
+     None, None,
+     ["Open `runs\\20261012_0020_setup_throughput_0\\summary.md` in Notepad and read the table.",
+      "Open `timing.jsonl` in the same folder: one line per request with its time in seconds (`latency_s`)."],
+     "The model answers in under half a second and gives identical answers on repeat, so anyone re-running our experiments gets the same results.")
 
-experiment(3, "B0: word matching (no AI)",
-           "The simplest possible system, as a floor every AI system must beat.",
-           ["Turn each example sentence into word weights (TF-IDF: words that are rare overall but frequent in a sentence weigh more).",
-            "Train a standard classifier (logistic regression) on the 10 examples per intent.",
-            "For off-topic requests: if a request is too unlike every example (below a threshold chosen on development data), refuse it.",
-            "Score on the 100 development requests."],
-           "python scripts/run_b0.py --projects P1", "a few seconds; no AI model needed",
-           "A basic word-matching classifier gets 0.78 on P1; every AI system has to beat that to be worth it.")
+test(3, "B0: word matching, no AI",
+     "The simplest possible system, as a floor that every AI system must beat.",
+     [["The code", "src\\baselines\\b0_tfidf.py"],
+      ["The script", "scripts\\run_b0.py"],
+      ["Result folders", "runs\\20261011_1614_P1_B0_0 (the first run) and later re-runs, e.g. runs\\20261025_1518_P1_B0_0"]],
+     ["Turn every example sentence into word weights (TF-IDF: a word counts more if it is common in this sentence but rare overall).",
+      "Train a standard classifier (logistic regression, from scikit-learn) on P1's 120 examples.",
+      "For off-topic requests: if a request is too unlike every example, refuse it. The cut-off (0.3482) was chosen on development data.",
+      "Answer the 100 development requests and score them."],
+     "python scripts/run_b0.py --projects P1", "a few seconds; no AI model needed",
+     ["`intent macro-F1 0.780 | accuracy 0.700`: the scores.",
+      "`threshold 0.3482`: the cut-off for refusing off-topic requests.",
+      "`entity F1 0.000 (none extracted)`: B0 only picks an intent; it never extracts entities."],
+     None, None,
+     ["Work out its F1 from the real files: `python scripts/explain_f1.py --run 20261011_1614_P1_B0_0`. It ends with 0.7801 (0.780 when rounded) and \"all three are the same\".",
+      "Every re-run makes a new dated folder in `runs` with exactly the same score: that shows the result repeats."],
+     "A basic word-matching classifier gets 0.78 on P1; any AI system has to beat that to be worth it.")
 
-experiment(4, "B1: one generic prompt",
-           "What you get with one standard AI prompt and no design decisions.",
-           ["Fixed one design in advance: joint-fixed-llm.",
-            "Ran it on the 100 development requests through the recipe in Part A2."],
-           "python scripts/run_design.py --systems B1 --projects P1", "under a minute",
-           "One generic prompt reaches 0.927; the agent has to beat this to show its design work adds anything.")
+test(4, "B1: one generic prompt",
+     "What you get from one standard AI prompt with no design decisions.",
+     [["The design it uses", "joint-fixed-llm, fixed in advance (B1_CONFIG_ID in src\\pipelines\\catalogue.py)"],
+      ["The script", "scripts\\run_design.py"],
+      ["Result folder", "runs\\20261013_0110_P1_B1_0 (predictions.jsonl, metrics.json)"]],
+     ["Use one design, chosen before any results were seen.",
+      "Run it on the 100 development requests, following the recipe in Part A2.",
+      "Save every answer and the scores in a new run folder."],
+     "python scripts/run_design.py --systems B1 --projects P1", "under a minute",
+     ["`B1  joint-fixed-llm intent 0.927 entity 0.610 oos 0.870`: its intent, entity and off-topic F1."],
+     None, None,
+     ["`python scripts/explain_f1.py --run 20261013_0110_P1_B1_0` shows its 80 answers, 8 of them wrong, and works out 0.9268.",
+      "In the CSV file it saves, filter column F for \"no\" to see exactly which 8 requests it got wrong."],
+     "One generic prompt reaches 0.927; the agent has to beat this to show its design work adds anything.")
 
-experiment(5, "B2: a person configuring by hand",
-           "Measure what a person achieves by hand, and how long it takes.",
-           ["Created a worksheet with the project description and the 12 designs.",
-            "A team member chose a design, wrote descriptions, timed themselves and declared any help (P2 used ChatGPT).",
-            "The worksheet was checked and saved as a run, with the minutes and the help recorded."],
-           "python scripts/run_b2.py check --project P1\npython scripts/run_b2.py finish --project P1",
-           "the person's own time (38 min for P1, under 6 for P2)",
-           "By hand, a beginner got 0.858 on P1 in 38 minutes; the agent got 0.958 with no human time.")
+test(5, "B2: a person configuring by hand",
+     "A team member configured the pipeline by hand, timed, so we can compare the agent with a person.",
+     [["The worksheets", "configs\\b2\\P1_worksheet.md, configs\\b2\\P2_worksheet.md"],
+      ["The script", "scripts\\run_b2.py (start, check, finish)"],
+      ["Result folders", "runs\\20261024_1622_P1_B2_0, runs\\20261024_1630_P2_B2_0"],
+      ["The time and help declared", "inside each result folder's config.json (\"effort\", \"ai_assistance\")"]],
+     ["`run_b2.py start` created a worksheet with the project description and the 12 designs.",
+      "The person chose a design, wrote a description for every intent and field, and declared any help.",
+      "`run_b2.py check` scored the choices on development data; each check is added to the worksheet.",
+      "`run_b2.py finish` saved the final result with the minutes and the help recorded."],
+     "python scripts/run_b2.py check --project P1", "the person's own time: 38 min for P1, under 6 min for P2",
+     ["`intent macro-F1 0.858 | entity F1 0.586`: the person's scores on P1."],
+     None, None,
+     ["Open `configs\\b2\\P1_worksheet.md`: section 2 shows the chosen design, sections 3 and 4 the descriptions, section 5 the time and help, and the bottom shows each check's score.",
+      "Open `runs\\20261024_1622_P1_B2_0\\config.json` and search for `\"ai_assistance\"`.",
+      "`python scripts/explain_f1.py --run 20261024_1622_P1_B2_0` works out 0.858 from its answers."],
+     "By hand, a beginner got 0.858 on P1 in 38 minutes; the agent got 0.958 with no human time. On P2, a person with ChatGPT matched the agent, and we report that too.")
 
-experiment(6, "B3: the published baseline (XLM-R)",
-           "Compare with the model the MASSIVE paper itself used.",
-           ["Downloaded XLM-R, a 270-million-parameter language model.",
-            "Fine-tuned it: trained its internal numbers on the examples, for 30 rounds (B3-k, 10 examples per intent) or on all training data (B3-full, upper reference).",
-            "Chose the off-topic threshold on development data, then scored with the same scorer as everything else."],
-           "python scripts/run_b3_local.py --projects P1 --variants B3-k",
-           "about 11 minutes for P1 B3-k; about 85 minutes for all four versions. Don't run it live; show the run folder instead",
-           "We compared against the published baseline: with the same data our agent wins on intents, and A2 also wins on entities.")
+test(6, "B3: the published baseline (XLM-R)",
+     "We compared against the model the MASSIVE paper itself used as its baseline.",
+     [["The code", "src\\baselines\\b3_encoder.py"],
+      ["The script", "scripts\\run_b3_local.py"],
+      ["The downloaded model", "C:\\Users\\mihir\\.cache\\huggingface\\hub\\models--xlm-roberta-base (1.1 GB)"],
+      ["Result folders", "runs\\20261015_2240_P1_B3-k_0 and the B3-full and P2 folders"],
+      ["Summary of each run", "summary.md inside each folder"]],
+     ["Download XLM-R, a language model with 270 million parameters.",
+      "Fine-tune it: show it the examples again and again (30 rounds) and adjust its internal numbers until it learns them. "
+      "B3-k uses the same 10 examples per intent as everyone else; B3-full uses all the training data (10-30 times more).",
+      "Choose the off-topic cut-off on development data.",
+      "Answer the 100 development requests and score them with the same scorer as every other system."],
+     "python scripts/run_b3_local.py --projects P1 --variants B3-k",
+     "about 11 minutes for P1 B3-k; about 85 minutes for all four. Don't run it live: open the result folder instead",
+     ["The summary says: fine-tuned on 120 cases for 30 epochs in 664 s, intent macro-F1 0.909, entity F1 0.650."],
+     None, None,
+     ["Open `runs\\20261015_2240_P1_B3-k_0\\summary.md` in Notepad.",
+      "`python scripts/explain_f1.py --run 20261015_2240_P1_B3-k_0` works out 0.909 from its saved answers."],
+     "With the same data, our agent beats the published baseline on intents, and A2 also beats it on entities. B3-full, with 10-30 times more data, is only a reference.")
 
-experiment(7, "B4: random search",
-           "Check whether the agent chooses designs better than luck.",
-           ["Picked 4 of the 12 designs at random, with the same budget the agent gets.",
-            "Scored them on development data and kept the best, by the same rule the agent uses.",
-            "Repeated with 5 different random seeds, and also tried all 12 (the ceiling)."],
-           "python scripts/run_design.py --systems B4-random --exhaustive --projects P1", "under a minute",
-           "Random search averaged 0.959 on P1. A1 did not beat it; the improved A2 reached the best design.")
+test(7, "B4: random search",
+     "We checked whether the agent chooses designs better than luck.",
+     [["The code", "src\\baselines\\b4_search.py"],
+      ["The script", "scripts\\run_design.py"],
+      ["Random-search results", "runs\\20261013_0112_P1_B4-random_seeds (config.json, metrics.json)"],
+      ["All 12 designs scored", "runs\\20261013_0112_P1_B4-exhaustive_0 (config.json)"]],
+     ["Pick 4 of the 12 designs at random: the same budget the agent gets.",
+      "Score each on development data and keep the best, by the same rule the agent uses.",
+      "Repeat with 5 different random seeds, so the result is not one lucky or unlucky draw.",
+      "Also score all 12 designs: the best possible (the ceiling)."],
+     "python scripts/run_design.py --systems B4-random --exhaustive --projects P1", "under a minute",
+     ["For each seed, the 4 designs drawn and the one kept; then the average over the 5 seeds."],
+     None, None,
+     ["Open `runs\\20261013_0112_P1_B4-random_seeds\\metrics.json` and find `\"selected_intent_macro_f1\"`: "
+      "the 5 winning scores, to 4 decimals, are 0.9585, 0.9511, 0.9744, 0.9511 and 0.9585.",
+      "Average them on a calculator: (0.9585 + 0.9511 + 0.9744 + 0.9511 + 0.9585) / 5 = 4.7936 / 5 = 0.9587, which rounds to **0.959**, the B4 score. (Use 4 decimals: rounding first to 3 gives 0.958.)",
+      "Open `config.json` in the same folder and search for `\"attempted\"` to see which 4 designs each seed drew.",
+      "Open the B4-exhaustive folder's `config.json` and search for `\"ranking\"`: all 12 designs, best first (schema-sim-llm, 0.974)."],
+     "Random search averaged 0.959 on P1. A1 did not beat it; the improved A2 reached the best design, 0.974.")
 
-experiment(8, "A1 and A2: the agent",
-           "Run the full framework: Analyzer, Architect, scoring the candidates, selection.",
-           ["The Analyzer asks the AI to describe every intent and field (2 calls).",
-            "The Architect asks the AI which designs to try; A2 asks it to rank each design choice separately.",
-            "Each chosen design is scored on development data; after 3, the scores go back to the Architect for a 4th choice.",
-            "The best-scoring design is selected; every choice and its reason are saved in the run folder."],
-           "python scripts/run_design.py --systems A1 --projects P1\npython scripts/run_a2.py", "under a minute each",
-           "A2 ranks every choice, tests alternatives one change at a time, and reached the best of all 12 designs on both projects.",
-           "screen_run_a2.png", "The A2 run: the AI's rankings, the 4 designs it tried, and the decision (real output).")
+test(8, "A1 and A2: the agent",
+     "We ran the full framework: the Analyzer, the Architect, scoring the candidates and selecting the best.",
+     [["The Analyzer", "src\\analyzer\\analyzer.py"],
+      ["A1's Architect", "src\\architect\\architect.py"],
+      ["A2's Architect", "src\\architect\\architect_v2.py"],
+      ["Puts the steps together", "src\\architect\\design_run.py"],
+      ["Scripts", "scripts\\run_design.py (A1), scripts\\run_a2.py (A2)"],
+      ["Result folders", "runs\\20261013_0110_P1_A1_0, runs\\20261024_1648_P1_A2_0 (config.json, events.jsonl)"],
+      ["Answers of the chosen design", "runs\\20261024_1654_P1_A1-selected_0, runs\\20261024_1654_P1_A2-selected_0"]],
+     ["Analyzer: ask the AI to write a one-line description of every intent and field (2 calls).",
+      "Architect: ask the AI which designs to try. A1 asks it to pick 3 at once; A2 asks it to rank each design choice separately, then builds 3 designs that each change one choice.",
+      "Score each of the 3 designs on the 100 development requests.",
+      "Give the scores back to the Architect, which picks a 4th design.",
+      "Keep the best of the 4. Save every choice, its reason and its score in the run folder."],
+     "python scripts/run_a2.py", "under a minute",
+     ["`ranked extraction schema_guided > two_stage > joint`: the AI's own ranking, with its reason in brackets.",
+      "`tried ... [reasoned/initial]`: the 3 first designs and their scores; `[reasoned/revision]`: the 4th, chosen after seeing the scores.",
+      "`selected schema-sim-llm: intent 0.974`: the design kept."],
+     "screen_run_a2.png", "The A2 run (real output).",
+     ["Open `runs\\20261013_0110_P1_A1_0\\config.json` and search for `\"attempts\"`: the 4 designs A1 tried, each with a `\"rationale\"` (its reason) and `\"source\": \"reasoned\"` (the AI chose it, not a fallback).",
+      "Search the same file for `\"reasoned_choices\"`: 4, so all 4 choices came from the AI.",
+      "`python scripts/explain_f1.py --run 20261024_1654_P1_A2-selected_0` works out A2's 0.974 (Part A5)."],
+     "The agent chooses designs itself and records a reason for each choice. A2 tests the alternatives one change at a time, and it reached the best of all 12 designs on both projects.")
 
-experiment(9, "Ablations",
-           "Find out which part of the agent matters by removing one part at a time.",
-           ["Without the Analyzer: no descriptions written.",
-            "Without the Architect's reasoning: a fixed order instead of the AI's choice.",
-            "Without scored selection: take the first design, unscored.",
-            "Without repair: no second chance on a badly formatted reply.",
-            "Each variant scored on the same 100 requests and compared with the full system."],
-           "python scripts/run_dev_analysis.py --skip-timing", "1 to 2 minutes",
-           "Scoring the candidates is what helps most (+3 to +4 points); A1's reasoning did not help, which is why we built A2.")
+test(9, "Ablations",
+     "We removed one part of the agent at a time to find out which part matters.",
+     [["The script", "scripts\\run_dev_analysis.py"],
+      ["One result folder per variant", "runs\\20261016_0100_P1_A1-noAnalyzer_0, ...-noReasoning_0, ...-noSelection_0, ...-oneCandidate_0, ...-noRepair_0"],
+      ["All numbers together", "reports\\dev_analysis.json (section \"ablations\")"],
+      ["The write-up", "reports\\DEV_ANALYSIS.md, section 1"]],
+     ["No Analyzer: run the agent without the AI-written descriptions.",
+      "No reasoning: replace the AI's choice of designs with a fixed order.",
+      "No selection: take the Architect's first design without scoring any.",
+      "No repair: give no second chance when the model's reply is badly formatted.",
+      "Score each variant on the same 100 requests and compare it with the full agent."],
+     "python scripts/run_dev_analysis.py --skip-timing", "1 to 2 minutes",
+     ["One line per variant, e.g. `A1-noReasoning joint-sim-llm intent 0.886` on P2: without the AI's reasoning, P2 scored higher than with it."],
+     "../../figures/fig4_ablations.png", "Each bar removes one part of A1 (chart from the reports\\figures folder).",
+     ["Pick a variant and work out its score: `python scripts/explain_f1.py --run 20261016_0102_P2_A1-noReasoning_0` gives 0.886.",
+      "Compare with the full agent on P2: `python scripts/explain_f1.py --run 20261024_1654_P2_A1-selected_0` gives 0.841."],
+     "Scoring the candidates helps most, by 3 to 4 points. A1's reasoning did not help, which is exactly why we built A2.")
 
-experiment(10, "Confidence intervals (bootstrap)",
-           "Check whether a difference between two systems is real or could be luck.",
-           "**By hand, the idea:** imagine 5 requests. Make a \"pretend\" test set by drawing 5 of them at random, "
-           "allowing repeats (e.g. #2, #2, #4, #1, #5). Score both systems on it and note the difference. Do this "
-           "1,000 times. If the difference is above zero in nearly all of the 1,000 draws, it is real; if it often "
-           "flips sign, it could be luck. The middle 95% of the 1,000 differences is the confidence interval. "
-           "The script does this for every comparison.",
-           "python scripts/run_dev_analysis.py --skip-timing", "included in C9",
-           "With 100 development requests, the intervals still include zero, so we don't call any difference significant yet; the 300-request test sets will narrow them.")
+test(10, "Confidence intervals (bootstrap)",
+     "We checked whether a difference between two systems is real or could be luck.",
+     [["The code", "paired_bootstrap in scripts\\run_dev_analysis.py"],
+      ["The results", "reports\\dev_analysis.json (section \"bootstrap\")"],
+      ["The step-by-step explainer", "scripts\\explain_stats.py"]],
+     ["Take the 100 development requests and both systems' answers to them.",
+      "Make a \"pretend\" set of 100 by drawing request numbers at random, allowing repeats: some requests appear twice, some not at all.",
+      "Score both systems on that same pretend set and note the difference.",
+      "Do this 1,000 times. Sort the 1,000 differences and keep the middle 95%: that range is the confidence interval.",
+      "If the range is entirely above 0, the lead is real. If it includes 0, it could be luck."],
+     "python scripts/explain_stats.py bootstrap", "about 20 seconds",
+     ["Step 1: on the real 100 requests A1 leads B1 by +0.032.",
+      "Step 2: three of the 1,000 pretend sets. In draw 1 B1 actually wins (-0.065): that is how luck shows up.",
+      "Step 3: the interval is [-0.040, +0.121]: it includes 0.",
+      "It matches the number recorded in reports\\dev_analysis.json."],
+     "screen_bootstrap.png", "The bootstrap, step by step (real output).",
+     ["Run it for P2: `python scripts/explain_stats.py bootstrap --project P2`.",
+      "Open `reports\\dev_analysis.json` and search for `\"ci_low\"` to see every recorded interval."],
+     "With 100 development requests, A1's lead over B1 could still be luck, so we don't call it significant yet. The 300-request test sets will tell.")
 
-experiment(11, "Real speed (timing)",
-           "Measure how fast the final pipeline answers when nothing is saved in advance.",
-           ["Switch off the saved answers so every request goes to the model live.",
-            "Send 5 warm-up requests (not counted), then 50 development requests.",
-            "Time each one with a stopwatch in the code, then report the median and the slowest 5% (p95).",
-            "Requests refused before reaching the model are left out, so they cannot make a design look faster."],
-           "python scripts/run_dev_analysis.py", "about 5 minutes (includes C9 and C10)",
-           "Every pipeline answers in under one second, even in the slowest 5% of requests.")
+test(11, "Real speed (timing)",
+     "We measured how fast the final pipeline answers when nothing is saved in advance.",
+     [["The code", "time_requests in src\\evaluation\\runner.py"],
+      ["Time for every request", "runs\\20261016_0101_P1_A1-timing_0\\timing.jsonl"],
+      ["The step-by-step explainer", "scripts\\explain_stats.py"]],
+     ["Switch off the saved answers so every request goes to the model live.",
+      "Send 5 warm-up requests and ignore them: the first one wakes the model up and is slow.",
+      "Send 50 development requests and time each one with a stopwatch in the code.",
+      "Leave out requests refused before reaching the model, so they cannot make a design look faster.",
+      "Sort the 50 times. The median is the middle one; p95 is the one that 95% are faster than."],
+     "python scripts/explain_stats.py timing", "a second (it reads the saved times)",
+     ["The 50 times sorted, numbered 1 to 50.",
+      "Median = number 26 = 0.77 s. p95 = number 48 = 0.95 s.",
+      "Both match what is recorded in reports\\dev_analysis.json."],
+     "screen_timing.png", "How the speed figures are worked out (real output).",
+     ["Open `runs\\20261016_0101_P1_A1-timing_0\\timing.jsonl` in Notepad: each line has a request and its `latency_s` (seconds). The first 5 say `\"warmup\": true`.",
+      "To measure again from scratch (about 5 minutes): `python scripts/run_dev_analysis.py`."],
+     "Every pipeline answers in under one second, even in the slowest 5% of requests.")
 
-experiment(12, "Error analysis",
-           "Find out what kind of mistakes the agent makes, not just how many.",
-           ["Look at every development request the agent got wrong.",
-            "Put each mistake in one category: confused intent, wrongly refused, answered an off-topic request, missed entity, extra (spurious) entity, wrong entity type, wrong boundary (too much or too little text), or a value not in the request.",
-            "Example: \"wake me at five am\" with the answer time = \"five\" is a wrong boundary (should be \"five am\").",
-            "Count each category per project."],
-           "python scripts/run_dev_analysis.py --skip-timing", "included in C9",
-           "Most of the original agent's mistakes were extracting extra words as entities, which pointed us to the main weakness.")
+test(12, "Error analysis",
+     "We looked at what kind of mistakes the agent makes, not just how many.",
+     [["The code", "classify_errors in scripts\\run_dev_analysis.py"],
+      ["The results", "reports\\dev_analysis.json (section \"errors\")"],
+      ["The explainer", "scripts\\explain_stats.py"]],
+     ["Go through every development request the agent got wrong.",
+      "Put each mistake in one category: confused intent, wrongly refused, answered an off-topic request, missed entity, "
+      "extra (spurious) entity, wrong entity type, wrong boundary (too much or too little text), or a value not in the request.",
+      "Count each category, and keep real examples of each."],
+     "python scripts/explain_stats.py errors", "a second",
+     ["`spurious entity: 22`, e.g. \"turn the lights off please -> house_place='lights'\": the agent extracted \"lights\" as a place, which it is not.",
+      "`missed entity: 15`, e.g. \"make a room darker\": the room was not extracted.",
+      "`incorrect out-of-scope rejection: 4`, e.g. \"i need some more lights\" was refused as off-topic."],
+     "screen_errors.png", "A1's mistakes by category, with real examples (real output).",
+     ["Run it for P2: `python scripts/explain_stats.py errors --project P2`.",
+      "Check one example against the data: find \"make a room darker\" in `data\\processed\\P1\\dev.jsonl`; the correct entity is house_place = room."],
+     "Most of the original agent's mistakes were extra words extracted as entities, which showed us where it was weakest.")
 
-experiment(13, "Robustness to messy typing",
-           "Check whether the systems still work when people type carelessly.",
-           ["Rewrite every development request three ways, the same way every time (fixed seed):",
-            "typos: two neighbouring letters swapped, e.g. \"tunr the lights off please\";",
-            "capitals: \"TURN THE LIGHTS OFF PLEASE\";",
-            "filler: \"hey, could you please turn the lights off please, thanks\".",
-            "Score B0, B1 and the agent on each rewritten set."],
-           "python scripts/run_robustness.py", "about a minute (answers saved earlier)",
-           "The AI systems lose at most about 7 points on messy input; word matching drops by up to 27.")
+test(13, "Robustness to messy typing",
+     "We checked whether the systems still work when people type carelessly.",
+     [["The script", "scripts\\run_robustness.py"],
+      ["Result folders", "runs\\20261016_0119_P1_A1-robust-typo_0, ...-robust-caps_0, ...-robust-filler_0 (and the same for B1 and B0)"],
+      ["All numbers together", "reports\\robustness.json"],
+      ["The write-up", "reports\\DEV_ANALYSIS.md, section 5"]],
+     ["Rewrite every development request three ways, the same way every time (fixed seed):",
+      "typos: two neighbouring letters swapped (\"tunr the lights off please\");",
+      "capitals: \"TURN THE LIGHTS OFF PLEASE\";",
+      "filler words: \"hey, could you please turn the lights off please, thanks\".",
+      "Score B0, B1 and the agent on each rewritten set, with the same correct answers as before."],
+     "python scripts/run_robustness.py", "about a minute (answers saved earlier)",
+     ["One line per system and version, e.g. `A1 typo intent 0.949`: with typos A1 dropped only from 0.958 to 0.949."],
+     None, None,
+     ["`python scripts/explain_f1.py --run 20261016_0119_P1_A1-robust-typo_0` shows the requests with their typos (\"tunr the lights off please\") next to A1's answers, and works out 0.949.",
+      "Open that folder's `predictions.jsonl`: each line has the rewritten request in `\"utt\"`."],
+     "The AI systems lose at most about 7 points on messy input, while word matching drops by up to 27.")
 
-experiment(14, "Export and live demo",
-           "Show the chosen pipeline can be saved and used by another program.",
-           ["Save the selected design, the Analyzer's descriptions, the examples and the model's fingerprint as a package.",
-            "Fingerprint every package file; a changed file makes the package refuse to load.",
-            "Load the package in a fresh program and answer normal, off-topic and invalid requests."],
-           "python scripts/demo.py --project P1\npython scripts/demo.py --project P1 --interactive\n"
-           "python -m pytest tests/test_runtime.py -vv -k modified",
-           "about 10 seconds each",
-           "The agent's choice is exported as a package any program can load; if anyone edits it, it refuses to load, as this test shows.")
+test(14, "Export and live demo",
+     "We saved the chosen pipeline as a package and showed another program can load and use it.",
+     [["The code", "src\\runtime\\package.py"],
+      ["Scripts", "scripts\\export_pipeline.py, scripts\\demo.py"],
+      ["The P1 package", "artifacts\\P1\\twostage-sim-llm-ff3d548a0af2\\ (pipeline.json, examples.jsonl, manifest.json)"],
+      ["Tests for it", "tests\\test_runtime.py"]],
+     ["Save the chosen design, the Analyzer's descriptions, the examples and the model's fingerprint into three files.",
+      "Write a fingerprint of each file into manifest.json. If a file is changed later, the fingerprints no longer match and the package refuses to load.",
+      "Load the package in a fresh program and answer normal, off-topic and invalid requests.",
+      "These packages hold A1's choices; A2's will be exported at the freeze."],
+     "python scripts/demo.py --project P1\npython scripts/demo.py --project P1 --interactive",
+     "about 10 seconds each",
+     ["`-> ok intent=alarm_set time='six thirty'`: understood, with the details extracted.",
+      "`-> out_of_scope`: refused, correctly.",
+      "`-> invalid_request`: an empty or too-long request, refused before the AI is even called."],
+     "screen_demo.png", "The demo (real output).",
+     ["Open `artifacts\\P1\\twostage-sim-llm-ff3d548a0af2\\manifest.json`: `\"files\"` lists each file's fingerprint.",
+      "See the tamper protection work: `python -m pytest tests/test_runtime.py -vv -k modified`. The test edits a package file and checks it is refused (2 passed).",
+      "In interactive mode, type your own requests, e.g. \"dim the kitchen lights\", then press Enter on an empty line to stop."],
+     "The agent's choice is saved as a package any program can load, and if anyone edits it, it refuses to load.")
 
-experiment(15, "Checking the results themselves",
-           "Prove that no recorded number was edited or computed wrongly.",
-           ["Re-score every run from its saved predictions and compare with the recorded score (reproduction check).",
-            "Recompute F1, accuracy and the off-topic scores with scikit-learn, without our scorer (independent check).",
-            "Both compare to 9 decimal places: 44 of 44 runs agree."],
-           "python scripts/reproduce_metrics.py\npython scripts/verify_with_sklearn.py\npython scripts/show_evidence.py",
-           "under a minute; the last command runs every check at once",
-           "Every recorded number can be recomputed from the raw predictions, and the standard library scikit-learn gets the same numbers.")
+test(15, "Checking the results themselves",
+     "We proved that no recorded number was edited or computed wrongly.",
+     [["Re-score every run", "scripts\\reproduce_metrics.py"],
+      ["Independent check with scikit-learn", "scripts\\verify_with_sklearn.py"],
+      ["Every check at once", "scripts\\show_evidence.py (saves reports\\EVIDENCE_SUMMARY.md)"]],
+     ["For every run folder with a predictions.jsonl, recompute its scores from the saved answers and compare with its metrics.json.",
+      "Separately, recompute F1, accuracy and the off-topic scores with scikit-learn, without our scorer.",
+      "Compare to 9 decimal places."],
+     "python scripts/reproduce_metrics.py\npython scripts/verify_with_sklearn.py\npython scripts/show_evidence.py",
+     "under a minute in total",
+     ["`match` / `agrees` on every line: the recorded number is exactly what recomputation gives.",
+      "`not checkable`: that folder has no answers to re-score (for example a timing run). It is not a failure."],
+     "screen_sklearn.png", "The independent check (real output).",
+     ["Part A5's explain_f1 does the same three-way check for one run, showing every step: our scorer, scikit-learn and the hand calculation all give 0.9744.",
+      "Run `python scripts/show_evidence.py` and find \"Overall: all checks passed\" on the last line."],
+     "Every recorded number can be recomputed from the raw answers, and the standard library scikit-learn gets the same numbers.")
 b.page_break()
 
 # =========================================================================
 b.h("Part D. If the teacher says \"do it now\"")
 b.table(["The teacher asks…", "Type this", "Time", "What appears"], [
     ["\"Show me a test running.\"", "python scripts/walkthrough.py", "5 s", "the six steps for three requests"],
+    ["\"Is the difference real?\"", "python scripts/explain_stats.py bootstrap", "20 s", "the confidence interval, worked out step by step"],
+    ["\"How did you measure speed?\"", "python scripts/explain_stats.py timing", "1 s", "50 times sorted, median and p95 picked out"],
     ["\"Run all your tests.\"", "python -m pytest tests", "15 s", "371 passed"],
     ["\"How do you compute F1?\"", "python scripts/explain_f1.py (Part A5)", "5 s", "every count and the average, matching metrics.json"],
     ["\"Write a test.\"", "the file from Part B2, then python -m pytest tests/test_my_first.py -vv", "5 min", "2 passed"],

@@ -1,0 +1,81 @@
+﻿#,case_id,request,correct intent,system said,right?
+1,massive-6741,please put to my calendar daily stand-up to ten am,calendar_set,calendar_set,yes
+2,massive-6873,can you erase the past event i visited,calendar_remove,calendar_remove,yes
+3,massive-6929,remove all the events and schedules,calendar_remove,calendar_remove,yes
+4,massive-6991,latest events,calendar_query,calendar_query,yes
+5,massive-7052,do i have anything going on this saturday between two and four p. m.,calendar_query,calendar_query,yes
+6,massive-7086,remove today's meeting at evening,calendar_remove,calendar_remove,yes
+7,massive-7134,what to do next on events,calendar_query,calendar_query,yes
+8,massive-7260,set reminder for meeting at three p. m. tomorrow,calendar_set,calendar_set,yes
+9,massive-7279,remind me to pick up the laundry next monday,calendar_set,calendar_set,yes
+10,massive-7373,when is the wedding scheduled,calendar_query,calendar_query,yes
+11,massive-7495,remind me for tomorrow interview,calendar_set,calendar_set,yes
+12,massive-7620,please delete all my calendar events,calendar_remove,calendar_remove,yes
+13,massive-7720,please tell me the pending reminders,calendar_query,calendar_query,yes
+14,massive-7780,please remind me about swatishs birthday,calendar_set,calendar_set,yes
+15,massive-7846,what reminders are coming up this week,calendar_query,calendar_query,yes
+16,massive-7920,open calendar remove all events,calendar_remove,calendar_remove,yes
+17,massive-8061,what time does the dinner party start tonight,calendar_query,calendar_query,yes
+18,massive-8089,when is my meeting,calendar_set,calendar_query,no
+19,massive-8384,are there any pending appointments this morning,calendar_query,calendar_query,yes
+20,massive-8463,remove my calendar event at one p. m. today,calendar_remove,calendar_remove,yes
+21,massive-8510,when is bruno mars coming to sacramento,calendar_query,REFUSED (off-topic),no
+22,massive-8528,clear event from calendar and refresh,calendar_remove,calendar_remove,yes
+23,massive-8606,i want to meet with sara tomorrow,calendar_set,calendar_set,yes
+24,massive-8612,remove thursday's lunch from my calendar,calendar_remove,calendar_remove,yes
+25,massive-8896,clear my schedule for today,calendar_remove,calendar_remove,yes
+26,massive-9023,create a reminder for visa application on this thursday,calendar_set,calendar_set,yes
+27,massive-10486,clear list,lists_remove,lists_remove,yes
+28,massive-10488,make list,lists_createoradd,lists_createoradd,yes
+29,massive-10539,send me the last list uploaded,lists_query,lists_query,yes
+30,massive-10545,make a list of numbers for me,lists_createoradd,lists_createoradd,yes
+31,massive-10548,create a new list for me please,lists_createoradd,lists_createoradd,yes
+32,massive-10557,please show my list,lists_query,lists_query,yes
+33,massive-10589,remove the excel file from the list,lists_remove,lists_remove,yes
+34,massive-10685,tell me what lists i have,lists_query,lists_query,yes
+35,massive-10730,can you please tell me what i have on my list,lists_query,lists_query,yes
+36,massive-10732,remove pepper from my grocery list,lists_remove,lists_remove,yes
+37,massive-10741,add something to my list,lists_createoradd,lists_createoradd,yes
+38,massive-10767,are eggs on my shopping list,lists_query,lists_query,yes
+39,massive-10870,add buy groceries to my to do list for today,lists_createoradd,lists_createoradd,yes
+40,massive-10883,please tell me how can i remove the item,lists_remove,REFUSED (off-topic),no
+41,massive-10886,can i check my lists,lists_query,lists_query,yes
+42,massive-10969,delete the last line,lists_remove,lists_remove,yes
+43,massive-11020,take grocery buying off of the list,lists_remove,lists_remove,yes
+44,massive-11041,remind me to order more soap,lists_createoradd,lists_createoradd,yes
+45,massive-11047,remove last played song,lists_remove,REFUSED (off-topic),no
+46,massive-11061,please add tom to my contact list,email_addcontact,email_addcontact,yes
+47,massive-11076,what is that on the list,lists_query,lists_query,yes
+48,massive-11086,add milk to my grocery list,lists_createoradd,lists_createoradd,yes
+49,massive-11096,remove the santana music list,lists_remove,lists_remove,yes
+50,massive-11119,can i see my work lists,lists_query,lists_query,yes
+51,massive-11212,delete the old playlist and create new,lists_createoradd,REFUSED (off-topic),no
+52,massive-15545,remind me to tweet at this company,calendar_set,REFUSED (off-topic),no
+53,massive-15778,send email to emilia saying i will be late please don't wait with dinner,email_sendemail,email_sendemail,yes
+54,massive-15798,check my inbox,email_query,email_query,yes
+55,massive-15867,please give me details of allen from my contact,email_querycontact,email_querycontact,yes
+56,massive-15900,what is john's last name,email_querycontact,REFUSED (off-topic),no
+57,massive-15910,check emails for last twelve hours,email_query,email_query,yes
+58,massive-15921,alexa add erosser at hotmail dot com as a new contact for emily rosser,email_addcontact,email_addcontact,yes
+59,massive-15930,let me know if there are any new emails from ebay,email_query,email_query,yes
+60,massive-15986,save this email in contact,email_addcontact,email_addcontact,yes
+61,massive-16140,show all the received emails recently with time stamp,email_query,email_query,yes
+62,massive-16184,tell me the contact details of my brother,email_querycontact,email_querycontact,yes
+63,massive-16322,tell bob smith,email_sendemail,REFUSED (off-topic),no
+64,massive-16445,please check for recent email study from this sender,email_query,email_query,yes
+65,massive-16454,send an email to my boss saying i will be late,email_sendemail,email_sendemail,yes
+66,massive-16493,did my mom send me an email,email_query,email_query,yes
+67,massive-16570,send an email to all my company workers,email_sendemail,email_sendemail,yes
+68,massive-16582,is this the correct area code for my boss,email_querycontact,email_querycontact,yes
+69,massive-16588,please delete the contacts that i haven't spoken to in three of months,email_querycontact,lists_remove,no
+70,massive-16601,i want to send email to jack at gmail dot com,email_sendemail,email_sendemail,yes
+71,massive-16611,send email to daughter saying i love you,email_sendemail,email_sendemail,yes
+72,massive-16779,open the contact named john,email_querycontact,REFUSED (off-topic),no
+73,massive-16818,please open my contact list,email_querycontact,REFUSED (off-topic),no
+74,massive-16840,email tom,email_sendemail,email_sendemail,yes
+75,massive-16848,i need to email susan and metion,email_sendemail,email_sendemail,yes
+76,massive-17017,save the email to my contact,email_addcontact,email_addcontact,yes
+77,massive-17018,save to contacts,email_addcontact,REFUSED (off-topic),no
+78,massive-17046,please let me know new emails from michael,email_query,email_query,yes
+79,massive-17048,just let me know new emails from sara,email_query,email_query,yes
+80,massive-17102,call raju phone number,email_querycontact,REFUSED (off-topic),no

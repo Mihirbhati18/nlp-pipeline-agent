@@ -1,0 +1,81 @@
+﻿#,case_id,request,correct intent,system said,right?
+1,massive-11,turn the lights off please,iot_hue_lightoff,iot_hue_lightoff,yes
+2,massive-24,make a room darker,iot_hue_lightdim,REFUSED (off-topic),no
+3,massive-232,set an alarm at six in the morning,alarm_set,alarm_set,yes
+4,massive-312,it's too dark here,iot_hue_lighton,iot_hue_lighton,yes
+5,massive-388,turn off the smart plug,iot_wemo_off,iot_wemo_off,yes
+6,massive-534,set a wake up call for ten am,alarm_set,alarm_set,yes
+7,massive-538,set an alarm for one p. m.,alarm_set,alarm_set,yes
+8,massive-610,i want to wake up at six am tomorrow please,alarm_set,alarm_set,yes
+9,massive-678,turn on the t. v. socket when i arrive home,iot_wemo_on,iot_wemo_on,yes
+10,massive-756,can you turn off wemo plug socket,iot_wemo_off,iot_wemo_off,yes
+11,massive-807,make coffee now,iot_coffee,REFUSED (off-topic),no
+12,massive-1058,at one p. m. today start the robot vacuum cleaner,iot_cleaning,iot_cleaning,yes
+13,massive-1576,olly start the vacuum cleaner,iot_cleaning,iot_cleaning,yes
+14,massive-1599,can you start the roomba,iot_cleaning,iot_cleaning,yes
+15,massive-1805,i need some more lights,iot_hue_lightup,iot_hue_lightup,yes
+16,massive-1988,hey alexa turn on disco lights in my apartment and let the party begin,iot_hue_lighton,iot_hue_lightchange,no
+17,massive-2118,set the mood please,iot_hue_lightchange,REFUSED (off-topic),no
+18,massive-2122,turn living room lights red,iot_hue_lightchange,iot_hue_lightchange,yes
+19,massive-2187,can you please turn off the light of my bed room,iot_hue_lightoff,REFUSED (off-topic),no
+20,massive-2246,turn off the closet light,iot_hue_lightoff,iot_hue_lightoff,yes
+21,massive-2312,olly turn the lights down to seven,iot_hue_lightdim,REFUSED (off-topic),no
+22,massive-2431,what alarms are upcoming,alarm_query,alarm_query,yes
+23,massive-2470,switch on the lights,iot_hue_lighton,iot_hue_lighton,yes
+24,massive-2483,will you dim all the lights,iot_hue_lightdim,iot_hue_lightdim,yes
+25,massive-2499,lights down,iot_hue_lightdim,iot_hue_lightdim,yes
+26,massive-2520,please help me turn on the robot vacuum cleaner,iot_cleaning,iot_cleaning,yes
+27,massive-2599,i would like coffee now,iot_coffee,iot_coffee,yes
+28,massive-2749,start up the coffee machine,iot_coffee,iot_coffee,yes
+29,massive-2810,brighten lights in living room,iot_hue_lightup,iot_hue_lightup,yes
+30,massive-2814,brew some coffee,iot_coffee,iot_coffee,yes
+31,massive-2821,change light colors from blue to white,iot_hue_lightchange,REFUSED (off-topic),no
+32,massive-2834,please have vacuum go for one hour,iot_cleaning,REFUSED (off-topic),no
+33,massive-2863,change light color to blue,iot_hue_lightchange,iot_hue_lightchange,yes
+34,massive-2869,tell me my alarms,alarm_query,alarm_query,yes
+35,massive-2879,please remove any alarms that i have set,alarm_remove,REFUSED (off-topic),no
+36,massive-2946,alexa turn off the fan in the master bedroom,iot_wemo_off,iot_wemo_off,yes
+37,massive-2971,please start the coffee,iot_coffee,iot_coffee,yes
+38,massive-2978,lower lights,iot_hue_lightdim,iot_hue_lightdim,yes
+39,massive-3094,turn off lighting,iot_hue_lightoff,iot_hue_lightoff,yes
+40,massive-3148,what time is my wake up alarm set for,alarm_query,alarm_query,yes
+41,massive-3149,do i have any alarms for tomorrow morning,alarm_query,alarm_query,yes
+42,massive-3151,remove my early alarms,alarm_remove,alarm_remove,yes
+43,massive-3183,power off on,iot_wemo_off,iot_wemo_off,yes
+44,massive-3270,remove alarms set for tomorrow,alarm_remove,alarm_remove,yes
+45,massive-3394,please turn on my wemo plug socket,iot_wemo_on,iot_wemo_on,yes
+46,massive-3464,please turn on all the outdoor lights,iot_hue_lighton,iot_hue_lighton,yes
+47,massive-3609,please make a coffee for me,iot_coffee,iot_coffee,yes
+48,massive-3803,please turn off the smart plug socket,iot_wemo_off,iot_wemo_off,yes
+49,massive-3804,turn on the wemo plug socket,iot_wemo_on,iot_wemo_on,yes
+50,massive-3895,please increase the light,iot_hue_lightup,iot_hue_lightup,yes
+51,massive-3904,please delete the wednesday evening alarm,alarm_remove,REFUSED (off-topic),no
+52,massive-4129,what alarms do i have set right now,alarm_query,alarm_query,yes
+53,massive-4198,remove the alarm set for four hundred am,alarm_remove,alarm_remove,yes
+54,massive-4287,light up,iot_hue_lightup,iot_hue_lightup,yes
+55,massive-4387,raise the lamp's light,iot_hue_lightup,iot_hue_lightup,yes
+56,massive-4440,dim all interior lights,iot_hue_lightdim,iot_hue_lightdim,yes
+57,massive-4494,turn my lights to some random color,iot_hue_lightchange,REFUSED (off-topic),no
+58,massive-4515,change the color of the lights,iot_hue_lightchange,iot_hue_lightchange,yes
+59,massive-4573,turn up the lights in here please,iot_hue_lightup,iot_hue_lightup,yes
+60,massive-4619,start new smart socket,iot_wemo_on,iot_wemo_on,yes
+61,massive-4622,dim the lights to level two,iot_hue_lightdim,iot_hue_lightdim,yes
+62,massive-4632,please turn bedroom lights off,iot_hue_lightoff,iot_hue_lightoff,yes
+63,massive-4693,set an alarm for five am,alarm_set,alarm_set,yes
+64,massive-4723,list my different alarm,alarm_query,REFUSED (off-topic),no
+65,massive-4939,switch the lights to off,iot_hue_lightoff,iot_hue_lightoff,yes
+66,massive-4971,remove finlee's bedtime alarm,alarm_remove,alarm_remove,yes
+67,massive-5069,turn wemo on,iot_wemo_on,iot_wemo_on,yes
+68,massive-5094,it's dark in here,iot_hue_lighton,iot_hue_lighton,yes
+69,massive-5099,olly cancel alarms,alarm_remove,REFUSED (off-topic),no
+70,massive-5202,kindly switch off the light in the drawing hall,iot_hue_lightoff,iot_hue_lightoff,yes
+71,massive-5404,get the roomba to clean the kitchen,iot_cleaning,iot_cleaning,yes
+72,massive-5479,activate a different light color,iot_hue_lightchange,REFUSED (off-topic),no
+73,massive-5651,turn wemo plug socket on,iot_wemo_on,iot_wemo_on,yes
+74,massive-5653,toggle wemo plug socket on,iot_wemo_on,iot_wemo_on,yes
+75,massive-5667,tap start and then select settings,alarm_query,iot_hue_lightchange,no
+76,massive-5696,start house cleaning,iot_cleaning,REFUSED (off-topic),no
+77,massive-6001,it's coffee time,iot_coffee,REFUSED (off-topic),no
+78,massive-6035,open clock,alarm_set,REFUSED (off-topic),no
+79,massive-6052,alexa increase the brightness of the light it is hard to see down here,iot_hue_lightup,iot_hue_lightup,yes
+80,massive-8253,set a reminder i need to wake up at five am every morning,alarm_set,alarm_set,yes

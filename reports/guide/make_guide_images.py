@@ -151,6 +151,9 @@ def main():
     terminal("11_data_check.txt", "python scripts/prepare_data.py --check", "screen_data_check.png", ("pass",))
     terminal("12a_explain_table.txt", "python scripts/explain_f1.py   (steps 1 to 3)", "screen_explain_table.png", ("NO", "Saved"))
     terminal("12b_explain_counts.txt", "python scripts/explain_f1.py   (steps 4 to 6)", "screen_explain_counts.png", ("= 0.9744", "same", "F1 ="))
+    terminal("13_bootstrap.txt", "python scripts/explain_stats.py bootstrap", "screen_bootstrap.png", ("interval =", "-> same", "STEP 1."))
+    terminal("14_timing.txt", "python scripts/explain_stats.py timing", "screen_timing.png", ("Median =", "p95 =", "-> same"))
+    terminal("15a_errors.txt", "python scripts/explain_stats.py errors   (first part)", "screen_errors.png", (": 22", ": 15", ": 7", ": 4"))
     terminal("10_scorer_tests.txt", "python -m pytest tests/test_scorer.py -vv   (first 8 of 14)", "screen_scorer_tests.png", ("PASSED",))
 
 
