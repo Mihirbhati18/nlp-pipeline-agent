@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-25T17:37:07+00:00",
+  "files": {
+    "examples.jsonl": "28bd23d9aec6255c1ac9335c8b7fc6487847d0d06c05f2187d50477b4db60761",
+    "pipeline.json": "458d2f51df3133916a019d47052606a4bcb84e172ddd5e310c8edbdc2cf60825"
+  },
+  "format_version": "1",
+  "git": {
+    "branch": "master",
+    "commit": "6f90d666029144b871a28df945f03ed41abb60d3",
+    "dirty": "true"
+  },
+  "note": "Load with src.runtime.package.load_pipeline. Runtime never calls the Architect; the configuration below is fixed.",
+  "package_hash": "b7847545a937abb71e9f6a4be6ef6159ecd8f7b14419ec7aef29e3b738e0fd82",
+  "packages": {
+    "numpy": "1.26.4",
+    "pytest": "9.1.1",
+    "scikit-learn": "1.5.2",
+    "scipy": "1.13.1",
+    "torch": "2.14.1+cpu",
+    "transformers": "4.46.3"
+  }
+}

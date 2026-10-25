@@ -31,8 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SINGLE_CALL_P95_S = 0.59  # same declared estimate the G8 design run used
 
 
-def latest_a1_run(project: str) -> tuple[str, dict] | None:
-    runs = sorted((ROOT / "runs").glob(f"*_{project}_A1_*"))
+def latest_a1_run(project: str, system: str = "A1") -> tuple[str, dict] | None:
+    runs = sorted((ROOT / "runs").glob(f"*_{project}_{system}_0"))
     for run in reversed(runs):
         config = run / "config.json"
         if config.is_file():
@@ -46,6 +46,8 @@ def main() -> int:
     parser.add_argument("--projects", nargs="+", default=["P1", "P2"])
     parser.add_argument("--host", default="http://127.0.0.1:11434")
     parser.add_argument("--out", default=str(ROOT / "artifacts"))
+    parser.add_argument("--system", choices=["A1", "A2"], default="A1",
+                        help="A2 uses the improved Architect (decision 42)")
     args = parser.parse_args()
 
     try:
@@ -67,13 +69,14 @@ def main() -> int:
             spec, access,
             runtime_client=client, planning_client=client,
             load_cases=load_cases, single_call_p95_s=SINGLE_CALL_P95_S,
+            architect_version="v2" if args.system == "A2" else "v1",
         )
         after = client.counter.as_dict()
         selected = design.selected_config_id
 
-        recorded = latest_a1_run(project)
+        recorded = latest_a1_run(project, args.system)
         if recorded is None:
-            print(f"{project}: no A1 run folder to tie the export to; run scripts/run_design.py first",
+            print(f"{project}: no {args.system} run folder to tie the export to; run scripts/run_design.py first",
                   file=sys.stderr)
             return 1
         run_id, run_config = recorded
@@ -91,7 +94,7 @@ def main() -> int:
             client=client,
             out_root=args.out,
             source={
-                "system": "A1",
+                "system": args.system,
                 "run_id": run_id,
                 "selection_split": "dev",
                 "design_cost": design.as_dict()["design_cost"],

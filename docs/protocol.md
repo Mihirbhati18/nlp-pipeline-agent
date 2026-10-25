@@ -4,7 +4,7 @@ This file becomes the frozen protocol at G10. Until the freeze commit, every
 value marked provisional may still change, and each change is logged in
 `decisions.md`. After the freeze, nothing here changes.
 
-Status: **draft, not frozen.** Created 11 October 2026.
+Status: **FROZEN on 25 October 2026 (G10).** Created 11 October 2026. The freeze commit's hash is recorded in section 7 and in `decisions.md` (decision 46). Nothing in this file changes after the freeze.
 
 ## 1. Runtime model
 
@@ -82,21 +82,21 @@ never truncated. Actual token counts are logged per request.
 | Candidate evaluations per project (A1) | 4 (3 initial + 1 revision) |
 | B4-random configurations | 4 per seed, 5 seeds |
 | B4-exhaustive | all 12 configurations |
-| Architect design repeats per project | 3 |
+| Architect design repeats per project | 1 (deviation from the plan; decision 44) |
 | Expected total model calls | about 21,000 |
 | Hard upper bound | about 36,700 |
-| Exact test call count | _computed at G10 before any test call_ |
+| Exact test call count | **at most 7,800 first-attempt calls** (3,900 per project for P1 and P2: 15 frozen choices, 9 and 10 distinct pipelines, 300 test cases each; repairs add at most one per failed reply; TF-IDF rejections make fewer). Computed with `python scripts/run_final.py --count` from the manifests, before any test access. B3 makes no LLM calls. P3 is counted when it is released. |
 
-## 4. Success thresholds (provisional until 16 Oct)
+## 4. Success thresholds (frozen 25 Oct)
 
-| Symbol | Meaning | Provisional value |
+| Symbol | Meaning | Frozen value |
 |---|---|---|
 | delta_I | Minimum intent macro-F1 improvement of A1 over B1 | +2.0 points |
 | epsilon_E | Largest acceptable entity F1 drop of A1 vs B1 | 2.0 points |
 | S_min | Minimum schema validity after repair | 0.98 |
-| L_max | Maximum p95 latency for A1 | 2x B1's development p95, to be fixed here as a number |
+| L_max | Maximum p95 latency for an agent (A1, A2) | **2 x B1's p95 measured in the same interleaved timing session**: 1.22 s on P1 and 1.67 s on P2 (`reports/timing_interleaved.json`, 25 Oct). The 16 Oct B1 timing gave 1.18 s and 1.58 s; both agents are within either limit. |
 
-Rule: A1 succeeds against B1 if intent improvement is at least delta_I, the
+Rule (applies to A1 and A2): an agent succeeds against B1 if intent improvement is at least delta_I, the
 entity difference is no worse than -epsilon_E, schema validity is at least
 S_min, and p95 latency is at most L_max.
 
@@ -126,6 +126,9 @@ overlaps are in `DATA_REPORT.md`.
 
 Latency figures come only from uncached timing runs: 50 fixed development cases
 per system and project, after a 5-request warm-up, with the cache disabled.
+From 25 Oct the systems are timed **interleaved** (`scripts/run_timing.py`): each request goes to B1, A1 and A2 in
+turn, so a slowdown of the machine affects all of them equally. Timings taken while other programs use the GPU are
+discarded (decision 46).
 Cold start is measured separately. Cache hits never contribute a latency number.
 
 ## 7. Frozen artifacts
@@ -134,4 +137,29 @@ Cold start is measured separately. Cache hits never contribute a latency number.
 |---|---|---|
 | Project descriptions P1, P2, P3 (`configs/descriptions/`) | `dd4e25ab240f18438888404dc8a8d06e1f59a3ac` | 11 Oct 2026 |
 | Split IDs, k-shot pools and entity schemas (`data/manifests/`) | `dd4e25ab240f18438888404dc8a8d06e1f59a3ac` | 11 Oct 2026 |
-| Protocol, thresholds, configurations, code | _at G10_ | |
+| Protocol, thresholds, configurations, code | the G10 freeze commit (see decision 46) | 25 Oct 2026 |
+
+## 8. Frozen choices (G10)
+
+Every system's choice was made on development data before the freeze and is replayed, not re-made, at test time
+(`scripts/run_final.py`). P1 / P2:
+
+| System | P1 | P2 |
+|---|---|---|
+| B0 | TF-IDF + logistic regression, dev-tuned threshold | same |
+| B1 | joint-fixed-llm, bare specification | same |
+| B2 | twostage-sim-tfidf (worksheet) | twostage-sim-llm (worksheet, ChatGPT-assisted) |
+| B3-k / B3-full | XLM-R, seed 0, 30 / 5 epochs, threshold tuned on dev | same |
+| B4-random seeds 0-4 | twostage-sim-llm, joint-sim-llm, schema-sim-llm, joint-sim-llm, twostage-sim-llm | same designs |
+| B4-best (all 12) | schema-sim-llm | schema-sim-llm |
+| A1 | twostage-sim-llm | schema-fixed-llm |
+| A2 | schema-sim-llm | schema-sim-llm |
+| A1 ablations | noAnalyzer twostage-sim-llm; noReasoning twostage-sim-llm; noSelection and oneCandidate joint-fixed-llm; noRepair twostage-sim-llm | noAnalyzer twostage-fixed-llm; noReasoning joint-sim-llm; noSelection and oneCandidate joint-fixed-llm; noRepair schema-fixed-llm |
+
+Exported packages: A1 `artifacts/P1/twostage-sim-llm-ff3d548a0af2`, `artifacts/P2/schema-fixed-llm-d754b7d4ad80`;
+A2 `artifacts/P1/schema-sim-llm-b7847545a937`, `artifacts/P2/schema-sim-llm-630708f9b329`.
+
+Primary comparisons, reported per project with paired bootstrap 95% intervals: A2 and A1 against B1 (the success
+rule), against B4-random (RQ5), against B2 (RQ2) and against B3-k. A1 and A2 are both reported whichever does better
+(decision 42). A3 is future work (decision 47). P3 follows the same procedure once released: design on its
+development data, then test; it has no B2.

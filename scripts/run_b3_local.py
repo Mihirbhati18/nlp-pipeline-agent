@@ -84,7 +84,14 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--epochs-kshot", type=int, default=30)
     parser.add_argument("--epochs-full", type=int, default=5)
+    parser.add_argument("--split", choices=["dev", "test"], default="dev",
+                        help="test scores the locked test split; the threshold is still tuned on dev")
+    parser.add_argument("--freeze-commit", help="required for --split test")
     args = parser.parse_args()
+
+    if args.split == "test" and not args.freeze_commit:
+        print("--split test needs --freeze-commit <hash>", file=sys.stderr)
+        return 2
 
     import torch
 
@@ -104,9 +111,12 @@ def main() -> int:
     for project in args.projects:
         spec = load_spec(project)
         access = access_for(spec)
+        if args.freeze_commit:
+            access = access.release_after_freeze(commit=args.freeze_commit)
         try:
             pool = load_cases(access.train_path)
             dev = load_cases(access.dev_path)
+            target = load_cases(access.test_path) if args.split == "test" else dev
         except HeldOutProjectLockedError as exc:
             print(f"--- {project}: SKIPPED ---\n    {exc}\n", file=sys.stderr)
             continue
@@ -133,7 +143,10 @@ def main() -> int:
                       f"--epochs or use the Kaggle notebook instead.", file=sys.stderr)
                 trainer.release()
                 return 1
-            raw_predictions = trainer.predict(dev)
+            raw_dev = trainer.predict(dev)
+            # The threshold is chosen on development data only; the test split is
+            # predicted with the same trained model and that fixed threshold.
+            raw_predictions = trainer.predict(target) if args.split == "test" else raw_dev
             train_seconds = time.perf_counter() - started
             trainer.release()
 
@@ -142,8 +155,8 @@ def main() -> int:
                 for c in dev
             ]
             choice = tune_threshold(
-                [p["confidence"] for p in raw_predictions],
-                [p["closed_set_intent"] for p in raw_predictions],
+                [p["confidence"] for p in raw_dev],
+                [p["closed_set_intent"] for p in raw_dev],
                 gold,
                 spec.intent_names,
             )
@@ -162,7 +175,8 @@ def main() -> int:
 
             config = {
                 "system": variant,
-                "split": "dev",
+                "split": args.split,
+                "freeze_commit": args.freeze_commit,
                 "model": hp.model_name,
                 "model_digest": f"huggingface:{hp.model_name}",
                 "settings": hp.as_dict(),
@@ -188,11 +202,11 @@ def main() -> int:
             }
 
             with new_run(
-                project, variant, args.seed, config,
-                data_paths={"pool": spec.source["kshot"], "dev": spec.source["dev"]},
+                project, variant + ("-final" if args.split == "test" else ""), args.seed, config,
+                data_paths={"pool": spec.source["kshot"], args.split: spec.source[args.split]},
             ) as log:
                 for prediction, raw in zip(predictions, raw_predictions):
-                    case = next(c for c in dev if c["case_id"] == prediction.case_id)
+                    case = next(c for c in target if c["case_id"] == prediction.case_id)
                     log.log_prediction(
                         case_id=prediction.case_id,
                         gold_intent=case["true_intent"],
@@ -211,7 +225,7 @@ def main() -> int:
                               seconds=round(train_seconds, 1), device=gpu)
 
                 metrics = score(
-                    dev, predictions, labels=spec.intent_names,
+                    target, predictions, labels=spec.intent_names,
                     design_cost={"logical_calls": 0, "physical_calls": 0,
                                  "training_seconds": round(train_seconds, 1),
                                  "note": "B3 makes no LLM calls; its cost is GPU training time"},
@@ -221,7 +235,7 @@ def main() -> int:
                 p = metrics["primary"]
                 fmt = lambda v, d=3: "n/a" if v is None else f"{v:.{d}f}"  # noqa: E731
                 log.write_summary("\n".join([
-                    f"# {variant} on {project} (development)",
+                    f"# {variant} on {project} ({'test' if args.split == 'test' else 'development'})",
                     "",
                     f"{hp.model_name} fine-tuned on {len(training)} cases for {epochs} "
                     f"epochs, seed {args.seed}, on {gpu} in {train_seconds:.0f} s.",
