@@ -612,6 +612,252 @@ def c4_where_b1_comes_from():
 EXTRA = {4: c4_where_b1_comes_from}
 
 
+def context(who, why, compared, result, note=None, table=None):
+    """The "where this comes from, and how it is compared" block added under an experiment."""
+    b.h("Where this comes from, and how it is compared", 3)
+    b.p(f"**Who decided it:** {who}")
+    b.p(f"**Why these settings:** {why}")
+    b.p(f"**What it is compared with, and how:** {compared}")
+    if table:
+        header, rows, widths = table
+        b.table(header, rows, widths, font=9)
+    b.p(f"**The result:** {result}")
+    if note:
+        b.callout(note, fill="FEF9C3")
+
+
+def c1_context():
+    context(
+        "your project plan, section 4 (`docs\\PROJECT_PLAN.md` lines 270 to 330). It proposed the three projects "
+        "(P1 alarm and iot, P2 calendar, email and lists, P3 takeaway and transport), the split sizes, and the rule "
+        "that off-topic requests come only from domains no project uses (cooking, news, weather, social...). "
+        "The exact choices are written in `configs\\projects.json`.",
+        "10 examples per intent is the plan's \"k = 10\": every AI system gets the same small amount of data, the "
+        "realistic case for a new app. 100 development and 300 test requests per project is what the plan set "
+        "(lines 293 to 301). The official MASSIVE split labels are kept, so a test request in our files was also a "
+        "test request in MASSIVE.",
+        "nothing: this experiment prepares the data every other experiment is scored on. Its checks are internal: "
+        "every annotation converts exactly, every file's fingerprint is recorded, and no request is in two files.",
+        "16,521 / 16,521 annotations converted with 0 errors; the leakage check passes for all three projects. "
+        "P3's test set is 200, not 300, because MASSIVE has only 181 in-scope test requests in its domains; the "
+        "plan's own fallback of 200 was used and recorded in `docs\\DATA_REPORT.md`.",
+        "**The test files are locked by code** (`src\\analyzer\\access.py`) until the freeze, and P3 is locked "
+        "completely, so nothing so far has been tuned on test data.")
+
+
+def c2_context():
+    context(
+        "your project plan, section 2A, \"Day-1 throughput test\" (lines 187 to 195), and \"Rules for the models\" "
+        "(line 177 onwards).",
+        "the plan asked for 50 realistic full-size requests, a second pass to check repeatability, and this rule for "
+        "choosing the model: the largest model that is fast enough for the whole experiment and replies in valid "
+        "JSON at least 95% of the time.",
+        "the plan wanted two models compared, a small one (about 3B) and a larger one (about 7 to 8B). Only "
+        "qwen2.5:3b was measured: the 8B could not be downloaded on our connection, and it would not fit the "
+        "laptop's 4 GB graphics card anyway. This is recorded as decision 39 and as a limitation.",
+        "qwen2.5:3b passed both rules (JSON valid 1.00; the whole experiment fits in about 2.4 hours) and gave "
+        "identical answers 50 of 50 times, so it became the model every AI-based system uses.",
+        "**Why this matters for fairness:** the plan's rule \"one runtime model for every LLM-based system\" (line 179) "
+        "means B1, B2, B4, A1 and A2 all use this same model, so differences between them come from the design, not the model.")
+
+
+def c3_context():
+    context(
+        "your project plan, line 250: \"B0 = Simple reference: TF-IDF intent classifier with a documented OOS "
+        "threshold … sanity reference, not automatically SOTA\".",
+        "it is the simplest reasonable system that needs no AI model, so it shows how much the AI adds. Its off-topic "
+        "cut-off (0.3482) was chosen on development data, which the plan allows; that also makes its development "
+        "score slightly optimistic.",
+        "every other system, on the same 100 development requests with the same scorer. It is a floor: a system "
+        "that cannot beat B0 is not worth using.",
+        "0.780 on P1 and 0.730 on P2. Every AI-based system beats it, and in the robustness test (C13) it falls much "
+        "further than the AI systems when requests are messy.",
+        "B0 never extracts entities, so its entity F1 is 0 by design, not by failure.")
+
+
+def c5_context():
+    context(
+        "your project plan, line 252: \"B2 = Manually configured project-specific pipeline … human picks a "
+        "configuration and hand-writes intent/entity descriptions; 2-hour budget per project, recorded\". The plan "
+        "made B2 part of the minimum result (line 453) because it answers research question RQ2 (line 238): how does "
+        "the agent compare with a manually designed pipeline, considering quality and effort?",
+        "the person uses the same 12 designs, the same AI model and the same scorer as the agent, so only the "
+        "decisions differ. The 2-hour budget stops endless trying. Any help must be declared, because the same team "
+        "built the agent.",
+        "the agent (A1 and A2), on the same 100 development requests, on two things: the score and the human time it took.",
+        "on P1, a person working by hand took 38 minutes and scored 0.858; the agent scored 0.958 (A1) and 0.974 (A2) "
+        "with no human time. On P2, the person used ChatGPT (declared) and scored 0.861 in under 6 minutes, slightly "
+        "above A1 (0.841) and below A2 (0.898).",
+        "**Read these carefully.** Each project was measured once, by a beginner on the team that built the agent, "
+        "so it is not a blind test. P1 and P2 measure different things: a person alone, and a person helped by "
+        "ChatGPT. On P2 the person estimated 10 to 20 minutes, but the worksheet's own timestamps show under 6 "
+        "minutes, so the measured time is the one reported (finding F7).",
+        table=(["Project", "Person (B2)", "Time", "A1", "A2"],
+               [["P1", "0.858 (alone)", "38 min", "0.958", "0.974"],
+                ["P2", "0.861 (with ChatGPT)", "under 6 min", "0.841", "0.898"]],
+               [2.0, 4.6, 3.0, 3.5, 3.5]))
+
+
+def c6_context():
+    context(
+        "your project plan, line 253 and line 258: B3 follows the MASSIVE paper's own published reference "
+        "baseline (XLM-R), so the project has a comparison with published work, which DA2 requires.",
+        "the plan asked for two versions (line 264, \"data regime\"): **B3-k**, trained on the same 10 examples per "
+        "intent as every other system, which is the fair comparison; and **B3-full**, trained on all the training "
+        "data (10 to 30 times more), shown only as an upper reference. Like B0, it refuses off-topic requests with a "
+        "confidence cut-off chosen on development data.",
+        "the AI systems, on the same 100 development requests with the same scorer. Only B3-k is a matched comparison.",
+        "with the same data (B3-k), the agent wins on intent (P1: A1 0.958 and A2 0.974 against 0.909; P2: 0.841 and "
+        "0.898 against 0.833) and on refusing off-topic requests. On entities, B3-k beats A1 but A2 beats B3-k "
+        "(P1 0.707 against 0.650; P2 0.483 against 0.448). B3-full wins on entities, as expected with far more data.",
+        "**Do not call B3-full a fair comparison**: it learns from 10 to 30 times more data. The plan says to report "
+        "it plainly as an upper reference (line 264).")
+
+
+def c7_context():
+    context(
+        "your project plan, line 254 (\"B4-random: 4 configurations drawn at random (5 seeds). B4-exhaustive: all 12\") "
+        "and line 262, \"Why B4 matters\". It answers research question RQ5 (line 244): does the agent choose "
+        "designs better than plain search with the same budget?",
+        "4 designs because that is exactly the agent's budget (3 first choices plus 1 revision), so the comparison is "
+        "equal. 5 seeds so the result is not one lucky or unlucky draw. Trying all 12 shows the best possible score.",
+        "the agent. Both use the same 12 designs, the same Analyzer descriptions, the same development requests, the "
+        "same scorer and the same selection rule (`src\\evaluation\\selection.py`), so the only difference is how the "
+        "4 designs are chosen. The plan explains why this matters: if the agent beats B1, that might only be because "
+        "trying designs on development data helps; B4 tests whether the agent's own choices add anything.",
+        "on P1 random search averaged 0.959 and on P2 0.878. A1 (0.958, 0.841) did not beat it, which is reported as "
+        "finding F1. A2 (0.974, 0.898) reached the best of all 12 designs on both projects, above random search's average.",
+        "**A2 was designed after seeing these results** (decision 42), so its win here is not proof on its own; "
+        "only the locked test data after the freeze can confirm it.")
+
+
+def c8_context():
+    context(
+        "A1 is defined in your project plan (line 256, and section 6, line 413 onwards: the Architect with a budget "
+        "of 3 + 1 designs). A2 was added later, after the development results showed the Architect's choices were the "
+        "weak point: decision 42 (build A2 alongside A1) and decision 43 (A2 uses the same 3B model for planning) in "
+        "`docs\\decisions.md`.",
+        "A2 changes only how the Architect asks the AI: it ranks each design choice separately, tests the alternatives "
+        "one change at a time, and changes one choice in its revision. Everything else (designs, model, data, scorer, "
+        "selection rule) is identical to A1, so any difference comes from the search method.",
+        "B1 (the plan's full rule, see C4), B4 random search (C7), B2 the person (C5) and B3 the published baseline (C6), "
+        "all on the same development requests with the same scorer. A rule fixed **before** building A2 decides whether "
+        "A2 goes to the final test: its development score must be at least A1's on both projects. It passed.",
+        "A1: 0.958 and 0.841. A2: 0.974 and 0.898, the best of all 12 designs on both projects.",
+        "**Two things to state honestly.** (1) A2's development scores are not proof, because A2 was designed after "
+        "seeing them; A1 and A2 will both be reported on the locked test data, whichever does better. (2) The plan said "
+        "the Architect could use a free online model and that each design run should be repeated three times (line 391). "
+        "We used the local model only, and the three repeats were not run separately. That is a deviation from the plan, "
+        "recorded as decision 44: the re-runs on 24 and 25 October reused the saved answers, so they do not show the "
+        "model repeating itself. The evidence for that is the C2 test (50 of 50 identical short answers); long "
+        "written reasons can still vary slightly in wording, as the mini agent in G8 shows.")
+
+
+def c9_context():
+    context(
+        "your project plan, section 8 (line 457 onwards) lists the ablations: no Analyzer, one fixed candidate, no "
+        "evaluation-driven selection, and no repair. These answer research question RQ3 (line 240): what does each part "
+        "contribute? One more, **no reasoning** (a fixed order instead of the AI's choice), is not in the plan; we added "
+        "it because it isolates the Architect's own judgement.",
+        "each variant removes exactly one part and keeps everything else, so a change in score can only come from that part.",
+        "the full agent (A1), on the same 100 development requests with the same scorer.",
+        "scored selection helps most (+3.2 on P1, +3.8 on P2). The Analyzer helps on P2 (+2.9). Repair hardly matters "
+        "for this model. Removing the AI's reasoning did not hurt, and on P2 it helped (0.886 against 0.841), which "
+        "led to A2.",
+        "**These are development-stage ablations.** The plan runs them again on the locked test data after the "
+        "freeze, and those are the ones the paper reports.")
+
+
+def c10_context():
+    context(
+        "your project plan, line 391: \"Use paired bootstrap confidence intervals for score differences on the same "
+        "test examples and report per-project results.\"",
+        "**paired** means both systems are scored on the same pretend set each time, because they answered the same "
+        "requests; that is fairer than resampling each separately. 1,000 draws is the usual number. The fixed seed "
+        "makes the interval come out the same every time.",
+        "every main pair: A1 against B1, A1 against B3-k, and A1 against the best of the 12 designs, separately for P1 and P2.",
+        "every interval includes 0 on development data: with only 100 requests per project, none of the differences "
+        "is certain yet. The 300-request test sets will narrow them.",
+        "**With only three projects, the plan says to make no claim about all projects in general** (line 391): the "
+        "intervals describe these projects only.")
+
+
+def c11_context():
+    context(
+        "your project plan, line 210: \"Latency comes from separate timing runs: for each system and project, 50 "
+        "fixed development cases run with the cache disabled, after a warm-up of 5 requests.\" The success rule "
+        "(C4) also needs it: the agent may be at most twice as slow as B1 at p95.",
+        "speed must come from live requests, never from saved answers, which would look instant. The warm-up is "
+        "dropped because the first request wakes the model. Requests refused before reaching the model are left "
+        "out, so they cannot make a design look faster.",
+        "B1, on the same 50 requests: the agent's p95 must be no more than 2 x B1's.",
+        "P1: A1 0.77 s median, 0.95 s p95 against B1's 0.44 s and 0.59 s (A1 uses 2 calls per request). P2: A1 0.43 s "
+        "and 0.77 s against B1's 0.41 s and 0.79 s. A1 is within the 2 x limit on both projects.",
+        "**A2 has not been timed yet.** Its chosen design (schema-sim-llm) makes one call per request, so it should be "
+        "close to B1, but that is measured at the freeze, not assumed.")
+
+
+def c12_context():
+    context(
+        "your project plan, section 8, the error-analysis paragraph: it lists the categories (confused intents, "
+        "missed entities, wrong boundaries, wrong types, unsupported values, incorrect refusals, missed off-topic, "
+        "invalid replies and runtime failures).",
+        "counting kinds of mistake, not just the number, shows **why** a score is what it is and where to improve. "
+        "The plan allows looking at development mistakes while improving, but says test-data mistakes may only be "
+        "inspected after the freeze.",
+        "nothing directly: it explains the scores of the other experiments. Here it was run on A1.",
+        "most of A1's mistakes are entity mistakes, mainly extracting words that are not fields (22 per project); "
+        "intent mistakes are rare (1 on P1, 5 on P2). This is why A1's entity F1 was low, and A2, which picks a "
+        "design with written descriptions, does much better on entities.")
+
+
+def c13_context():
+    context(
+        "**this test is not in the project plan.** We added it on 16 October as an extra check, because real users "
+        "type carelessly and the plan's tests all use clean requests. It is reported as an extra, not as a planned result.",
+        "three common kinds of messiness: typos, capital letters and filler words. Each rewrite uses a fixed seed, so "
+        "it is the same every time, and the typos never touch the entity words, so the correct answers stay valid.",
+        "B0 (word matching), B1 (generic prompt) and A1, each on the clean requests and on each rewritten version, with "
+        "the same scorer.",
+        "the AI systems lose at most about 7 points (A1's worst: P2 with typos, 0.841 to 0.770); word matching drops by "
+        "up to 27 points (P2 with filler words). Capitals do not affect B0 at all, because it lowercases everything.",
+        "A1 is not more robust than B1 everywhere: on P2 it loses more to typos and capitals. That is in finding F6.")
+
+
+def c14_context():
+    context(
+        "your project plan, \"Runtime and export\" (line 423): \"Export the ProjectSpec, chosen configuration, prompts, "
+        "model identifiers (Ollama model name and digest), dependency manifest and version/hash. Provide a simple "
+        "callable interface first.\" This is gate G9.",
+        "a design is only useful if a real app can load and use it without re-running the agent. The fingerprints "
+        "stop anyone changing a package unnoticed, and the stored model fingerprint stops it running on a different "
+        "model than the one it was tested with.",
+        "nothing: this is a working demonstration and an integrity check, tested by `tests\\test_runtime.py`.",
+        "packages for P1 (twostage-sim-llm) and P2 (schema-fixed-llm) load in a fresh program, handle normal, off-topic "
+        "and invalid requests, and refuse to load if a file is edited.",
+        "**These packages hold A1's choices.** A2's chosen pipeline (schema-sim-llm on both projects) will be exported "
+        "at the freeze.")
+
+
+def c15_context():
+    context(
+        "the re-scoring check comes from your project plan, gate G12 (line 447): \"Metrics recompute from saved "
+        "predictions; every quantitative claim traces to a run.\" **The scikit-learn check is not in the plan:** we "
+        "added it on 24 October so the scores are also confirmed by a standard library that has nothing to do with our code.",
+        "a recorded number is only trustworthy if it can be recomputed from the raw answers. Comparing to 9 decimal "
+        "places means even a tiny change would be caught.",
+        "each run's own recorded metrics.json, recomputed in two independent ways.",
+        "every checkable run matches both ways (46 at the last count). A test (`tests\\test_reproduce_metrics.py`) also "
+        "proves the check really catches a hand-edited number. The check once found a real gap: B0 and B3 were not "
+        "saving one field, which was fixed.")
+
+
+EXTRA.update({1: c1_context, 2: c2_context, 3: c3_context, 5: c5_context, 6: c6_context, 7: c7_context,
+              8: c8_context, 9: c9_context, 10: c10_context, 11: c11_context, 12: c12_context,
+              13: c13_context, 14: c14_context, 15: c15_context})
+
+
+
 def files_table(rows):
     b.table(["What", "Where"], rows, [5.2, 11.4], font=9)
 
