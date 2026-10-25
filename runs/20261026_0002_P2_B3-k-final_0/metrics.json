@@ -1,0 +1,132 @@
+{
+  "metric_definitions_version": "1.2",
+  "n_cases": 300,
+  "n_in_scope": 250,
+  "n_out_of_scope": 50,
+  "missing_responses": 0,
+  "unexpected_prediction_ids": [],
+  "intent_label_set": [
+    "calendar_query",
+    "calendar_remove",
+    "calendar_set",
+    "email_addcontact",
+    "email_query",
+    "email_querycontact",
+    "email_sendemail",
+    "lists_createoradd",
+    "lists_query",
+    "lists_remove"
+  ],
+  "invalid_label_predictions": {},
+  "primary": {
+    "intent_macro_f1": 0.7998552201161697,
+    "intent_accuracy_in_scope": 0.724,
+    "entity_span_precision": 0.4908256880733945,
+    "entity_span_recall": 0.4349593495934959,
+    "entity_span_f1": 0.46120689655172414,
+    "entity_counts": {
+      "tp": 107,
+      "fp": 111,
+      "fn": 139
+    },
+    "oos_precision": 0.42045454545454547,
+    "oos_recall": 0.74,
+    "oos_f1": 0.5362318840579711,
+    "oos_counts": {
+      "tp": 37,
+      "fp": 51,
+      "fn": 13
+    },
+    "false_rejection_rate_in_scope": 0.204,
+    "schema_validity_after_repair": 1.0,
+    "schema_validity_before_repair": 1.0,
+    "unsupported_extraction_rate": 0.004366812227074236,
+    "unsupported_extraction_counts": {
+      "unsupported_items": 1,
+      "predicted_items": 229
+    },
+    "runtime_failure_rate": 0.0,
+    "runtime_failure_counts": {
+      "ok": 212,
+      "oos": 88
+    },
+    "retries": 0,
+    "fallback_rate": 0.0,
+    "latency_median_s": null,
+    "latency_p95_s": null,
+    "latency_n_timed": 0,
+    "cold_start_s": null,
+    "design_cost": {
+      "logical_calls": 0,
+      "physical_calls": 0,
+      "training_seconds": 363.1,
+      "note": "B3 makes no LLM calls; its cost is GPU training time"
+    }
+  },
+  "secondary": {
+    "end_to_end_exact_match": 0.4666666666666667,
+    "unsupported_request_rate": 0.0033333333333333335
+  },
+  "per_intent": {
+    "calendar_query": {
+      "precision": 0.9473684210526315,
+      "recall": 0.6666666666666666,
+      "f1": 0.782608695652174,
+      "support": 27
+    },
+    "calendar_remove": {
+      "precision": 0.8846153846153846,
+      "recall": 0.8518518518518519,
+      "f1": 0.8679245283018868,
+      "support": 27
+    },
+    "calendar_set": {
+      "precision": 0.9444444444444444,
+      "recall": 0.6296296296296297,
+      "f1": 0.7555555555555556,
+      "support": 27
+    },
+    "email_addcontact": {
+      "precision": 0.8181818181818182,
+      "recall": 0.75,
+      "f1": 0.7826086956521738,
+      "support": 12
+    },
+    "email_query": {
+      "precision": 0.9166666666666666,
+      "recall": 0.8148148148148148,
+      "f1": 0.8627450980392156,
+      "support": 27
+    },
+    "email_querycontact": {
+      "precision": 0.9444444444444444,
+      "recall": 0.6538461538461539,
+      "f1": 0.7727272727272727,
+      "support": 26
+    },
+    "email_sendemail": {
+      "precision": 0.8846153846153846,
+      "recall": 0.8846153846153846,
+      "f1": 0.8846153846153846,
+      "support": 26
+    },
+    "lists_createoradd": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "support": 26
+    },
+    "lists_query": {
+      "precision": 0.9130434782608695,
+      "recall": 0.8076923076923077,
+      "f1": 0.8571428571428572,
+      "support": 26
+    },
+    "lists_remove": {
+      "precision": 0.8571428571428571,
+      "recall": 0.6923076923076923,
+      "f1": 0.7659574468085107,
+      "support": 26
+    }
+  }
+}

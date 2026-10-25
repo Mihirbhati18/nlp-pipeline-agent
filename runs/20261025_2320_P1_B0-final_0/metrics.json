@@ -1,0 +1,141 @@
+{
+  "metric_definitions_version": "1.2",
+  "n_cases": 300,
+  "n_in_scope": 250,
+  "n_out_of_scope": 50,
+  "missing_responses": 0,
+  "unexpected_prediction_ids": [],
+  "intent_label_set": [
+    "alarm_query",
+    "alarm_remove",
+    "alarm_set",
+    "iot_cleaning",
+    "iot_coffee",
+    "iot_hue_lightchange",
+    "iot_hue_lightdim",
+    "iot_hue_lightoff",
+    "iot_hue_lighton",
+    "iot_hue_lightup",
+    "iot_wemo_off",
+    "iot_wemo_on"
+  ],
+  "invalid_label_predictions": {},
+  "primary": {
+    "intent_macro_f1": 0.6990786552102155,
+    "intent_accuracy_in_scope": 0.616,
+    "entity_span_precision": 0.0,
+    "entity_span_recall": 0.0,
+    "entity_span_f1": 0.0,
+    "entity_counts": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 183
+    },
+    "oos_precision": 0.3142857142857143,
+    "oos_recall": 0.66,
+    "oos_f1": 0.4258064516129032,
+    "oos_counts": {
+      "tp": 33,
+      "fp": 72,
+      "fn": 17
+    },
+    "false_rejection_rate_in_scope": 0.288,
+    "schema_validity_after_repair": 1.0,
+    "schema_validity_before_repair": 1.0,
+    "unsupported_extraction_rate": null,
+    "unsupported_extraction_counts": {
+      "unsupported_items": 0,
+      "predicted_items": 0
+    },
+    "runtime_failure_rate": 0.0,
+    "runtime_failure_counts": {
+      "oos": 105,
+      "ok": 195
+    },
+    "retries": 0,
+    "fallback_rate": 0.0,
+    "latency_median_s": null,
+    "latency_p95_s": null,
+    "latency_n_timed": 0,
+    "cold_start_s": null,
+    "design_cost": null
+  },
+  "secondary": {
+    "end_to_end_exact_match": 0.32,
+    "unsupported_request_rate": 0.0
+  },
+  "per_intent": {
+    "alarm_query": {
+      "precision": 0.9444444444444444,
+      "recall": 0.6538461538461539,
+      "f1": 0.7727272727272727,
+      "support": 26
+    },
+    "alarm_remove": {
+      "precision": 0.8461538461538461,
+      "recall": 0.5238095238095238,
+      "f1": 0.6470588235294118,
+      "support": 21
+    },
+    "alarm_set": {
+      "precision": 0.7407407407407407,
+      "recall": 0.7692307692307693,
+      "f1": 0.7547169811320754,
+      "support": 26
+    },
+    "iot_cleaning": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.7499999999999999,
+      "support": 25
+    },
+    "iot_coffee": {
+      "precision": 1.0,
+      "recall": 0.92,
+      "f1": 0.9583333333333334,
+      "support": 25
+    },
+    "iot_hue_lightchange": {
+      "precision": 0.9166666666666666,
+      "recall": 0.44,
+      "f1": 0.5945945945945945,
+      "support": 25
+    },
+    "iot_hue_lightdim": {
+      "precision": 0.9,
+      "recall": 0.42857142857142855,
+      "f1": 0.5806451612903225,
+      "support": 21
+    },
+    "iot_hue_lightoff": {
+      "precision": 0.8333333333333334,
+      "recall": 0.6,
+      "f1": 0.6976744186046512,
+      "support": 25
+    },
+    "iot_hue_lighton": {
+      "precision": 0.5,
+      "recall": 0.6666666666666666,
+      "f1": 0.5714285714285715,
+      "support": 3
+    },
+    "iot_hue_lightup": {
+      "precision": 0.8666666666666667,
+      "recall": 0.52,
+      "f1": 0.65,
+      "support": 25
+    },
+    "iot_wemo_off": {
+      "precision": 0.75,
+      "recall": 0.6666666666666666,
+      "f1": 0.7058823529411765,
+      "support": 18
+    },
+    "iot_wemo_on": {
+      "precision": 0.8571428571428571,
+      "recall": 0.6,
+      "f1": 0.7058823529411764,
+      "support": 10
+    }
+  }
+}

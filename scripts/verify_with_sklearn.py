@@ -40,9 +40,10 @@ def load_jsonl(path: Path) -> list[dict]:
         return [json.loads(line) for line in handle if line.strip()]
 
 
-def project_cases(project: str, variant: str | None) -> list[dict]:
+def project_cases(project: str, variant: str | None, split: str = "dev") -> list[dict]:
     manifest = json.loads((ROOT / "data" / "manifests" / f"{project}.json").read_text(encoding="utf-8"))
-    cases = load_jsonl(ROOT / "data" / "processed" / project / "dev.jsonl")
+    path = manifest["files"]["test"] if split == "test" else f"data/processed/{project}/dev.jsonl"
+    cases = load_jsonl(ROOT / path)
     if variant:
         sys.path.insert(0, str(ROOT / "scripts"))
         from run_robustness import perturb  # rewrites only the request text; labels unchanged
@@ -62,10 +63,11 @@ def predicted_label(row: dict) -> str:
 def check(run: Path) -> tuple[str, str]:
     config = json.loads((run / "config.json").read_text(encoding="utf-8"))
     project = config.get("project")
-    if project not in ("P1", "P2") or config.get("split", "dev") != "dev":
-        return "skipped", "not a development run of P1 or P2"
+    split = config.get("split", "dev")
+    if project not in ("P1", "P2", "P3") or split not in ("dev", "test"):
+        return "skipped", "not a scored development or test run"
     recorded = json.loads((run / "metrics.json").read_text(encoding="utf-8"))
-    cases, _ = project_cases(project, config.get("variant"))
+    cases, _ = project_cases(project, config.get("variant"), split)
     by_id = {r["case_id"]: r for r in load_jsonl(run / "predictions.jsonl")}
     labels = recorded["intent_label_set"]
 

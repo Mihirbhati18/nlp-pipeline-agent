@@ -1,0 +1,127 @@
+{
+  "metric_definitions_version": "1.2",
+  "n_cases": 300,
+  "n_in_scope": 250,
+  "n_out_of_scope": 50,
+  "missing_responses": 0,
+  "unexpected_prediction_ids": [],
+  "intent_label_set": [
+    "calendar_query",
+    "calendar_remove",
+    "calendar_set",
+    "email_addcontact",
+    "email_query",
+    "email_querycontact",
+    "email_sendemail",
+    "lists_createoradd",
+    "lists_query",
+    "lists_remove"
+  ],
+  "invalid_label_predictions": {},
+  "primary": {
+    "intent_macro_f1": 0.8231108052604565,
+    "intent_accuracy_in_scope": 0.752,
+    "entity_span_precision": 0.5,
+    "entity_span_recall": 0.45528455284552843,
+    "entity_span_f1": 0.47659574468085103,
+    "entity_counts": {
+      "tp": 112,
+      "fp": 112,
+      "fn": 134
+    },
+    "oos_precision": 0.5108695652173914,
+    "oos_recall": 0.94,
+    "oos_f1": 0.6619718309859155,
+    "oos_counts": {
+      "tp": 47,
+      "fp": 45,
+      "fn": 3
+    },
+    "false_rejection_rate_in_scope": 0.18,
+    "schema_validity_after_repair": 1.0,
+    "schema_validity_before_repair": 0.9966666666666667,
+    "unsupported_extraction_rate": 0.06167400881057269,
+    "unsupported_extraction_counts": {
+      "unsupported_items": 14,
+      "predicted_items": 227
+    },
+    "runtime_failure_rate": 0.0,
+    "runtime_failure_counts": {
+      "ok": 208,
+      "oos": 92
+    },
+    "retries": 1,
+    "fallback_rate": 0.0,
+    "latency_median_s": null,
+    "latency_p95_s": null,
+    "latency_n_timed": 0,
+    "cold_start_s": null,
+    "design_cost": null
+  },
+  "secondary": {
+    "end_to_end_exact_match": 0.44,
+    "unsupported_request_rate": 0.03333333333333333
+  },
+  "per_intent": {
+    "calendar_query": {
+      "precision": 0.75,
+      "recall": 0.6666666666666666,
+      "f1": 0.7058823529411765,
+      "support": 27
+    },
+    "calendar_remove": {
+      "precision": 0.92,
+      "recall": 0.8518518518518519,
+      "f1": 0.8846153846153846,
+      "support": 27
+    },
+    "calendar_set": {
+      "precision": 0.9130434782608695,
+      "recall": 0.7777777777777778,
+      "f1": 0.84,
+      "support": 27
+    },
+    "email_addcontact": {
+      "precision": 0.8333333333333334,
+      "recall": 0.8333333333333334,
+      "f1": 0.8333333333333334,
+      "support": 12
+    },
+    "email_query": {
+      "precision": 0.9545454545454546,
+      "recall": 0.7777777777777778,
+      "f1": 0.8571428571428572,
+      "support": 27
+    },
+    "email_querycontact": {
+      "precision": 0.8571428571428571,
+      "recall": 0.46153846153846156,
+      "f1": 0.6,
+      "support": 26
+    },
+    "email_sendemail": {
+      "precision": 1.0,
+      "recall": 0.7307692307692307,
+      "f1": 0.8444444444444443,
+      "support": 26
+    },
+    "lists_createoradd": {
+      "precision": 1.0,
+      "recall": 0.8461538461538461,
+      "f1": 0.9166666666666666,
+      "support": 26
+    },
+    "lists_query": {
+      "precision": 0.9565217391304348,
+      "recall": 0.8461538461538461,
+      "f1": 0.8979591836734695,
+      "support": 26
+    },
+    "lists_remove": {
+      "precision": 0.9523809523809523,
+      "recall": 0.7692307692307693,
+      "f1": 0.8510638297872339,
+      "support": 26
+    }
+  }
+}

@@ -63,11 +63,11 @@ def check_run(run: Path) -> tuple[str, str]:
     if project not in ("P1", "P2", "P3") or not metrics_path.is_file():
         return "not checkable", "no project metrics"
     split = config.get("split", "dev")
-    if split != "dev":
+    if split not in ("dev", "test"):
         return "not checkable", f"split {split}"
 
     spec = load_spec(project)
-    cases = load_cases(spec.source["dev"])
+    cases = load_cases(spec.source[split])  # test runs exist only after the G10 freeze
     variant = config.get("variant")
     if variant:
         # Robustness runs were scored on rewritten requests. Rebuild exactly

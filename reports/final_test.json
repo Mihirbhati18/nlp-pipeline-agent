@@ -1,0 +1,517 @@
+{
+  "split": "test",
+  "freeze_commit": "0ee6b22b86894aebbe253fae3b00eb97c542c575",
+  "generated": "2026-10-25 23:08",
+  "projects": {
+    "P1": {
+      "systems": {
+        "B0": {
+          "run_id": "20261025_2320_P1_B0-final_0",
+          "config": "tfidf-logreg",
+          "how_chosen": "TF-IDF classifier, threshold tuned on development data",
+          "intent_macro_f1": 0.6990786552102155,
+          "intent_accuracy_in_scope": 0.616,
+          "entity_span_f1": 0.0,
+          "oos_f1": 0.4258064516129032,
+          "schema_validity_after_repair": 1.0
+        },
+        "B1": {
+          "run_id": "20261025_2320_P1_B1-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "predeclared design, bare specification",
+          "intent_macro_f1": 0.8759286651028887,
+          "intent_accuracy_in_scope": 0.896,
+          "entity_span_f1": 0.6260869565217391,
+          "oos_f1": 0.8749999999999999,
+          "schema_validity_after_repair": 1.0
+        },
+        "B2": {
+          "run_id": "20261025_2320_P1_B2-final_0",
+          "config": "twostage-sim-tfidf",
+          "how_chosen": "the person's frozen worksheet choice (20261024_1622_P1_B2_0)",
+          "intent_macro_f1": 0.8371392108524933,
+          "intent_accuracy_in_scope": 0.8,
+          "entity_span_f1": 0.6481012658227848,
+          "oos_f1": 0.4705882352941177,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed0": {
+          "run_id": "20261025_2320_P1_B4-random-seed0-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 0, on development data",
+          "intent_macro_f1": 0.9026499233218422,
+          "intent_accuracy_in_scope": 0.916,
+          "entity_span_f1": 0.6390243902439026,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed1": {
+          "run_id": "20261025_2320_P1_B4-random-seed1-final_0",
+          "config": "joint-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 1, on development data",
+          "intent_macro_f1": 0.8812358685132693,
+          "intent_accuracy_in_scope": 0.9,
+          "entity_span_f1": 0.7319884726224783,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed2": {
+          "run_id": "20261025_2320_P1_B4-random-seed2-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 2, on development data",
+          "intent_macro_f1": 0.8979260553505186,
+          "intent_accuracy_in_scope": 0.912,
+          "entity_span_f1": 0.6985915492957746,
+          "oos_f1": 0.8648648648648649,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed3": {
+          "run_id": "20261025_2320_P1_B4-random-seed3-final_0",
+          "config": "joint-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 3, on development data",
+          "intent_macro_f1": 0.8812358685132693,
+          "intent_accuracy_in_scope": 0.9,
+          "entity_span_f1": 0.7319884726224783,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed4": {
+          "run_id": "20261025_2320_P1_B4-random-seed4-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 4, on development data",
+          "intent_macro_f1": 0.9026499233218422,
+          "intent_accuracy_in_scope": 0.916,
+          "entity_span_f1": 0.6390243902439026,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-best": {
+          "run_id": "20261025_2320_P1_B4-best-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "best of all 12 designs on development data",
+          "intent_macro_f1": 0.8979260553505186,
+          "intent_accuracy_in_scope": 0.912,
+          "entity_span_f1": 0.6985915492957746,
+          "oos_f1": 0.8648648648648649,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1": {
+          "run_id": "20261025_2320_P1_A1-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "A1 design run on development data",
+          "intent_macro_f1": 0.9026499233218422,
+          "intent_accuracy_in_scope": 0.916,
+          "entity_span_f1": 0.6390243902439026,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "A2": {
+          "run_id": "20261025_2320_P1_A2-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "A2 design run on development data",
+          "intent_macro_f1": 0.8979260553505186,
+          "intent_accuracy_in_scope": 0.912,
+          "entity_span_f1": 0.6985915492957746,
+          "oos_f1": 0.8648648648648649,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noAnalyzer": {
+          "run_id": "20261025_2320_P1_A1-noAnalyzer-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "ablation: no Analyzer",
+          "intent_macro_f1": 0.9026499233218422,
+          "intent_accuracy_in_scope": 0.916,
+          "entity_span_f1": 0.6390243902439026,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noReasoning": {
+          "run_id": "20261025_2320_P1_A1-noReasoning-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "ablation: fallback order, no reasoning",
+          "intent_macro_f1": 0.9026499233218422,
+          "intent_accuracy_in_scope": 0.916,
+          "entity_span_f1": 0.6390243902439026,
+          "oos_f1": 0.8849557522123894,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noSelection": {
+          "run_id": "20261025_2320_P1_A1-noSelection-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "ablation: first choice, unscored",
+          "intent_macro_f1": 0.8759286651028887,
+          "intent_accuracy_in_scope": 0.896,
+          "entity_span_f1": 0.6260869565217391,
+          "oos_f1": 0.8749999999999999,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-oneCandidate": {
+          "run_id": "20261025_2320_P1_A1-oneCandidate-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "ablation: one predeclared design",
+          "intent_macro_f1": 0.8759286651028887,
+          "intent_accuracy_in_scope": 0.896,
+          "entity_span_f1": 0.6260869565217391,
+          "oos_f1": 0.8749999999999999,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noRepair": {
+          "run_id": "20261025_2320_P1_A1-noRepair-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "ablation: no repair retry",
+          "intent_macro_f1": 0.9067671586210418,
+          "intent_accuracy_in_scope": 0.924,
+          "entity_span_f1": 0.6298076923076923,
+          "oos_f1": 0.9009009009009009,
+          "schema_validity_after_repair": 0.98
+        }
+      },
+      "b4_random": {
+        "mean_intent_macro_f1": 0.8931395278041483,
+        "min": 0.8812358685132693,
+        "max": 0.9026499233218422
+      },
+      "bootstrap": {
+        "A2 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.021997390247629922,
+            "ci_low": -0.006321039909666926,
+            "ci_high": 0.05090126802118522,
+            "share_a_better": 0.917
+          },
+          "entity_span_f1": {
+            "difference": 0.07250459277403554,
+            "ci_low": 0.007859044238813562,
+            "ci_high": 0.1450953678474114,
+            "share_a_better": 0.982
+          }
+        },
+        "A1 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.026721258218953547,
+            "ci_low": -0.0073539244806026804,
+            "ci_high": 0.056594990565918324,
+            "share_a_better": 0.938
+          },
+          "entity_span_f1": {
+            "difference": 0.012937433722163494,
+            "ci_low": -0.061666250658679256,
+            "ci_high": 0.09695582830594285,
+            "share_a_better": 0.618
+          }
+        },
+        "A2 vs A1": {
+          "intent_macro_f1": {
+            "difference": -0.004723867971323625,
+            "ci_low": -0.028464691696806654,
+            "ci_high": 0.018138314509435705,
+            "share_a_better": 0.365
+          },
+          "entity_span_f1": {
+            "difference": 0.05956715905187204,
+            "ci_low": -0.005566728340439142,
+            "ci_high": 0.12135632617162961,
+            "share_a_better": 0.967
+          }
+        },
+        "A2 vs B2": {
+          "intent_macro_f1": {
+            "difference": 0.060786844498025294,
+            "ci_low": 0.02005110264518606,
+            "ci_high": 0.10247900777650554,
+            "share_a_better": 0.997
+          },
+          "entity_span_f1": {
+            "difference": 0.05049028347298978,
+            "ci_low": -0.016293048582137204,
+            "ci_high": 0.11481577581733271,
+            "share_a_better": 0.946
+          }
+        },
+        "A2 vs B4-best": {
+          "intent_macro_f1": {
+            "difference": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0,
+            "share_a_better": 0.0
+          },
+          "entity_span_f1": {
+            "difference": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0,
+            "share_a_better": 0.0
+          }
+        },
+        "A1 vs B4-best": {
+          "intent_macro_f1": {
+            "difference": 0.004723867971323625,
+            "ci_low": -0.018138314509435705,
+            "ci_high": 0.028464691696806654,
+            "share_a_better": 0.635
+          },
+          "entity_span_f1": {
+            "difference": -0.05956715905187204,
+            "ci_low": -0.12135632617162961,
+            "ci_high": 0.005566728340439142,
+            "share_a_better": 0.033
+          }
+        }
+      }
+    },
+    "P2": {
+      "systems": {
+        "B0": {
+          "run_id": "20261025_2336_P2_B0-final_0",
+          "config": "tfidf-logreg",
+          "how_chosen": "TF-IDF classifier, threshold tuned on development data",
+          "intent_macro_f1": 0.668504232252473,
+          "intent_accuracy_in_scope": 0.584,
+          "entity_span_f1": 0.0,
+          "oos_f1": 0.40268456375838924,
+          "schema_validity_after_repair": 1.0
+        },
+        "B1": {
+          "run_id": "20261025_2336_P2_B1-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "predeclared design, bare specification",
+          "intent_macro_f1": 0.8231108052604565,
+          "intent_accuracy_in_scope": 0.752,
+          "entity_span_f1": 0.47659574468085103,
+          "oos_f1": 0.6619718309859155,
+          "schema_validity_after_repair": 1.0
+        },
+        "B2": {
+          "run_id": "20261025_2336_P2_B2-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "the person's frozen worksheet choice (20261024_1630_P2_B2_0)",
+          "intent_macro_f1": 0.850631940732781,
+          "intent_accuracy_in_scope": 0.808,
+          "entity_span_f1": 0.4913793103448276,
+          "oos_f1": 0.7479674796747968,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed0": {
+          "run_id": "20261025_2336_P2_B4-random-seed0-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 0, on development data",
+          "intent_macro_f1": 0.850631940732781,
+          "intent_accuracy_in_scope": 0.808,
+          "entity_span_f1": 0.4913793103448276,
+          "oos_f1": 0.7479674796747968,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed1": {
+          "run_id": "20261025_2336_P2_B4-random-seed1-final_0",
+          "config": "joint-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 1, on development data",
+          "intent_macro_f1": 0.8477526748330138,
+          "intent_accuracy_in_scope": 0.788,
+          "entity_span_f1": 0.5180467091295117,
+          "oos_f1": 0.6911764705882352,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed2": {
+          "run_id": "20261025_2336_P2_B4-random-seed2-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 2, on development data",
+          "intent_macro_f1": 0.871714962251702,
+          "intent_accuracy_in_scope": 0.832,
+          "entity_span_f1": 0.5316973415132925,
+          "oos_f1": 0.7666666666666667,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed3": {
+          "run_id": "20261025_2336_P2_B4-random-seed3-final_0",
+          "config": "joint-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 3, on development data",
+          "intent_macro_f1": 0.8477526748330138,
+          "intent_accuracy_in_scope": 0.788,
+          "entity_span_f1": 0.5180467091295117,
+          "oos_f1": 0.6911764705882352,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-random-seed4": {
+          "run_id": "20261025_2336_P2_B4-random-seed4-final_0",
+          "config": "twostage-sim-llm",
+          "how_chosen": "best of 4 random designs, seed 4, on development data",
+          "intent_macro_f1": 0.850631940732781,
+          "intent_accuracy_in_scope": 0.808,
+          "entity_span_f1": 0.4913793103448276,
+          "oos_f1": 0.7479674796747968,
+          "schema_validity_after_repair": 1.0
+        },
+        "B4-best": {
+          "run_id": "20261025_2336_P2_B4-best-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "best of all 12 designs on development data",
+          "intent_macro_f1": 0.871714962251702,
+          "intent_accuracy_in_scope": 0.832,
+          "entity_span_f1": 0.5316973415132925,
+          "oos_f1": 0.7666666666666667,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1": {
+          "run_id": "20261025_2336_P2_A1-final_0",
+          "config": "schema-fixed-llm",
+          "how_chosen": "A1 design run on development data",
+          "intent_macro_f1": 0.8518213980552433,
+          "intent_accuracy_in_scope": 0.804,
+          "entity_span_f1": 0.5040322580645161,
+          "oos_f1": 0.7580645161290321,
+          "schema_validity_after_repair": 0.9966666666666667
+        },
+        "A2": {
+          "run_id": "20261025_2336_P2_A2-final_0",
+          "config": "schema-sim-llm",
+          "how_chosen": "A2 design run on development data",
+          "intent_macro_f1": 0.871714962251702,
+          "intent_accuracy_in_scope": 0.832,
+          "entity_span_f1": 0.5316973415132925,
+          "oos_f1": 0.7666666666666667,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noAnalyzer": {
+          "run_id": "20261025_2336_P2_A1-noAnalyzer-final_0",
+          "config": "twostage-fixed-llm",
+          "how_chosen": "ablation: no Analyzer",
+          "intent_macro_f1": 0.8409551111414465,
+          "intent_accuracy_in_scope": 0.796,
+          "entity_span_f1": 0.43000000000000005,
+          "oos_f1": 0.746031746031746,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noReasoning": {
+          "run_id": "20261025_2336_P2_A1-noReasoning-final_0",
+          "config": "joint-sim-llm",
+          "how_chosen": "ablation: fallback order, no reasoning",
+          "intent_macro_f1": 0.8477526748330138,
+          "intent_accuracy_in_scope": 0.788,
+          "entity_span_f1": 0.5180467091295117,
+          "oos_f1": 0.6911764705882352,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noSelection": {
+          "run_id": "20261025_2336_P2_A1-noSelection-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "ablation: first choice, unscored",
+          "intent_macro_f1": 0.8231108052604565,
+          "intent_accuracy_in_scope": 0.752,
+          "entity_span_f1": 0.47659574468085103,
+          "oos_f1": 0.6619718309859155,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-oneCandidate": {
+          "run_id": "20261025_2336_P2_A1-oneCandidate-final_0",
+          "config": "joint-fixed-llm",
+          "how_chosen": "ablation: one predeclared design",
+          "intent_macro_f1": 0.8231108052604565,
+          "intent_accuracy_in_scope": 0.752,
+          "entity_span_f1": 0.47659574468085103,
+          "oos_f1": 0.6619718309859155,
+          "schema_validity_after_repair": 1.0
+        },
+        "A1-noRepair": {
+          "run_id": "20261025_2336_P2_A1-noRepair-final_0",
+          "config": "schema-fixed-llm",
+          "how_chosen": "ablation: no repair retry",
+          "intent_macro_f1": 0.8518213980552433,
+          "intent_accuracy_in_scope": 0.804,
+          "entity_span_f1": 0.5040322580645161,
+          "oos_f1": 0.7377049180327869,
+          "schema_validity_after_repair": 0.99
+        }
+      },
+      "b4_random": {
+        "mean_intent_macro_f1": 0.8536968386766584,
+        "min": 0.8477526748330138,
+        "max": 0.871714962251702
+      },
+      "bootstrap": {
+        "A2 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.04860415699124543,
+            "ci_low": 0.011180026212177396,
+            "ci_high": 0.08941454440187302,
+            "share_a_better": 0.996
+          },
+          "entity_span_f1": {
+            "difference": 0.05510159683244148,
+            "ci_low": 0.002592165898617549,
+            "ci_high": 0.11081169898126847,
+            "share_a_better": 0.979
+          }
+        },
+        "A1 vs B1": {
+          "intent_macro_f1": {
+            "difference": 0.028710592794786716,
+            "ci_low": -0.0032914912313904976,
+            "ci_high": 0.06298384888789899,
+            "share_a_better": 0.959
+          },
+          "entity_span_f1": {
+            "difference": 0.027436513383665095,
+            "ci_low": -0.01034016947071098,
+            "ci_high": 0.06774193548387092,
+            "share_a_better": 0.914
+          }
+        },
+        "A2 vs A1": {
+          "intent_macro_f1": {
+            "difference": 0.019893564196458713,
+            "ci_low": -0.010668011707973157,
+            "ci_high": 0.052161542826051566,
+            "share_a_better": 0.887
+          },
+          "entity_span_f1": {
+            "difference": 0.027665083448776384,
+            "ci_low": -0.024943615336628533,
+            "ci_high": 0.07693403212942929,
+            "share_a_better": 0.847
+          }
+        },
+        "A2 vs B2": {
+          "intent_macro_f1": {
+            "difference": 0.02108302151892094,
+            "ci_low": -0.006999688332420928,
+            "ci_high": 0.05291187971436273,
+            "share_a_better": 0.921
+          },
+          "entity_span_f1": {
+            "difference": 0.040318031168464885,
+            "ci_low": -0.008521003942978389,
+            "ci_high": 0.0895532223344902,
+            "share_a_better": 0.946
+          }
+        },
+        "A2 vs B4-best": {
+          "intent_macro_f1": {
+            "difference": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0,
+            "share_a_better": 0.0
+          },
+          "entity_span_f1": {
+            "difference": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0,
+            "share_a_better": 0.0
+          }
+        },
+        "A1 vs B4-best": {
+          "intent_macro_f1": {
+            "difference": -0.019893564196458713,
+            "ci_low": -0.052161542826051566,
+            "ci_high": 0.010668011707973157,
+            "share_a_better": 0.113
+          },
+          "entity_span_f1": {
+            "difference": -0.027665083448776384,
+            "ci_low": -0.07693403212942929,
+            "ci_high": 0.024943615336628533,
+            "share_a_better": 0.153
+          }
+        }
+      }
+    }
+  }
+}

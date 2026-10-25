@@ -337,3 +337,54 @@ full, from the `*-selected_0` and `*_B1_0` run folders:
   (0.59 s and 0.79 s); A2 has not yet been timed.
 - These are development numbers; the rule is applied for the report on the
   frozen test runs.
+
+---
+
+## F10. FINAL RESULTS on the locked test data (G11, 26 Oct)
+
+Freeze commit `0ee6b22` (tag `g10-freeze`); 300 test requests per project; every
+system's choice made on development data before the freeze
+(`reports/final_test.json`, run folders `*-final_0`). All 36 test runs pass the
+reproduction check and the independent scikit-learn check.
+
+| System | P1 intent | P1 entity | P2 intent | P2 entity |
+|---|---|---|---|---|
+| B0 word matching | 0.699 | 0 | 0.669 | 0 |
+| B1 generic prompt | 0.876 | 0.626 | 0.823 | 0.477 |
+| B2 person (P2 with ChatGPT) | 0.837 | 0.648 | 0.851 | 0.491 |
+| B3-k XLM-R, matched data | 0.809 | 0.650 | 0.800 | 0.461 |
+| B4-random, mean of 5 seeds | 0.893 | | 0.854 | |
+| **A1** | **0.903** | 0.639 | 0.852 | 0.504 |
+| **A2** | 0.898 | **0.699** | **0.872** | **0.532** |
+| B3-full (upper reference, 10-30x data) | 0.883 | 0.802 | 0.904 | 0.775 |
+
+**Success rule against B1** (intent >= +2.0, entity >= -2.0, schema >= 0.98, p95 <= L_max):
+
+| Agent | P1 intent / entity | P2 intent / entity | Passes |
+|---|---|---|---|
+| A1 | +2.7 / +1.3 | +2.9 / +2.7 | **yes, both projects** |
+| A2 | +2.2 / +7.3 | +4.9 / +5.5 | **yes, both projects** |
+
+Schema validity 0.997-1.000; p95 latency within L_max (interleaved timing, protocol section 4).
+
+Paired bootstrap 95% intervals (intent): A2 vs B1 P1 +0.022 [-0.006, +0.051], **P2 +0.049
+[+0.011, +0.089]**; A1 vs B1 P1 +0.027 [-0.007, +0.057], P2 +0.029 [-0.003, +0.063];
+A2 vs B2 **P1 +0.061 [+0.020, +0.102]**, P2 +0.021 [-0.007, +0.053]; A2 vs A1 P1 -0.005,
+P2 +0.020 (both include 0).
+
+- **RQ1 (agent vs generic pipeline): positive.** Both agents meet the preregistered rule on
+  both projects. A2's gain is statistically reliable on P2; on P1 the intervals include 0.
+  A1, which failed the rule on P2 development data (F9), passes on test.
+- **RQ2 (vs a person):** A2 beats B2 on both projects, reliably on P1 (a person working
+  alone); on P2 (a person with ChatGPT) the interval includes 0.
+- **RQ5 (vs random search):** A2 is ahead of the random-search mean by +0.5 (P1) and +1.8
+  (P2): a modest edge. A1 is above the mean on P1 (+1.0) and slightly below on P2 (-0.2).
+- **Published baseline:** both agents beat B3-k by 7 to 9 points on intent; B3-full,
+  trained on far more data, beats them on entities and on P2 intent, as expected.
+- **A1 vs A2:** A1 is 0.005 ahead on P1 intent, A2 well ahead on entities (+6.0, +2.8)
+  and on P2 intent (+2.0); neither intent difference is statistically reliable.
+- **Ablations on test:** scored selection helps (+2.7 P1, +2.9 P2 over the unscored first
+  choice); the Analyzer helps P2 (+1.1 intent, +7.4 entity); on test the Architect's
+  reasoning is neutral on P1 and slightly helpful on P2 (+0.4), unlike development (F5).
+- Every score is lower than on development data, as expected: development scores were
+  selection scores and optimistic.

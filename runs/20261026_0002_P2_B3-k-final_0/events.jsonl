@@ -1,0 +1,2 @@
+{"ts": 1792953165.019324, "kind": "threshold_tuned", "threshold": 0.7708090543746948, "dev_macro_f1_at_threshold": 0.7808807737330309, "n_candidate_thresholds": 101, "criterion": "macro-F1 over intents plus the out-of-scope class, dev only", "tuned_on": "development split only"}
+{"ts": 1792953165.0204828, "kind": "training", "n_cases": 100, "epochs": 30, "seconds": 363.1, "device": "cpu"}
