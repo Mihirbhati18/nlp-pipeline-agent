@@ -1,0 +1,4 @@
+MASSIVE 1.1 en-US: 16521 records, licence CC BY 4.0 (Attribution 4.0 International)
+P1: {'kshot': 120, 'dev_in_scope': 80, 'dev_oos': 20, 'dev_total': 100, 'test_in_scope': 250, 'test_oos': 50, 'test_total': 300} | leakage id-check pass
+P2: {'kshot': 100, 'dev_in_scope': 80, 'dev_oos': 20, 'dev_total': 100, 'test_in_scope': 250, 'test_oos': 50, 'test_total': 300} | leakage id-check pass
+P3: {'kshot': 60, 'dev_in_scope': 80, 'dev_oos': 20, 'dev_total': 100, 'test_in_scope': 167, 'test_oos': 33, 'test_total': 200} | leakage id-check pass

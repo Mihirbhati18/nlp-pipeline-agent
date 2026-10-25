@@ -1,0 +1,118 @@
+------------------------------------------------------------------------------
+Walkthrough: design joint-fixed-llm on P1 (Home assistant)
+  extraction=joint, examples=fixed, off-topic policy=llm_label
+  model qwen2.5:3b, answers from the saved cache
+------------------------------------------------------------------------------
+
+REQUEST 1: "turn the lights off please"
+
+  1. Correct answer (from the dataset):
+    intent = iot_hue_lightoff
+    entities = none
+
+  2. Examples put in the prompt (12 in total, first 3 shown):
+    "review the alarms i have" -> alarm_query
+    "remove alarm of seven thirty am on monday" -> alarm_remove
+    "put alarm on" -> alarm_set
+
+  3. Prompt sent to the model (68 lines, start and end shown):
+    Label this request and extract its information. Reply with JSON only.
+    
+    Supported requests:
+    - alarm_query
+    - alarm_remove
+    - alarm_set
+       ... (58 more lines: label list, examples) ...
+    Use an empty list if there is nothing to extract. Never invent a value.
+    
+    Request: turn the lights off please
+    Answer:
+
+  4. Model's raw reply:
+    {"intent": "iot_hue_lightoff", "entities": []}
+
+  5. Reading the reply:
+    valid format = True
+    status = ok   intent = iot_hue_lightoff
+    entities located in the request text = none
+
+  6. Verdict:
+    intent RIGHT
+
+REQUEST 2: "make a room darker"
+
+  1. Correct answer (from the dataset):
+    intent = iot_hue_lightdim
+    entities = house_place='room'
+
+  2. Examples put in the prompt (12 in total, first 3 shown):
+    "review the alarms i have" -> alarm_query
+    "remove alarm of seven thirty am on monday" -> alarm_remove
+    "put alarm on" -> alarm_set
+
+  3. Prompt sent to the model (68 lines, start and end shown):
+    Label this request and extract its information. Reply with JSON only.
+    
+    Supported requests:
+    - alarm_query
+    - alarm_remove
+    - alarm_set
+       ... (58 more lines: label list, examples) ...
+    Use an empty list if there is nothing to extract. Never invent a value.
+    
+    Request: make a room darker
+    Answer:
+
+  4. Model's raw reply:
+    {"intent": "iot_hue_lightdim", "entities": [{"type": "house_place", "text": "room"}]}
+
+  5. Reading the reply:
+    valid format = True
+    status = ok   intent = iot_hue_lightdim
+    entities located in the request text = house_place='room' at characters 7-11
+
+  6. Verdict:
+    intent RIGHT
+
+REQUEST 3: "is it possible for you to provide the likes of my music"
+
+  1. Correct answer (from the dataset):
+    intent = OUT OF SCOPE (should be refused)
+    entities = none
+
+  2. Examples put in the prompt (12 in total, first 3 shown):
+    "review the alarms i have" -> alarm_query
+    "remove alarm of seven thirty am on monday" -> alarm_remove
+    "put alarm on" -> alarm_set
+
+  3. Prompt sent to the model (68 lines, start and end shown):
+    Label this request and extract its information. Reply with JSON only.
+    
+    Supported requests:
+    - alarm_query
+    - alarm_remove
+    - alarm_set
+       ... (58 more lines: label list, examples) ...
+    Use an empty list if there is nothing to extract. Never invent a value.
+    
+    Request: is it possible for you to provide the likes of my music
+    Answer:
+
+  4. Model's raw reply:
+    {"intent": "none_of_the_above", "entities": []}
+
+  5. Reading the reply:
+    valid format = True
+    status = oos   intent = none_of_the_above
+    entities located in the request text = none
+
+  6. Verdict:
+    correctly REFUSED
+
+------------------------------------------------------------------------------
+7. Scores for these 3 requests
+   our scorer:   intent accuracy 1.000, entity F1 1.000, off-topic F1 1.000
+   scikit-learn: intent accuracy 1.000
+   A real evaluation does exactly this for all 100 development requests, saves every
+   prediction in a run folder, and computes macro-F1 over all intents.
+------------------------------------------------------------------------------

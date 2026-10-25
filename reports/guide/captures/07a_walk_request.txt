@@ -1,0 +1,34 @@
+REQUEST 2: "make a room darker"
+
+  1. Correct answer (from the dataset):
+    intent = iot_hue_lightdim
+    entities = house_place='room'
+
+  2. Examples put in the prompt (12 in total, first 3 shown):
+    "review the alarms i have" -> alarm_query
+    "remove alarm of seven thirty am on monday" -> alarm_remove
+    "put alarm on" -> alarm_set
+
+  3. Prompt sent to the model (68 lines, start and end shown):
+    Label this request and extract its information. Reply with JSON only.
+    
+    Supported requests:
+    - alarm_query
+    - alarm_remove
+    - alarm_set
+       ... (58 more lines: label list, examples) ...
+    Use an empty list if there is nothing to extract. Never invent a value.
+    
+    Request: make a room darker
+    Answer:
+
+  4. Model's raw reply:
+    {"intent": "iot_hue_lightdim", "entities": [{"type": "house_place", "text": "room"}]}
+
+  5. Reading the reply:
+    valid format = True
+    status = ok   intent = iot_hue_lightdim
+    entities located in the request text = house_place='room' at characters 7-11
+
+  6. Verdict:
+    intent RIGHT

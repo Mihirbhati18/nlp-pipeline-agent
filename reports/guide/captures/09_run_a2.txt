@@ -1,0 +1,20 @@
+A2: runtime qwen2.5:3b (357c53fb659c), planner qwen2.5:3b (357c53fb659c)
+=== P1: 20261025_1514_P1_A2_0 ===
+  ranked extraction         schema_guided > two_stage > joint  (Schema-guided extraction provides clear instructions for the model, wh)
+  ranked example_selection  fixed > similarity  (Fixed examples ensure consistency and coverage, while similarity selec)
+  ranked oos_policy         tfidf_threshold > llm_label  (Tfidf threshold policy is cheaper and can prevent unnecessary model ca)
+  tried schema-fixed-tfidf     intent 0.845 entity 0.505 [reasoned/initial]
+  tried schema-sim-tfidf       intent 0.869 entity 0.617 [reasoned/initial]
+  tried twostage-fixed-tfidf   intent 0.839 entity 0.544 [reasoned/initial]
+  tried schema-sim-llm         intent 0.974 entity 0.707 [reasoned/revision]
+  selected schema-sim-llm: intent 0.974 vs A1 0.958 -> meets the keep rule | 4/4 reasoned, 2 planning calls
+=== P2: 20261025_1514_P2_A2_0 ===
+  ranked extraction         schema_guided > two_stage > joint  (Schema-guided extraction provides clear instructions for each intent a)
+  ranked example_selection  fixed > similarity  (Fixed examples cover all intents but ignore the nuances of the request)
+  ranked oos_policy         tfidf_threshold > llm_label  (Tfidf threshold policy rejects requests early, saving resources and av)
+  tried schema-fixed-tfidf     intent 0.762 entity 0.391 [reasoned/initial]
+  tried schema-sim-tfidf       intent 0.802 entity 0.437 [reasoned/initial]
+  tried twostage-fixed-tfidf   intent 0.772 entity 0.413 [reasoned/initial]
+  tried schema-sim-llm         intent 0.898 entity 0.483 [reasoned/revision]
+  selected schema-sim-llm: intent 0.898 vs A1 0.841 -> meets the keep rule | 4/4 reasoned, 2 planning calls
+Decision 42 keep-or-drop rule: A2 GOES to the test set (P1: meets, P2: meets)

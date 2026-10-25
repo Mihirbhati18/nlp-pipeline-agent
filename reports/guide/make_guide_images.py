@@ -141,6 +141,33 @@ def main():
     terminal("04_demo.txt", "python scripts/demo.py --project P1", "screen_demo.png", ("-> ok", "-> out_of_scope", "invalid_request"))
     terminal("05_gitlog.txt", "git log --reverse (dates and messages)", "screen_gitlog.png")
     terminal("06_summary.txt", "python scripts/show_evidence.py   (summary lines)", "screen_summary.png", ("Overall",))
+    # for the "how we did every test" guide
+    evaluation_flow()
+    terminal("07a_walk_request.txt", "python scripts/walkthrough.py   (request 2 of 3 shown)", "screen_walk_request.png",
+             ("intent RIGHT", "intent =", "Model's raw reply"))
+    terminal("07b_walk_scores.txt", "python scripts/walkthrough.py   (end of the output)", "screen_walk_scores.png", ("our scorer", "scikit-learn"))
+    terminal("08_my_first_test.txt", "python -m pytest tests/test_my_first.py -vv", "screen_my_first_test.png", ("passed", "PASSED"))
+    terminal("09_run_a2.txt", "python scripts/run_a2.py", "screen_run_a2.png", ("selected", "GOES"))
+    terminal("11_data_check.txt", "python scripts/prepare_data.py --check", "screen_data_check.png", ("pass",))
+    terminal("10_scorer_tests.txt", "python -m pytest tests/test_scorer.py -vv   (first 8 of 14)", "screen_scorer_tests.png", ("PASSED",))
+
+
+def evaluation_flow():
+    fig, ax = canvas(11, 4.4, "What one evaluation run does, for every one of the 100 development requests")
+    steps = [("Request", ["from the locked-split", "development file"]),
+             ("Prompt", ["labels + examples", "+ the request"]),
+             ("AI model", ["qwen2.5:3b replies", "in JSON"]),
+             ("Read reply", ["check format, locate", "entities in the text"]),
+             ("Compare", ["with the correct", "answer from data"]),
+             ("Save", ["prediction written to", "predictions.jsonl"])]
+    for i, (title, lines) in enumerate(steps):
+        box(ax, 0.15 + i * 1.82, 2.2, 1.62, 1.2, title, lines, ai=(title == "AI model"))
+        if i:
+            arrow(ax, 0.15 + i * 1.82 - 0.2, 2.8, 0.15 + i * 1.82, 2.8)
+    box(ax, 3.3, 0.3, 4.4, 1.15, "After all 100 requests", ["scorer computes F1, accuracy, ...", "-> metrics.json in a dated run folder"],
+        fill="#f0fdf4")
+    arrow(ax, 10.1, 2.2, 7.7, 0.9, curve=-0.2)
+    save(fig, "evaluation_flow.png")
 
 
 if __name__ == "__main__":

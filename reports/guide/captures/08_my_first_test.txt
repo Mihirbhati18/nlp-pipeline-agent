@@ -1,0 +1,3 @@
+tests/test_my_first.py::test_a_perfect_system_scores_1 PASSED            [ 50%]
+tests/test_my_first.py::test_our_scorer_agrees_with_sklearn_on_one_mistake PASSED [100%]
+============================== 2 passed in 1.32s ==============================

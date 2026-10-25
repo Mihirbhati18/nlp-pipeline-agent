@@ -1,0 +1,5 @@
+7. Scores for these 3 requests
+   our scorer:   intent accuracy 1.000, entity F1 1.000, off-topic F1 1.000
+   scikit-learn: intent accuracy 1.000
+   A real evaluation does exactly this for all 100 development requests, saves every
+   prediction in a run folder, and computes macro-F1 over all intents.
