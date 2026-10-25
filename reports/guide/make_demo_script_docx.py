@@ -206,6 +206,99 @@ b.bullets([
     "Charts are in **reports\\figures**; they do not need the model.",
 ])
 
+b.page_break()
+b.h("More questions and answers")
+b.p("Grouped by topic. Each answer is short enough to say aloud; the extra detail is there if the teacher asks more.")
+
+
+def qa(title, rows):
+    b.h(title, 2)
+    b.table(["Question", "Answer"], rows, [5.0, 11.6], font=9)
+
+
+qa("Using AI tools instead", [
+    ["Why not just use an AI tool like ChatGPT to make the pipeline?",
+     "We tested that. On P2 one of us used ChatGPT to design the pipeline (B2): it scored 0.861, slightly above our first "
+     "agent (0.841) but below our improved agent (0.898), which needed no human. Show: "
+     "python scripts/explain_f1.py --run 20261024_1630_P2_B2_0. It is one run on one project, so it suggests rather than proves."],
+    ["So is an AI tool better or worse?",
+     "An AI tool gives an opinion; our framework tests every option on real requests and keeps the one that scores best. "
+     "Even inside our system, qwen's first advice was partly wrong and testing caught it. Our framework is also automatic, "
+     "repeatable, recorded, and runs offline."],
+    ["Are there automatic tools that already do this?",
+     "Yes, for example DSPy, which tunes prompts automatically, and Prompt2Model. They are in our related work. Our plan "
+     "listed a DSPy comparison as optional (B5) and it has not been done yet; we plan to add it."],
+    ["Why not call the ChatGPT API at runtime instead of a small local model?",
+     "Cost per request, privacy (user messages would leave the device), and dependence on an internet service. The plan "
+     "also requires one model for every compared system, so the comparison stays fair; a local model makes that possible "
+     "at zero cost."],
+])
+
+qa("Who would use it, and real-world use cases", [
+    ["Who is going to use this?",
+     "Developers and small teams building any app that has to understand short user requests, especially when they "
+     "have only a few examples and no machine-learning expert. They describe the app, give about 10 examples per request "
+     "type, and get a tested pipeline back."],
+    ["Give a real example.",
+     "A hospital app: patients type 'I need to see a cardiologist on Monday' or 'cancel my appointment'. The developer "
+     "lists the request types (book, cancel, check bed availability...) with a few examples each; the framework designs "
+     "and tests the pipeline, and the app gets intent = book_appointment, details = cardiologist, Monday."],
+    ["Which industries could use it?",
+     "Healthcare (appointments, symptom triage routing); banking (check balance, block card, report fraud); e-commerce "
+     "(track order, return item); telecom (recharge, complaint about network); smart homes and devices (like our P1); "
+     "office tools (calendar, email, lists, like our P2); travel and food ordering (like our held-out P3); HR and IT "
+     "helpdesks (reset password, apply for leave); government services; education (course queries, fee payment)."],
+    ["Where would it sit in a real product?",
+     "Between the user and the app's actions: a chat box or voice assistant sends the text to the exported pipeline, "
+     "which returns the intent and details; the app then books, cancels or answers. Our demo shows that step."],
+    ["What makes it useful for a company?",
+     "Less setup time (no hand-tuning for every new app), a measured quality score before going live, and it can run "
+     "on the company's own computer, so customer data stays private."],
+])
+
+qa("How well it works", [
+    ["Is the accuracy good enough for a real product?",
+     "On development data the improved agent gets 0.974 on the home assistant and 0.898 on the productivity assistant. "
+     "For a real product you would test on that product's own messages first, and add a fallback such as asking the "
+     "user to rephrase when it refuses a request."],
+    ["What happens when it gives a wrong answer?",
+     "Every reply is checked: a broken reply is caught and retried once; an unclear request can be refused rather than "
+     "acted on wrongly. The project description itself says acting on the wrong device is worse than admitting the "
+     "request was not understood."],
+    ["How much data does it need?",
+     "About 10 labelled example sentences per request type, plus some labelled requests to test on. That is the "
+     "realistic case for a new app, and it is where training a model like XLM-R struggled (0.909 against our 0.974)."],
+    ["Does it handle messy typing?",
+     "Yes, we tested typos, capitals and filler words: the AI systems lost at most about 7 points, while simple word "
+     "matching lost up to 27. Show: reports\\figures\\fig6_robustness.png."],
+    ["How fast is it?", "Under one second per request on this laptop, measured live. Show: python scripts/explain_stats.py timing."],
+    ["Does it work in other languages?",
+     "We tested English only. MASSIVE has 51 languages and qwen is multilingual, so it should extend, but that is untested and would need its own evaluation."],
+])
+
+qa("Design choices", [
+    ["Why the MASSIVE dataset?", "It is public (CC BY 4.0), labelled by people, has many domains to build separate projects from, and comes with a published baseline (XLM-R) to compare against."],
+    ["Why qwen2.5:3b?", "It fits the laptop's 4 GB graphics card, answered in about 0.4 s, always replied in valid JSON and gave identical answers on repeat. A larger 8B model was too big for the card."],
+    ["Why only 12 designs?", "Safety (no AI-written code runs), fair proof (we can compare with random search, a person and all 12), and a small model that already makes mistakes. Next step: A3 lets the agent rewrite its own prompt."],
+    ["Why test only 4 of the 12?", "Testing costs time; a real system cannot try everything. Choosing well within a small budget is the agent's job, and A2 found the best design while testing 4."],
+    ["What if the app gets a new request type later?", "Add it to the list with about 10 examples and run the framework again: it re-analyses, re-tests and exports a new pipeline. No manual re-tuning."],
+    ["Can it run without a graphics card?", "Yes, more slowly: Ollama can run the model on the processor. We measured speed only on this laptop."],
+])
+
+qa("Honesty and process", [
+    ["What are the weaknesses?",
+     "One small model; results so far are on development data; the human baseline is one beginner per project; the first "
+     "agent did not beat random search; entity extraction is the weakest area; English only; the final pipeline is always "
+     "one of 12 designs."],
+    ["Why is the first agent (A1) worse than random?", "Its AI kept choosing one kind of example and never tried the best design. A2 fixed this by structuring the search, with the same model."],
+    ["Did you change the system after seeing results?", "Yes, once: A2, recorded as decision 42 with a keep-or-drop rule fixed in advance. Both A1 and A2 will be reported on the locked test data, whichever does better."],
+    ["How do we know you did not cheat?", "Test data is locked by code; every answer is saved; scores are recomputed by our scripts and by scikit-learn; and the git history shows the work step by step since 11 October."],
+    ["What did you do yourselves, if AI wrote the code?",
+     "We planned the project, decided what to test and compare, did the human baseline (B2), checked every result, and can "
+     "explain and re-run each step. The AI assistance is recorded in docs\\contributions.md."],
+    ["What would you do with more time?", "A3 (the agent refines its own prompt from its mistakes), the final test runs and the held-out project P3, the DSPy comparison, more languages, and a larger model."],
+])
+
 b.save(OUT)
 b.save_pdf(OUT.with_suffix(".pdf"))
 print(f"wrote {OUT.name} and {OUT.with_suffix('.pdf').name}")
