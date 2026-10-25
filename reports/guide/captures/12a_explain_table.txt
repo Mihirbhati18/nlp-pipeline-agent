@@ -1,0 +1,27 @@
+==============================================================================
+STEP 1. Correct answers:  data\processed\P1\dev.jsonl  (100 requests)
+STEP 2. System's answers: runs\20261024_1654_P1_A2-selected_0\predictions.jsonl
+        80 requests are in scope (they have a real intent); 20 are off-topic and are scored
+        separately (off-topic F1), so intent F1 uses only the in-scope ones.
+==============================================================================
+
+STEP 3. Side by side (first 15 of 80; all of them are in the CSV file)
+
+    #  request                                correct intent       system said            right?
+    1  turn the lights off please             iot_hue_lightoff     iot_hue_lightoff       yes
+    2  make a room darker                     iot_hue_lightdim     iot_hue_lightdim       yes
+    3  set an alarm at six in the morning     alarm_set            alarm_set              yes
+    4  it's too dark here                     iot_hue_lighton      iot_hue_lighton        yes
+    5  turn off the smart plug                iot_wemo_off         iot_wemo_off           yes
+    6  set a wake up call for ten am          alarm_set            alarm_set              yes
+    7  set an alarm for one p. m.             alarm_set            alarm_set              yes
+    8  i want to wake up at six am tomorrow   alarm_set            alarm_set              yes
+    9  turn on the t. v. socket when i arriv  iot_wemo_on          iot_wemo_on            yes
+   10  can you turn off wemo plug socket      iot_wemo_off         iot_wemo_off           yes
+   11  make coffee now                        iot_coffee           iot_coffee             yes
+   12  at one p. m. today start the robot va  iot_cleaning         iot_cleaning           yes
+   13  olly start the vacuum cleaner          iot_cleaning         iot_cleaning           yes
+   14  can you start the roomba               iot_cleaning         iot_cleaning           yes
+   15  i need some more lights                iot_hue_lightup      REFUSED (off-topic)    NO
+
+  Saved all 80 lines to reports\f1_explained_20261024_1654_P1_A2-selected_0.csv (open it in Excel).

@@ -1,0 +1,27 @@
+STEP 4 and 5. For each intent, count and calculate
+
+  TP = system said this intent and it was right
+  FP = system said this intent but the correct one was different
+  FN = this was the correct intent but the system said something else
+  precision = TP/(TP+FP)   recall = TP/(TP+FN)   F1 = 2*P*R/(P+R)
+
+  alarm_query
+     TP 6 (#22, #34, #40, #41, #52, #64)   FP 0   FN 1 (#75)
+     precision 6/6 = 1.000   recall 6/7 = 0.857   F1 = 0.923
+  alarm_remove
+     TP 7 (#35, #42, #44, #51, #53, #66, ...)   FP 0   FN 0
+     precision 7/7 = 1.000   recall 7/7 = 1.000   F1 = 1.000
+  ... (10 more intents) ...
+
+STEP 6. Average the F1 of every intent (macro-F1)
+
+  (0.923 + 1.000 + 1.000 + 1.000 + 1.000 + 0.923 + 1.000 + 1.000 + 1.000 + 0.923 + 1.000 + 0.923) / 12
+  = 0.9744
+
+  accuracy = 76 right / 80 = 0.9500
+
+  Check against the other two ways of computing it:
+    recorded in 20261024_1654_P1_A2-selected_0/metrics.json : 0.9744
+    scikit-learn f1_score              : 0.9744
+    -> all three are the same
+==============================================================================

@@ -20,7 +20,7 @@ sys.path.insert(0, str(HERE))
 from docx_helpers import Builder  # noqa: E402
 
 IMG = HERE / "images"
-OUT = HERE / "How_Every_Test_Was_Done.docx"
+OUT = HERE / "How_Every_Test_Was_Done_v2.docx"
 
 b = Builder()
 b.title(
@@ -34,12 +34,12 @@ b.callout(
     "to be able to do any step yourself. Claude Code wrote the code and ran the tests. This guide teaches the "
     "recipe behind every test, gives a small example you can work out on paper, and the exact command to "
     "run it yourself, with what your screen should show.\n"
-    "**How to use it:** read Part A first, since it explains the idea every test is built on. Then do the "
+    "**How to use it:** read Part A first, slowly: it shows where every file is and how a score is calculated from them. Then do the "
     "30-minute rehearsal in Part E once before you present."
 )
 b.h("Contents", 2)
 b.numbered([
-    "Part A. The basics: what a test is, and watching one happen",
+    "Part A. The basics: what a test is, where the files are, and how a score is calculated",
     "Part B. Software tests: writing and running your own",
     "Part C. Every experiment, one by one (15 tests)",
     "Part D. If the teacher says \"do it now\"",
@@ -77,40 +77,164 @@ b.numbered([
 b.p("That is the whole idea. The different experiments change only **which system** answers (B0, B1, A1, A2...) "
     "or **which requests** it gets (clean, with typos...).")
 
-b.h("A3. Watch one experiment happen, step by step", 2)
-b.p("The walkthrough tool prints every step from A2 for three requests. **Show this to your teacher first**: "
-    "it makes everything else easy to follow.")
-b.code("python scripts/walkthrough.py")
-b.image(IMG / "screen_walk_request.png", "One request, all six steps (real output).")
-b.image(IMG / "screen_walk_scores.png", "The end: the scores for these requests, from our scorer and from scikit-learn.")
-b.p("Try other designs, more requests, or a live answer from the model instead of a saved one:")
-b.code("python scripts/walkthrough.py --design schema-sim-llm --n 5\npython scripts/walkthrough.py --live")
+b.h("A3. Where everything lives: the files behind every test", 2)
+b.p("Before running anything, it helps to know that the whole project is just **folders of files** on your "
+    "laptop, in `D:\\MyClaudeProject\\nlp`. Open that folder in File Explorer and you will see these:")
+b.table(["Folder", "What is inside", "You will use it for"], [
+    ["data\\processed\\P1\\", "The requests and their correct answers for project P1", "seeing the data the systems are tested on"],
+    ["scripts\\", "Small programs you run, one per job (walkthrough.py, explain_f1.py, demo.py...)", "running every test"],
+    ["src\\", "The framework itself: the code the scripts use", "seeing how a step works"],
+    ["runs\\", "One folder per experiment, holding its answers and its scores", "checking any result"],
+    ["tests\\", "The 371 automated tests", "Part B"],
+    ["reports\\", "Reports, charts and the files these tools save", "showing results"],
+], [3.8, 7.6, 5.2], font=9.5)
 
-b.h("A4. Work out F1 by hand", 2)
-b.p("Being able to compute F1 yourself is the best proof you understand the results. Here are 8 requests:")
+b.h("The two files every test is built from", 3)
+b.p("**File 1: the correct answers.** `data\\processed\\P1\\dev.jsonl` holds the 100 development requests for P1 "
+    "and, for each one, the correct answer. These come from the MASSIVE dataset, where people labelled every "
+    "request. Open it with Notepad (right-click → Open with → Notepad). Each line is one request. The second line is:")
+b.code('{"case_id": "massive-24", "utt": "make a room darker", "true_intent": "iot_hue_lightdim",\n'
+       ' "in_scope": true, "entities": [{"type": "house_place", "text": "room", "start": 7, "end": 11}], ...}')
+b.table(["Field", "Meaning", "In this line"], [
+    ["case_id", "the request's ID in the MASSIVE dataset", "massive-24"],
+    ["utt", "the request, exactly as a user typed it (utterance)", "make a room darker"],
+    ["true_intent", "the correct intent", "iot_hue_lightdim (dim a light)"],
+    ["in_scope", "true = the app should handle it; false = off-topic, should be refused", "true"],
+    ["entities", "the details to extract, with their position in the sentence (counting characters from 0)", "house_place = \"room\", characters 7 to 11"],
+], [2.6, 8.4, 5.6], font=9.5)
+b.p("The format is called **JSONL**: one record per line, written as `\"name\": value` pairs.", size=10.5)
+
+b.p("**File 2: what a system answered.** Every experiment saves its answers in its own folder in `runs`. "
+    "For A2 on P1 that is `runs\\20261024_1654_P1_A2-selected_0\\predictions.jsonl`. The folder name is the date "
+    "and time (24 Oct, 16:54), the project (P1) and the system (A2). The line for the same request is:")
+b.code('{"case_id": "massive-24", "gold_intent": "iot_hue_lightdim", "gold_in_scope": true, "status": "ok",\n'
+       ' "predicted_intent": "iot_hue_lightdim", "predicted_entities": [{"type": "house_place", "text": "room"}], ...}')
+b.table(["Field", "Meaning"], [
+    ["gold_intent", "the correct intent, copied from File 1 (\"gold\" means correct answer)"],
+    ["status", "ok = the system answered with an intent; oos = it refused the request as off-topic; invalid or error = its reply was broken"],
+    ["predicted_intent", "the intent the system answered"],
+    ["predicted_entities", "the details the system extracted"],
+], [3.6, 13.0], font=9.5)
+b.p("**Every score in this project is just these two files compared line by line.** Request massive-24: correct "
+    "`iot_hue_lightdim`, answered `iot_hue_lightdim`, so it is right. Section A5 shows how all 80 lines become an F1 score.")
+
+b.h("A4. The walkthrough script, explained", 2)
+b.p("A **script** is a text file of instructions written in Python. `walkthrough.py` is one of them, in the "
+    "scripts folder: `D:\\MyClaudeProject\\nlp\\scripts\\walkthrough.py`. You can open it to read it, in Notepad or "
+    "in VS Code (installed on this laptop), with:")
+b.code("code scripts\\walkthrough.py")
+b.p("It is a teaching tool: it does what a real experiment does, but for only three requests, and prints every "
+    "step instead of doing it silently. It changes nothing and saves nothing.")
+
+b.h("What it does, step by step, and where each step's code is", 3)
+b.table(["Step", "What happens", "Files it reads", "Code that does it"], [
+    ["Start", "Locks the test data, then reads the project's intents, fields and description",
+     "data\\manifests\\P1.json, configs\\descriptions\\P1.md", "src\\analyzer\\spec.py, src\\analyzer\\access.py"],
+    ["1", "Takes a request and its correct answer", "data\\processed\\P1\\dev.jsonl (File 1)", "load_cases in src\\analyzer\\spec.py"],
+    ["2", "Picks example requests to show the model (fixed, or the most similar ones)",
+     "data\\processed\\P1\\kshot.jsonl (120 labelled examples)", "src\\pipelines\\examples.py"],
+    ["3", "Writes the prompt: instructions, the list of intents, the examples, then the request", "—",
+     "render_prompt in src\\pipelines\\catalogue.py"],
+    ["4", "Sends the prompt to the AI model and receives its reply",
+     "cache\\ folder (the model's saved answers), or the live model with --live",
+     "src\\llm\\client.py, which talks to Ollama at http://127.0.0.1:11434"],
+    ["5", "Reads the reply: is it valid JSON with a real intent? Where is each entity in the sentence?", "—",
+     "src\\evaluation\\output_schema.py, src\\evaluation\\span_rule.py"],
+    ["6", "Compares the answer with the correct one: right or wrong", "—", "inside walkthrough.py"],
+    ["7", "Scores the requests, with our scorer and with scikit-learn", "—",
+     "src\\evaluation\\scorer.py and the scikit-learn library"],
+], [1.2, 5.6, 5.0, 4.8], font=8.5)
+b.p("**\"From the saved cache\"** means: when the experiments ran, every answer the model gave was saved in the "
+    "`cache` folder. The walkthrough reuses those saved answers, so you see exactly what the experiments saw, "
+    "instantly. Add `--live` to ask the model fresh; because the model is repeatable, it gives the same answers.")
+
+b.h("How to run it", 3)
+b.numbered([
+    "Open the **Ollama** app from the Start menu (it runs the AI model in the background).",
+    "Open **PowerShell** (Start → type PowerShell → Enter).",
+    "Go to the project folder by typing this and pressing Enter:",
+])
+b.code("cd D:\\MyClaudeProject\\nlp")
+b.numbered(["Run the script:"])
+b.code("python scripts/walkthrough.py")
+b.p("It prints three requests: two the app should handle and one off-topic one. For each, steps 1 to 6 appear "
+    "under it. Here is request 2, with what each part means:")
+b.image(IMG / "screen_walk_request.png", "Request 2 of 3 (real output).")
+b.table(["What you see", "What it means"], [
+    ["1. Correct answer", "read from File 1: the dataset says this request is iot_hue_lightdim, with house_place = room"],
+    ["2. Examples put in the prompt", "worked examples the model is shown first, so it learns the format (12 here: one per intent)"],
+    ["3. Prompt sent to the model", "the full text the model receives: 68 lines, of which the start and end are shown"],
+    ["4. Model's raw reply", "exactly what the model wrote back, as JSON"],
+    ["5. Reading the reply", "the format is valid, the intent is a real one, and \"room\" is found at characters 7 to 11 of the request"],
+    ["6. Verdict", "the answer matches the correct one, so it is right"],
+], [4.6, 12.0], font=9.5)
+b.image(IMG / "screen_walk_scores.png", "The end of the output: all three right, so every score is 1.000.")
+b.p("**How this relates to the real experiments:** an experiment runs exactly these steps, with the same code, "
+    "for all 100 development requests instead of 3. It saves every answer in a predictions.jsonl file (File 2) "
+    "and the scores in metrics.json, inside a new run folder.")
+b.p("Other things to try:")
+b.code("python scripts/walkthrough.py --n 5                     # 5 requests instead of 3\n"
+       "python scripts/walkthrough.py --design schema-sim-llm   # the design A2 chose\n"
+       "python scripts/walkthrough.py --live                    # ask the model fresh")
+
+b.h("A5. Work out F1 yourself, on the real results", 2)
+b.p("A2's recorded intent macro-F1 on P1 is **0.974**. Here is how to get that number yourself from Files 1 and 2.")
+
+b.h("Option 1: let the explain script show every step", 3)
+b.code("python scripts/explain_f1.py")
+b.p("The script `scripts\\explain_f1.py` reads File 1 and File 2, puts them side by side, does the counting, and "
+    "prints each step. It also saves the side-by-side table as a spreadsheet file.")
+b.image(IMG / "screen_explain_table.png", "Steps 1 to 3: the two files, and the requests side by side (real output).")
+b.p("Why only 80 of the 100 requests? 20 are off-topic and have no correct intent; they are scored separately as "
+    "off-topic F1. Look at request #15, \"i need some more lights\": the correct intent is iot_hue_lightup, but A2 "
+    "**refused** it as off-topic. That is one of A2's 4 mistakes.")
+b.image(IMG / "screen_explain_counts.png", "Steps 4 to 6: counting, the formula for each intent, and the average (real output).")
+b.p("Read the alarm_query line like this: A2 got 6 alarm_query requests right (TP 6: requests #22, #34, #40, #41, "
+    "#52, #64). It never said alarm_query wrongly (FP 0). It missed one, request #75 (FN 1). So precision = 6/6 = "
+    "1.000, recall = 6/7 = 0.857 and F1 = 2 × 1.000 × 0.857 / (1.000 + 0.857) = 0.923. Doing this for all 12 intents "
+    "and averaging gives 0.9744. That matches the number recorded in metrics.json and the one scikit-learn computes.")
+b.p("Every run works the same way. For the generic prompt B1, for example:")
+b.code("python scripts/explain_f1.py --run 20261013_0110_P1_B1_0")
+
+b.h("Option 2: count it yourself in a spreadsheet", 3)
+b.p("The script saved all 80 lines as `reports\\f1_explained_20261024_1654_P1_A2-selected_0.csv`. Open it in Excel, "
+    "or upload it to Google Sheets (sheets.google.com → File → Import). The columns are:")
+b.table(["A", "B", "C", "D", "E", "F"], [
+    ["#", "case_id", "request", "correct intent", "system said", "right?"],
+], [1.5, 2.8, 4.6, 2.8, 2.8, 2.1], font=9.5)
+b.p("Pick one intent, for example **alarm_query**, and count three things. You can use a filter (Data → Filter), "
+    "or type these formulas into any empty cell:")
+b.table(["Count", "Meaning", "Formula", "Answer"], [
+    ["TP", "correct intent is alarm_query AND right", "=COUNTIFS(D:D,\"alarm_query\",F:F,\"yes\")", "6"],
+    ["FP", "system said alarm_query AND wrong", "=COUNTIFS(E:E,\"alarm_query\",F:F,\"no\")", "0"],
+    ["FN", "correct intent is alarm_query AND wrong", "=COUNTIFS(D:D,\"alarm_query\",F:F,\"no\")", "1"],
+], [1.4, 5.4, 7.0, 2.8], font=9)
+b.p("Then: precision = TP / (TP + FP) = 6/6 = 1.000; recall = TP / (TP + FN) = 6/7 = 0.857; "
+    "F1 = 2 × precision × recall / (precision + recall) = 0.923. Repeat for the other 11 intents (only the name in "
+    "the formula changes), add the 12 F1 values and divide by 12. You get 0.974, the recorded score.")
+b.callout("**A refused request** (\"REFUSED (off-topic)\" in column E) counts as wrong for its correct intent (an FN), "
+          "but as an FP for no intent, because the system did not claim any intent. The scorer and scikit-learn "
+          "both treat it this way.")
+
+b.h("Option 3: a small practice example on paper", 3)
+b.p("**This table is made up for practice. It is not from the project.** It has only 8 requests, so the whole "
+    "calculation fits on paper. Once you can do this, you can do the real one above.")
 b.table(["#", "Correct intent", "System said", "Right?"], [
     ["1", "alarm_set", "alarm_set", "yes"], ["2", "alarm_set", "alarm_set", "yes"],
     ["3", "alarm_set", "alarm_remove", "no"], ["4", "alarm_remove", "alarm_remove", "yes"],
     ["5", "alarm_remove", "alarm_set", "no"], ["6", "lights_off", "lights_off", "yes"],
     ["7", "lights_off", "lights_off", "yes"], ["8", "lights_off", "alarm_set", "no"],
 ], [1.0, 5.0, 5.0, 5.6], font=10)
-b.p("**Step 1. Count, for each intent:**")
-b.bullets([
-    "**TP (true positive):** the system said this intent and it was right.",
-    "**FP (false positive):** the system said this intent but it was wrong.",
-    "**FN (false negative):** this was the correct intent but the system said something else.",
-])
-b.table(["Intent", "TP", "FP", "FN", "Precision = TP/(TP+FP)", "Recall = TP/(TP+FN)", "F1"], [
+b.p("**Step 1.** For each intent, count TP, FP and FN, exactly as in Option 2:")
+b.table(["Intent", "TP", "FP", "FN", "Precision", "Recall", "F1"], [
     ["alarm_set", "2 (#1, #2)", "2 (#5, #8)", "1 (#3)", "2/4 = 0.500", "2/3 = 0.667", "0.571"],
     ["alarm_remove", "1 (#4)", "1 (#3)", "1 (#5)", "1/2 = 0.500", "1/2 = 0.500", "0.500"],
     ["lights_off", "2 (#6, #7)", "0", "1 (#8)", "2/2 = 1.000", "2/3 = 0.667", "0.800"],
 ], [2.6, 1.9, 1.9, 1.5, 3.1, 3.0, 2.6], font=9)
-b.p("**Step 2. F1 for each intent** = 2 × precision × recall / (precision + recall). "
-    "For alarm_set: 2 × 0.5 × 0.667 / (0.5 + 0.667) = 0.571.")
-b.p("**Step 3. Macro-F1** = average of the three: (0.571 + 0.500 + 0.800) / 3 = **0.624**. "
-    "**Accuracy** = 5 right out of 8 = **0.625**.")
-b.p("**Step 4. Check it with scikit-learn.** Save this as `check_f1.py` in the project folder and run "
-    "`python check_f1.py`. It prints 0.624 and 0.625, the same as the hand calculation.")
+b.p("**Step 2.** F1 for alarm_set = 2 × 0.500 × 0.667 / (0.500 + 0.667) = 0.667 / 1.167 = 0.571.")
+b.p("**Step 3.** Macro-F1 = (0.571 + 0.500 + 0.800) / 3 = **0.624**. Accuracy = 5 right / 8 = **0.625**.")
+b.p("**Step 4.** Check with scikit-learn: save this as `check_f1.py` in the project folder and run "
+    "`python check_f1.py`. It prints 0.624 and 0.625.")
 b.code(
     "from sklearn.metrics import f1_score, accuracy_score\n\n"
     "gold = ['alarm_set', 'alarm_set', 'alarm_set', 'alarm_remove', 'alarm_remove',\n"
@@ -120,8 +244,6 @@ b.code(
     "print('macro F1', round(f1_score(gold, pred, average='macro'), 3))\n"
     "print('accuracy', accuracy_score(gold, pred))"
 )
-b.p("In the real experiments the scorer does exactly this, over 100 requests and 10 to 12 intents. "
-    "Requests the system wrongly refused also count as wrong.")
 b.page_break()
 
 # =========================================================================
@@ -374,7 +496,7 @@ b.h("Part D. If the teacher says \"do it now\"")
 b.table(["The teacher asks…", "Type this", "Time", "What appears"], [
     ["\"Show me a test running.\"", "python scripts/walkthrough.py", "5 s", "the six steps for three requests"],
     ["\"Run all your tests.\"", "python -m pytest tests", "15 s", "371 passed"],
-    ["\"How do you compute F1?\"", "work Part A4 on paper, then python check_f1.py", "5 min", "0.624 by hand and by scikit-learn"],
+    ["\"How do you compute F1?\"", "python scripts/explain_f1.py (Part A5)", "5 s", "every count and the average, matching metrics.json"],
     ["\"Write a test.\"", "the file from Part B2, then python -m pytest tests/test_my_first.py -vv", "5 min", "2 passed"],
     ["\"Run your agent.\"", "python scripts/run_a2.py", "under 1 min", "the AI's rankings, 4 designs tried, the choice"],
     ["\"Run a baseline.\"", "python scripts/run_b0.py --projects P1", "seconds", "B0 score 0.780"],
@@ -392,8 +514,10 @@ b.h("Part E. 30-minute rehearsal checklist")
 b.p("Do these once before presenting. Tick each one when it works on your laptop.")
 b.checklist([
     "Open Ollama; in PowerShell run `cd D:\\MyClaudeProject\\nlp` and `ollama list`.",
-    "Run `python scripts/walkthrough.py` and explain each of the six steps out loud.",
-    "Work out the Part A4 F1 example on paper without looking, then check it with `check_f1.py`.",
+    "Open `data\processed\P1\dev.jsonl` and a `predictions.jsonl` in Notepad and explain one line of each (Part A3).",
+    "Run `python scripts/walkthrough.py` and explain each of the six steps out loud (Part A4).",
+    "Run `python scripts/explain_f1.py`, then count alarm_query yourself in the CSV file (Part A5).",
+    "Work out the practice example on paper without looking, then check it with `check_f1.py`.",
     "Create `tests/test_my_first.py`, run it, break it, fix it.",
     "Run `python -m pytest tests` and say what the tests check (Part B3 table).",
     "Run `python scripts/run_a2.py` and explain the rankings and the 4 designs tried.",
