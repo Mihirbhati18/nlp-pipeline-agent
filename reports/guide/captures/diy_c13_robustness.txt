@@ -1,0 +1,4 @@
+clean         e.g. 'turn the lights off please'                       macro-F1 0.771  refused 19 of 80
+typos         e.g. 'turn the ligths off please'                       macro-F1 0.704  refused 27 of 80
+CAPITALS      e.g. 'TURN THE LIGHTS OFF PLEASE'                       macro-F1 0.771  refused 19 of 80
+filler words  e.g. 'hey, could you please turn the lights off please, thanks' macro-F1 0.699  refused 31 of 80

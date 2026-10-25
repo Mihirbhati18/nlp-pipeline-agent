@@ -461,8 +461,8 @@ qa = [
      "Accuracy can look good while a rare request type is always missed. Macro-F1 scores every request type "
      "separately and averages them, so a system cannot hide its failures on rare ones."),
     ("Why did the original agent not beat random search?",
-     "Its AI kept choosing one kind of example and never tried the best design. Six of the 12 designs score "
-     "within 6 points of the best, so random picks usually include a good one. The improved agent fixes this "
+     "Its AI kept choosing one kind of example and never tried the best design. On P1, 5 of the 12 designs "
+     "score within 6 points of the best, so 4 random picks usually include a good one. The improved agent fixes this "
      "with a better search structure, using the same model."),
     ("How do we know you did not tune on the test data?",
      "The test data is locked by code until the freeze, and project P3 is fully hidden. A test checks that the "

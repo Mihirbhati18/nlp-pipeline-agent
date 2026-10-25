@@ -1,0 +1,4 @@
+run: 20261024_1654_P1_A2-selected_0
+intent macro-F1  recorded 0.974359   recomputed 0.974359
+accuracy         recorded 0.950000   recomputed 0.950000
+-> the same

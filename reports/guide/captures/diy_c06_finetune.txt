@@ -1,0 +1,8 @@
+pass 5/30, how wrong (loss): 2.000
+pass 10/30, how wrong (loss): 1.298
+pass 15/30, how wrong (loss): 0.680
+pass 20/30, how wrong (loss): 0.148
+pass 25/30, how wrong (loss): 0.083
+pass 30/30, how wrong (loss): 0.058
+accuracy: 0.938
+intent macro-F1: 0.94

@@ -1,0 +1,9 @@
+AI's ranking, as it wrote it: ['similar-cutoff', 'fixed-cutoff', 'fixed-model', 'refusal=model']
+after removing names that are not real designs: ['similar-cutoff', 'fixed-cutoff', 'fixed-model']
+AI's reason: The 'similar-cutoff' design is the best because it allows for a more nuanced understanding of user requests by considering the similarity to previous examples. This design can handle variations in user phrasing while still ensuring that off-topic requests are refused early. The 'fixed-cutoff' design is next, as it uses a fixed set of examples but still has the advantage of being able to handle some variations. The 'fixed-model' design is less flexible and may struggle with new or varied requests. Lastly, the 'refusal=model' design is the worst because it refuses requests without even giving the model a chance to process them, which can lead to many unnecessary refusals and missed opportunities for understanding user intent.
+tested similar-cutoff: intent macro-F1 0.872
+tested fixed-cutoff: intent macro-F1 0.957
+AI chose next: fixed-model (The previous tests showed that the 'fixed-cutoff' design performed better with a cutoff of 0.957, which is closer to the cutoff of 0.957 used in the fixed-cutoff design. This suggests that the fixed-model might be more aligned with the model's performance on the fixed-cutoff design, making it a good candidate for the next test.)
+tested fixed-model: intent macro-F1 0.858
+
+selected: fixed-cutoff with intent macro-F1 0.957

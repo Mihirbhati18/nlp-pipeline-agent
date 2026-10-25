@@ -1,0 +1,10 @@
+'turn the lights off please'                  correct: iot_hue_lightoff     model: iot_hue_lightoff
+'make a room darker'                          correct: iot_hue_lightdim     model: iot_hue_lightdim
+'set an alarm at six in the morning'          correct: alarm_set            model: alarm_set
+"it's too dark here"                          correct: iot_hue_lighton      model: iot_hue_lightup
+'turn off the smart plug'                     correct: iot_wemo_off         model: iot_wemo_off
+
+requests: 100
+intent accuracy: 0.9
+intent macro-F1: 0.927
+off-topic requests correctly refused: 20 of 20

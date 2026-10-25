@@ -1,0 +1,21 @@
+  joint-fixed-llm        0.927
+  joint-fixed-tfidf      0.849
+  joint-sim-llm          0.951
+  joint-sim-tfidf        0.862
+  schema-fixed-llm       0.950
+  schema-fixed-tfidf     0.845
+  schema-sim-llm         0.974
+  schema-sim-tfidf       0.869
+  twostage-fixed-llm     0.901
+  twostage-fixed-tfidf   0.839
+  twostage-sim-llm       0.958
+  twostage-sim-tfidf     0.858
+seed 0: drew ['schema-sim-llm', 'twostage-sim-tfidf', 'joint-fixed-llm', 'schema-fixed-llm'] -> kept schema-sim-llm (0.974)
+seed 1: drew ['joint-sim-llm', 'twostage-fixed-tfidf', 'joint-fixed-tfidf', 'schema-fixed-llm'] -> kept joint-sim-llm (0.951)
+seed 2: drew ['joint-fixed-llm', 'joint-fixed-tfidf', 'twostage-sim-llm', 'schema-fixed-tfidf'] -> kept twostage-sim-llm (0.958)
+seed 3: drew ['joint-sim-tfidf', 'twostage-fixed-tfidf', 'twostage-fixed-llm', 'joint-sim-llm'] -> kept joint-sim-llm (0.951)
+seed 4: drew ['joint-sim-tfidf', 'schema-fixed-llm', 'joint-fixed-tfidf', 'schema-sim-llm'] -> kept schema-sim-llm (0.974)
+average of the 5 winners: 0.962
+best possible (all 12): 0.974
+chance 4 random picks include the best design: 33%
+designs within 0.06 of the best: 5 of 12, so a random 4 usually contains a good one

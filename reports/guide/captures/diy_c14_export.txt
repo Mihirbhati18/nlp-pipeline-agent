@@ -1,0 +1,5 @@
+saved diy/my_package.json, fingerprint 154cb8a7b6e28ded ...
+loaded: {'project': 'P1 home assistant', 'examples': 'fixed', 'refusal': 'model', 'model': 'qwen2.5:3b'}
+'dim the kitchen lights' -> iot_hue_lightdim
+'who won the match yesterday' -> none_of_the_above
+tampered copy: diy\my_package_tampered.json was changed after it was saved: refusing to load it

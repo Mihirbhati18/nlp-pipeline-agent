@@ -41,7 +41,7 @@ b.h("Contents", 2)
 b.numbered([
     "Part A. The basics: what a test is, where the files are, and how a score is calculated",
     "Part B. Software tests: writing and running your own",
-    "Part C. Every experiment, one by one (15 tests)",
+    "Part C. Every experiment, one by one: run it, check it, and build it yourself (15 tests)",
     "Part D. If the teacher says \"do it now\"",
     "Part E. 30-minute rehearsal checklist",
     "Part F. How to explain the AI use honestly",
@@ -334,8 +334,8 @@ b.page_break()
 
 # =========================================================================
 b.h("Part C. Every experiment, one by one")
-b.p("Each experiment has the same seven parts: **in one sentence**, **where its files are**, **how it works**, "
-    "**run it**, **what the output means**, **check it yourself** and **what to say**. All paths are inside "
+b.p("Each experiment has the same parts: **in one sentence**, **where its files are**, **how it works**, "
+    "**run it**, **what the output means**, **check it yourself**, **build it yourself from scratch** and **what to say**. All paths are inside "
     "`D:\\MyClaudeProject\\nlp`. Before running anything: open the Ollama app, open PowerShell, and type "
     "`cd D:\\MyClaudeProject\\nlp`.")
 b.callout("**Three tools do the \"check it yourself\" parts for you, on the real files:**\n"
@@ -345,6 +345,187 @@ b.callout("**Three tools do the \"check it yourself\" parts for you, on the real
           "the speed figures and the error counts were worked out.\n"
           "A **run folder name** is a folder inside `runs`, such as `20261013_0110_P1_B1_0`: the date and time "
           "(13 Oct, 01:10), the project (P1), the system (B1) and the seed (0).")
+
+
+DIY_DIR = HERE.parents[1] / "diy"
+CAP = HERE / "captures"
+
+b.h("C0. Building things yourself: the diy folder", 2)
+b.p("Every experiment below ends with **\"Build it yourself from scratch\"**: a short Python script that does "
+    "the same job in the simplest possible way, so you can see how you would do it with your own hands. "
+    "These scripts are in the folder `D:\\MyClaudeProject\\nlp\\diy` (\"do it yourself\"). They are separate from "
+    "the project's own code, and much shorter, mostly 20 to 50 lines each. Each one was run on 25 October, and "
+    "the outputs shown are real.")
+b.h("How to open, change and run a script", 3)
+b.numbered([
+    "Open the folder in VS Code: in PowerShell, type `cd D:\\MyClaudeProject\\nlp` and then `code diy`. "
+    "Or open any file with Notepad.",
+    "Click a file, for example `c03_b0.py`, to read it. Lines starting with `#` are comments: notes for people, ignored by Python.",
+    "Run it from PowerShell, in the project folder: `python diy/c03_b0.py`.",
+    "Change something, save (Ctrl+S) and run it again. For example, change `0.35` to `0.5` in c03 and see the score change.",
+    "To write your own from nothing: create a new file in the diy folder (in VS Code: File → New File), name it "
+    "something like `my_test.py`, type the code, save, and run it the same way.",
+])
+b.h("The shared helper file: diy\\helpers.py", 3)
+b.p("Three small functions that every script uses, so they are written once:")
+b.code((DIY_DIR / "helpers.py").read_text(encoding="utf-8").strip())
+b.table(["Function", "What it does"], [
+    ["load_jsonl(path)", "opens a .jsonl file and returns its lines as a list of records (the same format as File 1 in Part A3)"],
+    ["ask_model(prompt)", "sends a prompt to the AI model running in the Ollama app on this laptop and returns its reply. "
+     "It sends a small message to the address http://127.0.0.1:11434 with the prompt and the settings. "
+     "temperature 0 means \"always pick the most likely answer\", so replies are repeatable"],
+    ["read_intent(text)", "reads the intent out of the model's JSON reply, or gives None if the reply is broken"],
+], [4.0, 12.6], font=9.5)
+b.p("The scripts for C7 to C14 also use `diy\\mini_pipeline.py`: the C4 pipeline turned into functions, with two "
+    "switches (which examples to show, and how to refuse off-topic requests). That gives 4 small designs, a mini "
+    "version of the project's 12, so you can build a mini agent and mini ablations on top of it.")
+
+
+DIY = {
+    1: dict(file="c01_make_split.py",
+            intro="Build P1's split yourself, straight from the original MASSIVE file.",
+            lines=[("records.append(json.loads(line))", "reads the dataset one request at a time: all 16,521"),
+                   ("r[\"scenario\"] in project_domains", "keeps only alarm and smart-home requests"),
+                   ("random.seed(42)", "fixes the random draw, so it comes out the same every time"),
+                   ("random.sample(candidates, 10)", "draws 10 examples of each intent at random"),
+                   ("example_ids & dev_ids", "the leakage check: requests that appear in both sets (must be none)")],
+            notice="It finds the same 1,159 training requests for P1 that B3-full trained on. Its random draw "
+                   "differs from the project's (different seed, and the project also balances intents in the "
+                   "development set), but the method is the same."),
+    2: dict(file="c02_speed.py",
+            intro="Time the model on 10 requests and check it gives the same answers twice.",
+            lines=[("time.perf_counter()", "a stopwatch: read it before and after a request, and subtract"),
+                   ("a == b for a, b in zip(...)", "compares the first and second answers pair by pair")],
+            notice="The first request is slow (it wakes the model up). That is why the real timing test throws "
+                   "away warm-up requests. These prompts are shorter than the project's, so they are faster."),
+    3: dict(file="c03_b0.py",
+            intro="Build the word-matching baseline yourself: about 20 lines, no AI model.",
+            lines=[("TfidfVectorizer(...)", "turns each sentence into word weights"),
+                   ("classifier.fit(X_train, y_train)", "the training: learns which words point to which intent"),
+                   ("classifier.predict(X_dev)", "guesses the intent of each development request"),
+                   ("predict_proba(X_dev).max(axis=1)", "how sure it is about its guess (0 to 1)"),
+                   ("\"REFUSED\" if c < 0.35", "refuses when it is not sure enough"),
+                   ("f1_score(..., average=\"macro\")", "scores it, exactly as in Part A5")],
+            notice="It scores 0.771; the project's B0 scores 0.780. The difference comes from the refusal rule: "
+                   "the project chose its cut-off carefully on development data and uses a slightly different "
+                   "measure of \"sure\", while this version just uses 0.35. Try other cut-offs and watch the score move."),
+    4: dict(file="c04_b1.py",
+            intro="Build a complete one-prompt AI pipeline yourself, and score it on all 100 requests.",
+            lines=[("one_example_each = ...", "picks one worked example for each intent"),
+                   ("def build_prompt(request)", "writes the prompt: instructions, the allowed intents, the examples, the request"),
+                   ("ask_model(build_prompt(r[\"utt\"]))", "asks the AI model about one request"),
+                   ("read_intent(...)", "reads the intent from its JSON reply"),
+                   ("f1_score(gold, pred, ...)", "scores the 80 in-scope requests; refused ones count as wrong")],
+            notice="This 40-line script gives intent macro-F1 0.927 and refuses all 20 off-topic requests, "
+                   "the same as the project's B1. It takes about 20 seconds."),
+    5: None,
+    6: dict(file="c06_finetune.py",
+            intro="Fine-tune XLM-R yourself. This version learns intents only (the project's B3 also learns entities). "
+                  "It runs for about 8 to 9 minutes on the laptop's processor; no Ollama needed.",
+            lines=[("AutoModelForSequenceClassification", "loads XLM-R and adds a small layer with one output per intent"),
+                   ("for epoch in range(30)", "30 passes over the 120 examples"),
+                   ("loss = model(...).loss", "how wrong the model is on the current batch"),
+                   ("loss.backward() / optimizer.step()", "work out how to change the model's numbers, then change them a little"),
+                   ("scores.argmax(dim=1)", "for each request, the intent with the highest score")],
+            notice="The \"how wrong\" number falls from 2.0 to 0.06 as it learns. It reaches 0.940, higher than the "
+                   "project's B3-k (0.909), because this version never refuses anything, so it can never wrongly "
+                   "refuse a valid request; the project's B3 also has to reject off-topic ones."),
+    7: dict(file="c07_random_search.py",
+            intro="Run random search yourself, using the 12 design scores the project measured.",
+            lines=[("random.sample(designs, 4)", "draws 4 designs at random"),
+                   ("max(drawn, key=...)", "keeps the best of the 4"),
+                   ("for seed in range(5)", "repeats with 5 different seeds"),
+                   ("1 - comb(11, 4) / comb(12, 4)", "the chance that 4 random picks include the single best design")],
+            notice="It averages 0.962 (the project's 0.959 used different random draws). There is a 33% chance "
+                   "of drawing the best design, and 5 of the 12 designs are within 0.06 of the best, which is why "
+                   "random search is hard to beat here."),
+    8: dict(file="c08_mini_agent.py",
+            intro="Build a mini agent yourself: the AI ranks 4 designs, two are tested, it sees the scores, picks one "
+                  "more, and the best is kept. About a minute.",
+            lines=[("ask_model(... Rank all 4 designs ...)", "the agent plans: it ranks the designs and gives a reason"),
+                   ("if d in names", "ignores any design name the AI invents; only real designs are tested"),
+                   ("evaluate(requests, ...)", "tests a design on 40 development requests"),
+                   ("ask_model(... tested these designs ...)", "the agent revises: it sees the scores and picks the next design"),
+                   ("max(scores, key=scores.get)", "keeps the best-scoring design")],
+            notice="The AI listed \"refusal=model\" as a fourth design. That is not a design name, so the script "
+                   "removed it, exactly as the project's Architect does: you can see both lines in the output. The ranking and the scores were the same in both runs, "
+                   "but the wording of the AI's reason differed between runs: long written answers can vary slightly "
+                   "even with temperature 0."),
+    9: dict(file="c09_ablation.py",
+            intro="Run an ablation yourself: switch off one part of the pipeline at a time.",
+            lines=[("show_examples=False", "removes the worked examples from the prompt"),
+                   ("refusal=\"cutoff\"", "replaces the model's own refusal with the similarity cut-off")],
+            notice="Removing the examples costs 2.7 points, so they matter. Swapping the refusal method barely "
+                   "changes anything here. That is the whole idea of an ablation."),
+    10: dict(file="c10_bootstrap.py",
+             intro="Compute a bootstrap confidence interval yourself, from the answers the project saved.",
+             lines=[("random.randrange(len(gold))", "draws one request number; repeating this 80 times makes a pretend set"),
+                    ("differences.append(...)", "the A1 minus B1 difference on that pretend set"),
+                    ("differences[25], differences[974]", "after sorting the 1,000 differences, cut 2.5% off each end")],
+             notice="It gives [-0.042, +0.118]; the project's gives [-0.040, +0.121]. They differ slightly because "
+                    "the random draws differ, but both include 0, so both reach the same conclusion."),
+    11: dict(file="c11_timing.py",
+             intro="Measure speed yourself: warm up, time 30 requests, sort, pick the median and p95.",
+             lines=[("for r in DEV[:3]: answer(...)", "warm-up requests that are not counted"),
+                    ("times.sort()", "sorts the times from fastest to slowest"),
+                    ("times[len(times) // 2]", "the middle one: the median")],
+             notice="This one-call pipeline answered in about 0.2 to 0.3 s in our runs (0.17 s median in the run shown, "
+                    "0.27 s in an earlier one). The project's A1 on P1 uses two calls per request and longer prompts, "
+                    "so it takes longer (0.77 s)."),
+    12: dict(file="c12_errors.py",
+             intro="Sort a system's mistakes into kinds yourself, using A1's saved answers on P2.",
+             lines=[("r[\"status\"] == \"oos\"", "the system refused the request"),
+                    ("r[\"predicted_intent\"] != r[\"gold_intent\"]", "the system answered with the wrong intent"),
+                    ("mix_ups.most_common(3)", "which intents get confused with which, most often")],
+             notice="It finds 5 wrong intents, 11 wrongly refused and 2 off-topic requests answered: exactly the "
+                    "intent-level counts in the project's error analysis. The project also sorts entity mistakes."),
+    13: dict(file="c13_robustness.py",
+             intro="Test robustness yourself: rewrite the requests messily and re-score the word-matching baseline.",
+             lines=[("def add_typo(sentence, rng)", "swaps two neighbouring letters in one long word"),
+                    ("s.upper()", "rewrites the request in capitals"),
+                    ("refused = predicted.count(\"REFUSED\")", "how many requests it refused because it was unsure")],
+             notice="Typos and filler words make it unsure, so it refuses more (27 and 31 of 80, against 19 when "
+                    "clean) and loses about 7 points. Capitals change nothing, because it lowercases everything. "
+                    "That is the same pattern as the project's robustness test."),
+    14: dict(file="c14_export.py",
+             intro="Save a pipeline as a package yourself, protect it with a fingerprint, load it and use it.",
+             lines=[("hashlib.sha256(...).hexdigest()", "the fingerprint: change one letter of the file and it changes completely"),
+                    ("if ... != expected: raise ValueError", "refuses to load a file whose fingerprint no longer matches"),
+                    ("replace(\"fixed\", \"similar\")", "tampers with a copy, to show it is refused")],
+             notice="The saved package answers \"dim the kitchen lights\" correctly and refuses \"who won the match "
+                    "yesterday\", and the tampered copy is refused. The project's export works the same way, with "
+                    "more files."),
+    15: dict(file="c15_check.py",
+             intro="Check a recorded result yourself by recomputing it from the saved answers.",
+             lines=[("json.loads(... metrics.json ...)", "the number the run recorded"),
+                    ("f1_score(gold, said, ...)", "the same number, recomputed with scikit-learn")],
+             notice="The recorded and recomputed values are identical to 6 decimal places. Give it any run folder "
+                    "name to check that run."),
+}
+
+
+def build_yourself(number):
+    if number == 5:
+        b.p("**Do it yourself:** B2 is already a by-hand job. To do it without the worksheet script: read "
+            "`configs\\descriptions\\P1.md`, pick one of the 12 designs, try it with "
+            "`python scripts/walkthrough.py --design <your design> --n 10`, look at which requests it gets wrong, "
+            "try another design, and time yourself from start to finish.")
+        return
+    item = DIY.get(number)
+    if not item:
+        return
+    b.h("Build it yourself from scratch", 3)
+    b.p(item["intro"])
+    b.p(f"**The file:** `diy\\{item['file']}` (open it with `code diy\\{item['file']}`):")
+    b.code((DIY_DIR / item["file"]).read_text(encoding="utf-8").strip())
+    b.p("**The key lines:**")
+    b.table(["Line", "What it does"], [[f"`{code}`", text] for code, text in item["lines"]], [6.6, 10.0], font=9)
+    b.p("**Run it:**")
+    b.code(f"python diy/{item['file']}")
+    capture = CAP / f"diy_{item['file'][:-3]}.txt"
+    b.p("**What you should see (real output):**")
+    b.code(capture.read_text(encoding="utf-8").strip())
+    b.p(f"**What to notice:** {item['notice']}")
 
 
 def files_table(rows):
@@ -369,6 +550,7 @@ def test(number, name, sentence, files, how, command, time, meaning=None, image=
     if check:
         b.p("**Check it yourself:**")
         b.numbered(check)
+    build_yourself(number)
     b.p(f"**Say:** \"{say}\"", size=10.5)
 
 
@@ -680,6 +862,7 @@ b.table(["The teacher asks…", "Type this", "Time", "What appears"], [
     ["\"Write a test.\"", "the file from Part B2, then python -m pytest tests/test_my_first.py -vv", "5 min", "2 passed"],
     ["\"Run your agent.\"", "python scripts/run_a2.py", "under 1 min", "the AI's rankings, 4 designs tried, the choice"],
     ["\"Run a baseline.\"", "python scripts/run_b0.py --projects P1", "seconds", "B0 score 0.780"],
+    ["\"Could you build it yourself?\"", "open diy\c04_b1.py, explain it, then python diy/c04_b1.py", "1 min", "your own 40-line pipeline scores 0.927, like B1"],
     ["\"Is the data clean?\"", "python scripts/prepare_data.py --check", "seconds", "sizes and leakage check pass"],
     ["\"Are your numbers real?\"", "python scripts/verify_with_sklearn.py", "seconds", "44 agree"],
     ["\"Show me it working.\"", "python scripts/demo.py --project P1 --interactive", "live", "answers the teacher's own sentences"],
@@ -705,6 +888,7 @@ b.checklist([
     "Run `python scripts/verify_with_sklearn.py` and explain why \"agrees\" matters.",
     "Run the demo in interactive mode and try three sentences of your own.",
     "Run `python scripts/show_evidence.py` and find \"Overall: all checks passed\".",
+    "Read `diy\c03_b0.py` and `diy\c04_b1.py` line by line, run them, then change one thing in each and run again.",
 ])
 
 # =========================================================================

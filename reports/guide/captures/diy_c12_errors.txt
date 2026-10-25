@@ -1,0 +1,21 @@
+wrong intent:       'when is my meeting' (correct: calendar_set, said: calendar_query)
+wrongly refused:    'when is bruno mars coming to sacramento' (correct: calendar_query)
+wrong intent:       'clear event from calendar and refresh' (correct: calendar_remove, said: calendar_query)
+wrong intent:       'clear my schedule for today' (correct: calendar_remove, said: calendar_query)
+wrongly refused:    'please tell me how can i remove the item' (correct: lists_remove)
+wrong intent:       'remind me to order more soap' (correct: lists_createoradd, said: calendar_set)
+wrongly refused:    'remove last played song' (correct: lists_remove)
+wrongly refused:    "what is john's last name" (correct: email_querycontact)
+wrongly refused:    'save this email in contact' (correct: email_addcontact)
+wrongly refused:    'tell bob smith' (correct: email_sendemail)
+wrongly refused:    'is this the correct area code for my boss' (correct: email_querycontact)
+wrongly refused:    "please delete the contacts that i haven't spoken to in three of months" (correct: email_querycontact)
+wrongly refused:    'open the contact named john' (correct: email_querycontact)
+wrongly refused:    'please open my contact list' (correct: email_querycontact)
+wrong intent:       'i need to email susan and metion' (correct: email_sendemail, said: email_addcontact)
+wrongly refused:    'call raju phone number' (correct: email_querycontact)
+answered off-topic: 'please add this song to my playlist favorites' -> lists_createoradd
+answered off-topic: 'can you send a tweet to lif saying that their app crashed' -> email_sendemail
+
+counts: {'wrong intent': 5, 'wrongly refused': 11, 'answered an off-topic request': 2}
+most common mix-ups: [(('calendar_remove', 'calendar_query'), 2), (('calendar_set', 'calendar_query'), 1), (('lists_createoradd', 'calendar_set'), 1)]

@@ -33,3 +33,7 @@ data/models/*.gguf
 
 # Background job logs
 logs/
+
+# Files the diy scripts write when you run them
+diy/my_*
+diy/__pycache__/

@@ -1,0 +1,5 @@
+full pipeline:            intent macro-F1 0.927
+without examples:         intent macro-F1 0.899   (change -0.027)
+cut-off instead of model: intent macro-F1 0.925   (change -0.002)
+
+A part that matters makes the score drop when it is removed.

@@ -1,0 +1,8 @@
+requests in MASSIVE (English): 16521
+requests about alarms and smart-home devices: 1657
+official split sizes: train 1159 | dev 182 | test 316
+examples drawn: 120 (10 per intent)
+development requests drawn: 80
+intents in the development sample: {'iot_hue_lightup': 6, 'alarm_set': 11, 'alarm_remove': 8, 'alarm_query': 8, 'iot_cleaning': 9, 'iot_wemo_on': 1, 'iot_hue_lightdim': 9, 'iot_coffee': 7, 'iot_hue_lightchange': 7, 'iot_hue_lightoff': 10, 'iot_wemo_off': 2, 'iot_hue_lighton': 2}
+requests in both examples and development (must be 0): 0
+saved diy/my_dev.jsonl

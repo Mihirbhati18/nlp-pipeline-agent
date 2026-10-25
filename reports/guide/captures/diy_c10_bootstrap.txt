@@ -1,0 +1,4 @@
+real difference (A1 - B1): +0.032
+95% confidence interval: [-0.042, +0.118]
+A1 better in 82% of the 1000 draws
+includes 0, so it could be luck

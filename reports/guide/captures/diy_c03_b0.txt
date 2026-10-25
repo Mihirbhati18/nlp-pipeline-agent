@@ -1,0 +1,3 @@
+first 5: [('turn the lights off please', 'iot_hue_lightoff'), ('make a room darker', 'REFUSED'), ('set an alarm at six in the morning', 'alarm_set'), ("it's too dark here", 'iot_hue_lighton'), ('turn off the smart plug', 'iot_wemo_off')]
+accuracy: 0.688
+intent macro-F1: 0.771
