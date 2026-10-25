@@ -41,10 +41,11 @@ b.h("Contents", 2)
 b.numbered([
     "Part A. The basics: what a test is, where the files are, and how a score is calculated",
     "Part B. Software tests: writing and running your own",
-    "Part C. Every experiment, one by one: run it, check it, and build it yourself (15 tests)",
+    "Part C. Every experiment, one by one (15 tests)",
     "Part D. If the teacher says \"do it now\"",
     "Part E. 30-minute rehearsal checklist",
     "Part F. How to explain the AI use honestly",
+    "Part G. Build it yourself from scratch: a short script for every experiment",
 ])
 b.page_break()
 
@@ -334,8 +335,8 @@ b.page_break()
 
 # =========================================================================
 b.h("Part C. Every experiment, one by one")
-b.p("Each experiment has the same parts: **in one sentence**, **where its files are**, **how it works**, "
-    "**run it**, **what the output means**, **check it yourself**, **build it yourself from scratch** and **what to say**. All paths are inside "
+b.p("Each experiment has the same seven parts: **in one sentence**, **where its files are**, **how it works**, "
+    "**run it**, **what the output means**, **check it yourself** and **what to say**. All paths are inside "
     "`D:\\MyClaudeProject\\nlp`. Before running anything: open the Ollama app, open PowerShell, and type "
     "`cd D:\\MyClaudeProject\\nlp`.")
 b.callout("**Three tools do the \"check it yourself\" parts for you, on the real files:**\n"
@@ -350,35 +351,36 @@ b.callout("**Three tools do the \"check it yourself\" parts for you, on the real
 DIY_DIR = HERE.parents[1] / "diy"
 CAP = HERE / "captures"
 
-b.h("C0. Building things yourself: the diy folder", 2)
-b.p("Every experiment below ends with **\"Build it yourself from scratch\"**: a short Python script that does "
-    "the same job in the simplest possible way, so you can see how you would do it with your own hands. "
-    "These scripts are in the folder `D:\\MyClaudeProject\\nlp\\diy` (\"do it yourself\"). They are separate from "
-    "the project's own code, and much shorter, mostly 20 to 50 lines each. Each one was run on 25 October, and "
-    "the outputs shown are real.")
-b.h("How to open, change and run a script", 3)
-b.numbered([
-    "Open the folder in VS Code: in PowerShell, type `cd D:\\MyClaudeProject\\nlp` and then `code diy`. "
-    "Or open any file with Notepad.",
-    "Click a file, for example `c03_b0.py`, to read it. Lines starting with `#` are comments: notes for people, ignored by Python.",
-    "Run it from PowerShell, in the project folder: `python diy/c03_b0.py`.",
-    "Change something, save (Ctrl+S) and run it again. For example, change `0.35` to `0.5` in c03 and see the score change.",
-    "To write your own from nothing: create a new file in the diy folder (in VS Code: File → New File), name it "
-    "something like `my_test.py`, type the code, save, and run it the same way.",
-])
-b.h("The shared helper file: diy\\helpers.py", 3)
-b.p("Three small functions that every script uses, so they are written once:")
-b.code((DIY_DIR / "helpers.py").read_text(encoding="utf-8").strip())
-b.table(["Function", "What it does"], [
-    ["load_jsonl(path)", "opens a .jsonl file and returns its lines as a list of records (the same format as File 1 in Part A3)"],
-    ["ask_model(prompt)", "sends a prompt to the AI model running in the Ollama app on this laptop and returns its reply. "
-     "It sends a small message to the address http://127.0.0.1:11434 with the prompt and the settings. "
-     "temperature 0 means \"always pick the most likely answer\", so replies are repeatable"],
-    ["read_intent(text)", "reads the intent out of the model's JSON reply, or gives None if the reply is broken"],
-], [4.0, 12.6], font=9.5)
-b.p("The scripts for C7 to C14 also use `diy\\mini_pipeline.py`: the C4 pipeline turned into functions, with two "
-    "switches (which examples to show, and how to refuse off-topic requests). That gives 4 small designs, a mini "
-    "version of the project's 12, so you can build a mini agent and mini ablations on top of it.")
+def build_intro():
+    b.h("G0. Before you start: the diy folder", 2)
+    b.p("Part C shows how each experiment was run and how to check it. This part shows how you would **build each one yourself**: a short Python script that does "
+        "the same job in the simplest possible way. "
+        "These scripts are in the folder `D:\\MyClaudeProject\\nlp\\diy` (\"do it yourself\"). They are separate from "
+        "the project's own code, and much shorter, mostly 20 to 50 lines each. Each one was run on 25 October, and "
+        "the outputs shown are real.")
+    b.h("How to open, change and run a script", 3)
+    b.numbered([
+        "Open the folder in VS Code: in PowerShell, type `cd D:\\MyClaudeProject\\nlp` and then `code diy`. "
+        "Or open any file with Notepad.",
+        "Click a file, for example `c03_b0.py`, to read it. Lines starting with `#` are comments: notes for people, ignored by Python.",
+        "Run it from PowerShell, in the project folder: `python diy/c03_b0.py`.",
+        "Change something, save (Ctrl+S) and run it again. For example, change `0.35` to `0.5` in c03 and see the score change.",
+        "To write your own from nothing: create a new file in the diy folder (in VS Code: File → New File), name it "
+        "something like `my_test.py`, type the code, save, and run it the same way.",
+    ])
+    b.h("The shared helper file: diy\\helpers.py", 3)
+    b.p("Three small functions that every script uses, so they are written once:")
+    b.code((DIY_DIR / "helpers.py").read_text(encoding="utf-8").strip())
+    b.table(["Function", "What it does"], [
+        ["load_jsonl(path)", "opens a .jsonl file and returns its lines as a list of records (the same format as File 1 in Part A3)"],
+        ["ask_model(prompt)", "sends a prompt to the AI model running in the Ollama app on this laptop and returns its reply. "
+         "It sends a small message to the address http://127.0.0.1:11434 with the prompt and the settings. "
+         "temperature 0 means \"always pick the most likely answer\", so replies are repeatable"],
+        ["read_intent(text)", "reads the intent out of the model's JSON reply, or gives None if the reply is broken"],
+    ], [4.0, 12.6], font=9.5)
+    b.p("The scripts for C7 to C14 also use `diy\\mini_pipeline.py`: the C4 pipeline turned into functions, with two "
+        "switches (which examples to show, and how to refuse off-topic requests). That gives 4 small designs, a mini "
+        "version of the project's 12, so you can build a mini agent and mini ablations on top of it.")
 
 
 DIY = {
@@ -514,7 +516,6 @@ def build_yourself(number):
     item = DIY.get(number)
     if not item:
         return
-    b.h("Build it yourself from scratch", 3)
     b.p(item["intro"])
     b.p(f"**The file:** `diy\\{item['file']}` (open it with `code diy\\{item['file']}`):")
     b.code((DIY_DIR / item["file"]).read_text(encoding="utf-8").strip())
@@ -528,12 +529,16 @@ def build_yourself(number):
     b.p(f"**What to notice:** {item['notice']}")
 
 
+NAMES = {}
+
+
 def files_table(rows):
     b.table(["What", "Where"], rows, [5.2, 11.4], font=9)
 
 
 def test(number, name, sentence, files, how, command, time, meaning=None, image=None, caption=None,
          check=None, say=""):
+    NAMES[number] = name
     b.h(f"C{number}. {name}", 2)
     b.p(f"**In one sentence:** {sentence}")
     b.p("**Where its files are:**")
@@ -550,7 +555,6 @@ def test(number, name, sentence, files, how, command, time, meaning=None, image=
     if check:
         b.p("**Check it yourself:**")
         b.numbered(check)
-    build_yourself(number)
     b.p(f"**Say:** \"{say}\"", size=10.5)
 
 
@@ -862,7 +866,6 @@ b.table(["The teacher asks…", "Type this", "Time", "What appears"], [
     ["\"Write a test.\"", "the file from Part B2, then python -m pytest tests/test_my_first.py -vv", "5 min", "2 passed"],
     ["\"Run your agent.\"", "python scripts/run_a2.py", "under 1 min", "the AI's rankings, 4 designs tried, the choice"],
     ["\"Run a baseline.\"", "python scripts/run_b0.py --projects P1", "seconds", "B0 score 0.780"],
-    ["\"Could you build it yourself?\"", "open diy\c04_b1.py, explain it, then python diy/c04_b1.py", "1 min", "your own 40-line pipeline scores 0.927, like B1"],
     ["\"Is the data clean?\"", "python scripts/prepare_data.py --check", "seconds", "sizes and leakage check pass"],
     ["\"Are your numbers real?\"", "python scripts/verify_with_sklearn.py", "seconds", "44 agree"],
     ["\"Show me it working.\"", "python scripts/demo.py --project P1 --interactive", "live", "answers the teacher's own sentences"],
@@ -888,7 +891,6 @@ b.checklist([
     "Run `python scripts/verify_with_sklearn.py` and explain why \"agrees\" matters.",
     "Run the demo in interactive mode and try three sentences of your own.",
     "Run `python scripts/show_evidence.py` and find \"Overall: all checks passed\".",
-    "Read `diy\c03_b0.py` and `diy\c04_b1.py` line by line, run them, then change one thing in each and run again.",
 ])
 
 # =========================================================================
@@ -900,6 +902,24 @@ b.callout("\"We planned the project and decided how it should be tested: which b
           "by step. The AI assistance is recorded in docs\\contributions.md, as our plan requires.\"")
 b.p("Then show one or two things live from Part D. Being able to run and explain a test on the spot is the proof "
     "that you understand it.")
+
+# =========================================================================
+b.page_break()
+b.h("Part G. Build it yourself from scratch")
+b.p("Parts A to F explain what was done, how to run it and how to check it. This part goes one step further: "
+    "for each experiment, a short script you can read, run and change, that does the same job in the simplest "
+    "way. If you can explain these, you can show you know how to build the tests yourself.")
+build_intro()
+for number in range(1, 16):
+    b.h(f"G{number}. Build it yourself: {NAMES[number]}  (goes with C{number})", 2)
+    build_yourself(number)
+b.h("Practice with Part G", 2)
+b.checklist([
+    "Read `diy\c03_b0.py` and `diy\c04_b1.py` line by line using G3 and G4, and run them.",
+    "Change one thing in each (for example the 0.35 cut-off in c03) and run again: explain why the score changed.",
+    "If the teacher asks \"could you build it yourself?\": open `diy\c04_b1.py`, explain it, and run `python diy/c04_b1.py`. "
+    "Your own 40-line pipeline scores 0.927, the same as B1.",
+])
 
 b.save(OUT)
 print(f"wrote {OUT.relative_to(HERE.parents[1])}")
