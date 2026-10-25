@@ -143,6 +143,9 @@ def main():
     terminal("06_summary.txt", "python scripts/show_evidence.py   (summary lines)", "screen_summary.png", ("Overall",))
     # for the "how we did every test" guide
     evaluation_flow()
+    # for the "how our system works" document
+    two_ways()
+    runtime_flow()
     terminal("07a_walk_request.txt", "python scripts/walkthrough.py   (request 2 of 3 shown)", "screen_walk_request.png",
              ("intent RIGHT", "intent =", "Model's raw reply"))
     terminal("07b_walk_scores.txt", "python scripts/walkthrough.py   (end of the output)", "screen_walk_scores.png", ("our scorer", "scikit-learn"))
@@ -155,6 +158,43 @@ def main():
     terminal("14_timing.txt", "python scripts/explain_stats.py timing", "screen_timing.png", ("Median =", "p95 =", "-> same"))
     terminal("15a_errors.txt", "python scripts/explain_stats.py errors   (first part)", "screen_errors.png", (": 22", ": 15", ": 7", ": 4"))
     terminal("10_scorer_tests.txt", "python -m pytest tests/test_scorer.py -vv   (first 8 of 14)", "screen_scorer_tests.png", ("PASSED",))
+
+
+def two_ways():
+    fig, ax = canvas(11, 5.6, "Two ways to build the part that understands requests")
+    # way 1: train
+    ax.text(0.2, 4.55, "Way 1: train a model  (B3, XLM-R)", fontsize=11, fontweight="bold", color=INK)
+    box(ax, 0.2, 3.0, 2.3, 1.2, "XLM-R", ["knows language,", "not your intents"])
+    box(ax, 3.0, 3.0, 2.6, 1.2, "Training (11 min)", ["study 120 examples", "30 times; its insides change"])
+    box(ax, 6.1, 3.0, 2.3, 1.2, "Trained XLM-R", ["now knows", "your 12 intents"], ai=True)
+    box(ax, 8.9, 3.0, 1.95, 1.2, "Answer", ["iot_hue_lightdim"])
+    for x1, x2 in ((2.5, 3.0), (5.6, 6.1), (8.4, 8.9)):
+        arrow(ax, x1, 3.6, x2, 3.6)
+    # way 2: instruct
+    ax.text(0.2, 2.35, "Way 2: give instructions  (our framework, with qwen)", fontsize=11, fontweight="bold", color=INK)
+    box(ax, 0.2, 0.75, 2.3, 1.25, "Our program", ["builds the prompt", "(the \"note\")"])
+    box(ax, 3.0, 0.75, 2.6, 1.25, "The prompt", ["intent list + examples", "+ the request"])
+    box(ax, 6.1, 0.75, 2.3, 1.25, "qwen2.5:3b", ["reads the note;", "never changes"], ai=True)
+    box(ax, 8.9, 0.75, 1.95, 1.25, "Answer", ["iot_hue_lightdim"])
+    for x1, x2 in ((2.5, 3.0), (5.6, 6.1), (8.4, 8.9)):
+        arrow(ax, x1, 1.37, x2, 1.37)
+    ax.text(0.2, 0.25, "Way 1 changes the model.  Way 2 changes only the text sent to it; "
+            "our framework's job is to find the best text.", fontsize=9.2, color=QUIET)
+    save(fig, "two_ways.png")
+
+
+def runtime_flow():
+    fig, ax = canvas(11, 3.3, "What happens to one user request once the pipeline is running")
+    steps = [("User types", ["\"make a room", "darker\""]),
+             ("Our program", ["builds the prompt", "from the saved recipe"]),
+             ("qwen answers", ["{\"intent\":", "\"iot_hue_lightdim\" ...}"]),
+             ("Our program", ["checks the reply,", "finds \"room\""]),
+             ("The app acts", ["dims the", "room's light"])]
+    for i, (title, lines) in enumerate(steps):
+        box(ax, 0.15 + i * 2.18, 0.6, 1.95, 1.4, title, lines, ai=(title == "qwen answers"))
+        if i:
+            arrow(ax, 0.15 + i * 2.18 - 0.23, 1.3, 0.15 + i * 2.18, 1.3)
+    save(fig, "runtime_flow.png")
 
 
 def evaluation_flow():

@@ -1,0 +1,76 @@
+Label this request and extract its information. Reply with JSON only.
+
+Supported requests:
+- alarm_query: Query alarms and their details.
+- alarm_remove: Remove an existing alarm.
+- alarm_set: Set a new alarm.
+- iot_cleaning: Start the cleaning robot.
+- iot_coffee: Start the coffee machine.
+- iot_hue_lightchange: Change the color of a light.
+- iot_hue_lightdim: Dim a light.
+- iot_hue_lightoff: Turn off a light.
+- iot_hue_lighton: Turn on a light.
+- iot_hue_lightup: Increase the brightness of a light.
+- iot_wemo_off: Turn off a smart device.
+- iot_wemo_on: Turn on a smart device.
+- none_of_the_above: the request is not one of the supported requests above
+
+Information to extract, copied exactly as written in the request:
+- alarm_type: Type of alarm (e.g., time, date)
+- business_name: Business name for devices (e.g., coffee machine)
+- business_type: Type of business (e.g., coffee machine, cleaning robot)
+- change_amount: Amount to change (e.g., brightness, colour intensity)
+- coffee_type: Type of coffee (e.g., espresso, cappuccino)
+- color_type: Color type (e.g., RGB, HSL)
+- date: Date for alarm (e.g., day, month, year)
+- device_type: Type of device (e.g., light, socket, cleaning robot)
+- event_name: Event name for devices (e.g., start, stop)
+- general_frequency: General frequency for devices (e.g., daily, weekly)
+- house_place: Place in the house (e.g., kitchen, bedroom)
+- order_type: Order type for devices (e.g., on, off, dim, bright)
+- place_name: Name of the place (e.g., living room, bathroom)
+- player_setting: Setting for devices (e.g., volume, brightness)
+- relation: Relation to other entities (e.g., off, on, dimmer)
+- time: Time for alarm (e.g., hour, minute)
+- time_zone: Time zone for time and date
+- timeofday: Time of day for alarm (e.g., morning, evening)
+
+Examples:
+Request: turn room light off
+Answer: {"intent": "iot_hue_lightoff", "entities": [{"type": "house_place", "text": "room"}]}
+Request: make me happy juice
+Answer: {"intent": "iot_coffee", "entities": [{"type": "coffee_type", "text": "happy juice"}]}
+Request: olly make the lights blue please
+Answer: {"intent": "iot_hue_lightchange", "entities": [{"type": "color_type", "text": "blue"}]}
+Request: it's dark in the living room
+Answer: {"intent": "iot_hue_lighton", "entities": [{"type": "house_place", "text": "living room"}]}
+Request: dim the lights at the living room
+Answer: {"intent": "iot_hue_lightdim", "entities": [{"type": "house_place", "text": "living room"}]}
+Request: turn the lights off in the living room
+Answer: {"intent": "iot_hue_lightoff", "entities": [{"type": "house_place", "text": "living room"}]}
+Request: olly make me coffee at eight am
+Answer: {"intent": "iot_coffee", "entities": [{"type": "time", "text": "eight am"}]}
+Request: turn the living room lights to one percent
+Answer: {"intent": "iot_hue_lightchange", "entities": [{"type": "house_place", "text": "living room"}, {"type": "change_amount", "text": "to one percent"}]}
+Request: i can't see let's make it brighter
+Answer: {"intent": "iot_hue_lightup", "entities": []}
+Request: i would love a less bright up room
+Answer: {"intent": "iot_hue_lightdim", "entities": []}
+Request: i want the coffee machine to make me coffee
+Answer: {"intent": "iot_coffee", "entities": [{"type": "device_type", "text": "coffee machine"}]}
+Request: modify the light colors of the house and make them dark instead
+Answer: {"intent": "iot_hue_lightchange", "entities": [{"type": "color_type", "text": "dark"}]}
+Request: turn off my smart plug socket
+Answer: {"intent": "iot_wemo_off", "entities": [{"type": "device_type", "text": "smart plug socket"}]}
+Request: brighten the lights on the front porch
+Answer: {"intent": "iot_hue_lightup", "entities": [{"type": "house_place", "text": "front porch"}]}
+Request: put alarm on
+Answer: {"intent": "alarm_set", "entities": []}
+Request: remove dust with vacuum cleaner
+Answer: {"intent": "iot_cleaning", "entities": [{"type": "device_type", "text": "vacuum cleaner"}]}
+
+Reply exactly: {"intent": "<one name>", "entities": [{"type": "<a type>", "text": "<text copied exactly from the request>"}]}
+Use an empty list if there is nothing to extract. Never invent a value.
+
+Request: make a room darker
+Answer:

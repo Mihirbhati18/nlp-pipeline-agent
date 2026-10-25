@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import html as _html
+import os
 import re
+import subprocess
 from pathlib import Path
 
 from docx import Document
@@ -16,6 +19,37 @@ BLUE = RGBColor(0x1D, 0x4E, 0xD8)
 INK = RGBColor(0x1E, 0x29, 0x3B)
 GREY = RGBColor(0x47, 0x55, 0x69)
 CONTENT_WIDTH = Cm(16.6)
+EDGE = Path("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
+
+_CSS = """
+body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1e293b; margin: 0 1.6cm; line-height: 1.4; }
+h1 { color: #1d4ed8; font-size: 18pt; margin-top: 18pt; } h2 { color: #1d4ed8; font-size: 14pt; margin-top: 14pt; }
+h3 { font-size: 12pt; margin-top: 12pt; }
+.title { text-align: center; color: #1d4ed8; font-size: 24pt; font-weight: bold; margin-top: 30pt; }
+.center { text-align: center; } .grey { color: #475569; }
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 12pt; font-size: 9.5pt; page-break-inside: avoid; }
+th, td { border: 1px solid #94a3b8; padding: 4px 6px; vertical-align: top; text-align: left; } th { background: #dbeafe; }
+.callout { background: #eff6ff; border: 1px solid #94a3b8; padding: 8px 10px; margin: 8pt 0 12pt; page-break-inside: avoid; }
+.warn { background: #fef9c3; }
+pre { background: #0f172a; color: #f8fafc; padding: 8px 10px; font-family: Consolas, monospace; font-size: 8.8pt;
+      white-space: pre-wrap; page-break-inside: avoid; }
+code { font-family: Consolas, monospace; font-size: 9.5pt; } img { width: 100%; }
+.cap { text-align: center; color: #475569; font-size: 9pt; margin-bottom: 12pt; }
+.pb { page-break-after: always; }
+"""
+
+
+def _inline(text: str) -> str:
+    """**bold** and `code` markup as HTML."""
+    out = []
+    for part in re.split(r"(\*\*[^*]+\*\*|`[^`]+`)", text):
+        if part.startswith("**"):
+            out.append(f"<b>{_html.escape(part[2:-2])}</b>")
+        elif part.startswith("`"):
+            out.append(f"<code>{_html.escape(part[1:-1])}</code>")
+        else:
+            out.append(_html.escape(part))
+    return "".join(out)
 
 
 def _shade(cell, fill: str) -> None:
@@ -39,6 +73,7 @@ class Builder:
         normal.font.name = "Calibri"
         normal.font.size = Pt(11)
         normal.paragraph_format.space_after = Pt(6)
+        self.html: list[str] = []
         for name, size in (("Heading 1", 18), ("Heading 2", 14), ("Heading 3", 12)):
             style = self.doc.styles[name]
             style.font.name = "Calibri"
@@ -75,12 +110,17 @@ class Builder:
         self.runs(para, text, size, colour)
         if center:
             para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        classes = ("center " if center else "") + ("grey" if colour is GREY else "")
+        self.html.append(f'<p class="{classes.strip()}">{_inline(text)}</p>')
         return para
 
     def h(self, text: str, level: int = 1):
+        self.html.append(f"<h{level}>{_html.escape(text)}</h{level}>")
         return self.doc.add_heading(text, level=level)
 
     def bullets(self, items, style: str = "List Bullet"):
+        tag = "ol" if style == "List Number" else "ul"
+        self.html.append(f"<{tag}>" + "".join(f"<li>{_inline(i)}</li>" for i in items) + f"</{tag}>")
         for item in items:
             self.runs(self.doc.add_paragraph(style=style), item)
 
@@ -88,12 +128,16 @@ class Builder:
         self.bullets(items, style="List Number")
 
     def checklist(self, items):
+        self.html.append("<ul style='list-style:none'>" + "".join(f"<li>&#9744; {_inline(i)}</li>" for i in items) + "</ul>")
         for item in items:
             self.runs(self.doc.add_paragraph(style="List Bullet"), "☐  " + item)
 
     # -- blocks ------------------------------------------------------------
 
     def table(self, header, rows, widths_cm, font: float = 9.5, bold_first_col: bool = False):
+        self.html.append("<table><tr>" + "".join(f"<th>{_inline(h)}</th>" for h in header) + "</tr>"
+                         + "".join("<tr>" + "".join(f"<td>{_inline(str(c))}</td>" for c in row) + "</tr>"
+                                   for row in rows) + "</table>")
         t = self.doc.add_table(rows=1, cols=len(header))
         t.style = "Table Grid"
         t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -114,6 +158,8 @@ class Builder:
         return t
 
     def callout(self, text: str, fill: str = "EFF6FF"):
+        css = "callout warn" if fill.upper() == "FEF9C3" else "callout"
+        self.html.append(f'<div class="{css}">' + "<br>".join(_inline(line) for line in text.split("\n")) + "</div>")
         t = self.doc.add_table(rows=1, cols=1)
         t.style = "Table Grid"
         cell = t.rows[0].cells[0]
@@ -127,6 +173,7 @@ class Builder:
 
     def code(self, text: str):
         """A dark block for commands or code; one line of text per line of input."""
+        self.html.append(f"<pre>{_html.escape(text)}</pre>")
         t = self.doc.add_table(rows=1, cols=1)
         cell = t.rows[0].cells[0]
         cell.text = ""
@@ -142,12 +189,16 @@ class Builder:
         self.doc.add_paragraph().paragraph_format.space_after = Pt(0)
 
     def image(self, path: Path, caption: str, width_cm: float = 16.6):
+        self.html.append(f'<img src="{Path(path).resolve().as_uri()}"><div class="cap">{_inline(caption)}</div>')
         self.doc.add_picture(str(path), width=Cm(width_cm))
         self.doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
-        cap = self.p(caption, size=9, colour=GREY, center=True)
+        cap = self.doc.add_paragraph()
+        self.runs(cap, caption, 9, GREY)
+        cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
         cap.paragraph_format.space_after = Pt(12)
 
     def page_break(self):
+        self.html.append('<div class="pb"></div>')
         self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
     def title(self, text: str, subtitle: str, lines: list[str]):
@@ -157,9 +208,22 @@ class Builder:
         run.bold = True
         run.font.size = Pt(24)
         run.font.color.rgb = BLUE
+        self.html.append(f'<div class="title">{_html.escape(text)}</div>')
         self.p(subtitle, size=13, colour=INK, center=True)
         for line in lines:
             self.p(line, size=10.5, colour=GREY, center=True)
 
     def save(self, path: Path):
         self.doc.save(path)
+
+    def save_pdf(self, path: Path):
+        """Write the same content as HTML and print it to PDF with Microsoft Edge (no extra software)."""
+        html_path = Path(path).with_suffix(".html")
+        page = ("<!doctype html><html><head><meta charset='utf-8'><style>" + _CSS + "</style></head><body>"
+                + "\n".join(self.html) + "</body></html>")
+        html_path.write_text(page, encoding="utf-8")
+        subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+                        f"--print-to-pdf={Path(path).resolve()}", html_path.resolve().as_uri()],
+                       check=True, capture_output=True, timeout=300)
+        if not os.environ.get("KEEP_HTML"):
+            html_path.unlink()

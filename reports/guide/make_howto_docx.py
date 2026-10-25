@@ -852,7 +852,61 @@ def c15_context():
         "saving one field, which was fixed.")
 
 
-EXTRA.update({1: c1_context, 2: c2_context, 3: c3_context, 5: c5_context, 6: c6_context, 7: c7_context,
+def c6_xlmr_explained():
+    b.h("XLM-R explained simply: what it is, and how it compares with our system", 3)
+    b.p("**What XLM-R is.** A **language model**: a program that has read huge amounts of text in about 100 languages "
+        "and learned how words relate to each other. It is **not a chatbot**: it cannot chat or write answers. The "
+        "creators of the MASSIVE dataset used it as their own reference system in their published paper.")
+    b.p("**What it knows, and what it does not.** It knows English. It does **not** know our intents: it has never "
+        "heard of iot_hue_lightoff or book_appointment. And it does **not** build pipelines; it cannot build anything.")
+    b.p("**What we do with it, step by step:**")
+    b.numbered([
+        "Load XLM-R. It knows language, but nothing about our app.",
+        "Add a small extra layer on top, with one output per intent (12 for P1).",
+        "**Train it** on our examples: show it the 120 labelled sentences 30 times. Each time it gets one wrong, its "
+        "internal numbers are adjusted a little. This is **fine-tuning**; it took about 11 minutes.",
+        "After training, **it is the pipeline**: give it a sentence and it directly answers with the intent. No prompt, "
+        "no instructions.",
+    ])
+    b.image(IMG / "two_ways.png", "Way 1 (XLM-R) changes the model by training it. Way 2 (our framework) changes only the text sent to qwen.")
+    b.p("**An everyday picture.** Think of a new waiter who speaks English but does not know your menu. **XLM-R is a "
+        "waiter who memorises the menu** before starting work: their brain changes. **Our system is a waiter who is "
+        "handed a note** every time a customer speaks (\"these are the only items on our menu... example: 'something "
+        "warm with milk' means coffee\"): their brain never changes, and our framework's job is to write the best note.")
+    b.p("**\"It has learned the intents, so what?\"** Now it can sit **the same exam** as our system. Both have exactly "
+        "the same job, reading a request and saying its intent, so both answer the same 80 development requests and "
+        "are scored the same way. Real answers on P1:")
+    b.table(["Request", "Correct", "XLM-R (B3-k) said", "Our system (A2) said"], [
+        ["turn the lights off please", "iot_hue_lightoff", "right", "right"],
+        ["make a room darker", "iot_hue_lightdim", "wrong: iot_cleaning", "right"],
+        ["switch on the lights", "iot_hue_lighton", "wrong: refused it", "right"],
+        ["start up the coffee machine", "iot_coffee", "wrong: refused it", "right"],
+        ["please remove any alarms that i have set", "alarm_remove", "wrong: refused it", "right"],
+        ["start new smart socket", "iot_wemo_on", "right", "wrong: refused it"],
+    ], [5.4, 3.4, 3.9, 3.9], font=9)
+    b.p("**The full count on 80 requests:** both right on 68; only our system right on 8; only XLM-R right on 1. "
+        "As F1: our system (A2) 0.974, XLM-R 0.909.")
+    b.p("**Why XLM-R struggled:** 10 examples per intent is very little to learn from, so it was often unsure and "
+        "refused normal requests. qwen did not need to learn the intents, because they are written on its note.")
+    b.table(["", "XLM-R (B3)", "Our framework (with qwen)"], [
+        ["Already knows language?", "yes", "yes"],
+        ["Knows our intents at the start?", "no", "no, but they are listed in the prompt"],
+        ["How it gets our intents", "**trained** on our examples: its insides change", "**told** them in the prompt: qwen never changes"],
+        ["Who builds the pipeline", "a person runs the training", "**our program, automatically**"],
+        ["What the pipeline is", "the trained XLM-R model", "a recipe (the chosen prompt design) plus qwen"],
+        ["A new project", "train again from scratch", "the framework designs a new prompt automatically"],
+    ], [4.6, 5.8, 6.2], font=9)
+    b.p("**So what the comparison tells us:** for a new app with only about 10 examples per intent, giving a ready-made "
+        "AI the right prompt (our way) got more answers right than training the published model (the standard way), "
+        "and needed no training. The full plain-language explanation is in the separate document \"How Our System Works\".")
+
+
+def c6_all():
+    c6_context()
+    c6_xlmr_explained()
+
+
+EXTRA.update({1: c1_context, 2: c2_context, 3: c3_context, 5: c5_context, 6: c6_all, 7: c7_context,
               8: c8_context, 9: c9_context, 10: c10_context, 11: c11_context, 12: c12_context,
               13: c13_context, 14: c14_context, 15: c15_context})
 
@@ -1250,4 +1304,5 @@ b.checklist([
 ])
 
 b.save(OUT)
+b.save_pdf(OUT.with_suffix(".pdf"))
 print(f"wrote {OUT.relative_to(HERE.parents[1])}")
