@@ -15,7 +15,7 @@ Last updated: 11 October 2026.
 1. `cd D:/MyClaudeProject/nlp` then `python -m pytest tests -q` - expect 336 passed. For a full evidence check: `python scripts/show_evidence.py`.
 2. B3 is done; nothing needs downloading.
 3. B2 is done for P1 and P2 (finding F7).
-4. Next: G10, the freeze.
+4. Next: finish the current work and the guides. The G10 freeze waits for the user's go-ahead (decision 45). Then A3, the refinement stage (decision 45).
 4. Nothing is lost by stopping. All work is committed, and the prediction cache in `cache/` means model answers already computed are never recomputed.
 
 State confirmed on 13 October: `qwen2.5:3b`, `torch` 2.14.1+cpu and
