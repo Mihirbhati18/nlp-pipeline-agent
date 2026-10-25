@@ -532,6 +532,86 @@ def build_yourself(number):
 NAMES = {}
 
 
+def c4_where_b1_comes_from():
+    b.h("Where B1 comes from, and how it is compared with our agent", 3)
+    b.p("**Who decided it: your project plan.** B1 was defined in the project plan, before any code was "
+        "written, in `docs\\PROJECT_PLAN.md`:")
+    b.bullets([
+        "**Line 251:** \"B1 = Generic LLM pipeline with a fixed prompt and procedure … receives supported "
+        "labels/schema … no project-specific search.\"",
+        "**Line 411:** \"B1 is fixed to one predeclared configuration (joint single call, fixed examples, LLM label).\"",
+    ])
+    b.p("\"Predeclared\" means it was chosen **in advance, before any results were seen**, so it could not be "
+        "picked to make the agent look good.")
+    b.p("**Where it is in the code.** That line of the plan became one line in `src\\pipelines\\catalogue.py` (line 39):")
+    b.code('B1_CONFIG_ID = "joint-fixed-llm"')
+    b.p("It simply names one of the 12 designs: **joint** (one AI call), **fixed** (the same one example per intent "
+        "every time) and **llm** (the model itself may answer none_of_the_above). It is the plainest combination of "
+        "the three choices. The prompt wording comes from the `render_prompt` function in the same file; **all 12 "
+        "designs share that template**, and B1 is its simplest setting.")
+    b.p("**What \"generic\" means here.** Not a famous prompt from somewhere else. It means one fixed design, used "
+        "the same way on every project (P1, P2, or any new one), with no project-specific decisions.")
+    b.table(["", "B1 gets it?", "Our agent gets it?"], [
+        ["The project's list of intents and fields", "yes", "yes"],
+        ["10 labelled examples per intent", "yes (shows 1 per intent)", "yes"],
+        ["The same AI model and the same 100 test requests", "yes", "yes"],
+        ["Descriptions written by the Analyzer", "no", "yes"],
+        ["Choosing between the 12 designs", "no: always joint-fixed-llm", "yes: ranks, tests, revises"],
+        ["Testing designs and keeping the best", "no", "yes"],
+    ], [7.4, 4.6, 4.6], font=9.5)
+
+    b.p("**An example: a hospital project.** Say the app is a hospital assistant with intents such as "
+        "book_appointment, cancel_appointment and check_bed_availability. B1 would always use the same template, "
+        "filled in with the hospital's intents and one example each:")
+    b.code("Label this request for a hospital assistant. Reply with JSON only.\n\n"
+           "Allowed intents:\n- book_appointment\n- cancel_appointment\n- check_bed_availability\n"
+           "- none_of_the_above  (use this if the request is about anything else)\n\n"
+           "Examples:\nRequest: I want to see a cardiologist on Monday\n"
+           "Answer: {\"intent\": \"book_appointment\"}\n...\n\n"
+           "Request: <the patient's request>\nAnswer:")
+    b.p("Our agent would read the hospital's description, write a description of every intent and field, and might "
+        "decide that patients phrase things in many ways, so the most similar examples and written descriptions "
+        "help (schema-sim-llm). Then it tests that choice before keeping it. Both would then be scored on the same "
+        "labelled hospital requests. For a new project you need the same ingredients we took from MASSIVE: a short "
+        "description, the intents and fields, about 10 labelled examples per intent, and labelled test requests kept aside.")
+
+    b.p("**How the comparison actually runs.** The script `scripts\\run_design.py` does both, one after the other, "
+        "for each project:")
+    b.table(["Step", "B1 (from line 137 of run_design.py)", "Our agent (A1 / A2)"], [
+        ["Design", "takes joint-fixed-llm, always", "analyses the project and chooses a design"],
+        ["Requests", "the same 100, from data\\processed\\P1\\dev.jsonl", "the same 100"],
+        ["AI model", "qwen2.5:3b", "qwen2.5:3b"],
+        ["Scoring", "the same score() function", "the same score() function"],
+        ["Saved in", "runs\\20261013_0110_P1_B1_0", "runs\\20261024_1654_P1_A1-selected_0 and ...A2-selected_0"],
+    ], [2.4, 7.1, 7.1], font=9)
+    b.p("**The rule, also fixed in advance** (`docs\\PROJECT_PLAN.md` line 389): the agent counts as better than B1 "
+        "only if (1) it gains **at least +2.0 points** of intent F1, (2) it loses **no more than 2.0 points** of "
+        "entity F1, (3) at least 98% of its replies are valid, and (4) it is no more than twice as slow as B1.")
+    b.table(["System", "Project", "Intent change (needs +2.0 or more)", "Entity change (needs -2.0 or better)", "Passes?"], [
+        ["A1", "P1", "+3.2", "-1.3", "yes"],
+        ["A1", "P2", "+3.8", "**-8.6**", "**no**: its entity extraction drops too much"],
+        ["A2", "P1", "+4.8", "+9.7", "yes"],
+        ["A2", "P2", "+9.4", "+3.3", "yes"],
+    ], [1.6, 1.6, 4.4, 4.4, 4.6], font=9)
+    b.callout("**Be accurate about this.** The original agent (A1) beats B1 on **intent** on both projects, but under "
+              "the plan's full rule it **fails on P2**, because its entity F1 is 8.6 points below B1's. The improved "
+              "agent (A2) passes on both projects. All of these are development numbers; the rule is applied again "
+              "to the locked test data after the freeze. This is recorded as finding F9 in docs\\FINDINGS.md.",
+              fill="FEF9C3")
+    b.p("**See both sides yourself, request by request:**")
+    b.code("python scripts/explain_f1.py --run 20261013_0110_P1_B1_0\n"
+           "python scripts/explain_f1.py --run 20261024_1654_P1_A1-selected_0")
+    b.p("The same 80 requests appear in both, each with the system's answer next to the correct one. To see B1's real "
+        "prompt, run `python scripts/walkthrough.py`: its default design is B1's, and step 3 shows the prompt.")
+    b.p("**Say:** \"B1 is the default: one standard prompt, chosen in our plan before any results, used the same way for "
+        "every project. Our agent and B1 answer the same requests with the same model and scorer, and our plan fixed "
+        "in advance how much better the agent must be. By that rule the improved agent passes on both projects; the "
+        "original failed on P2 because of entity extraction.\"", size=10.5)
+
+
+EXTRA = {4: c4_where_b1_comes_from}
+
+
 def files_table(rows):
     b.table(["What", "Where"], rows, [5.2, 11.4], font=9)
 
@@ -556,6 +636,8 @@ def test(number, name, sentence, files, how, command, time, meaning=None, image=
         b.p("**Check it yourself:**")
         b.numbered(check)
     b.p(f"**Say:** \"{say}\"", size=10.5)
+    if number in EXTRA:
+        EXTRA[number]()
 
 
 test(1, "The data and the splits",
