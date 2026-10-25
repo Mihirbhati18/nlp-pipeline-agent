@@ -37,3 +37,7 @@ logs/
 # Files the diy scripts write when you run them
 diy/my_*
 diy/__pycache__/
+
+# Temporary lock files from open documents
+.~lock.*
+~$*

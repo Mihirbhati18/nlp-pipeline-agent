@@ -1,9 +1,9 @@
-# Evidence summary (24 Oct 2026 16:55)
+# Evidence summary (25 Oct 2026 15:00)
 
-Code version: `3b3b731 Independent scikit-learn verification; A1 and A2 predictions recorded so every headline number is checkable` (32 commits in the history)
+Code version: `2b6e7a7 Project explanation and verification guide (Word), with diagrams and real command outputs` (35 commits in the history)
 
 ## 1. Automated tests
-`python -m pytest tests` -> **371 passed in 13.91s**
+`python -m pytest tests` -> **371 passed in 14.59s**
 
 ## 2. Results recomputed from saved predictions
 `python scripts/reproduce_metrics.py` -> {'not checkable': 22, 'match': 44}
@@ -71,11 +71,11 @@ Loaded P1 (Home assistant) pipeline twostage-sim-llm, package ff3d548a0af2
 Model qwen2.5:3b @ 357c53fb659c | 12 intents, 18 entity types
 
 [normal] 'wake me up at six thirty tomorrow'
-  -> ok  intent=alarm_set  time='six thirty', date='tomorrow'  [2 model calls, 3.98s]
+  -> ok  intent=alarm_set  time='six thirty', date='tomorrow'  [2 model calls, 14.14s]
 [normal] 'turn the bedroom lights off'
-  -> ok  intent=iot_hue_lightoff  house_place='bedroom'  [2 model calls, 0.73s]
+  -> ok  intent=iot_hue_lightoff  house_place='bedroom'  [2 model calls, 0.70s]
 [out of scope] 'who won the football match last night'
-  -> out_of_scope  [1 model calls, 0.31s]
+  -> out_of_scope  [1 model calls, 0.30s]
 [invalid] ''
   -> invalid_request  error: request is empty  [0 model calls, 0.00s]
 [invalid] 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...'
