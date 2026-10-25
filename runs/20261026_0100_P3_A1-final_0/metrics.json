@@ -1,0 +1,99 @@
+{
+  "metric_definitions_version": "1.2",
+  "n_cases": 200,
+  "n_in_scope": 167,
+  "n_out_of_scope": 33,
+  "missing_responses": 0,
+  "unexpected_prediction_ids": [],
+  "intent_label_set": [
+    "takeaway_order",
+    "takeaway_query",
+    "transport_query",
+    "transport_taxi",
+    "transport_ticket",
+    "transport_traffic"
+  ],
+  "invalid_label_predictions": {},
+  "primary": {
+    "intent_macro_f1": 0.8888595510229899,
+    "intent_accuracy_in_scope": 0.8562874251497006,
+    "entity_span_precision": 0.5151515151515151,
+    "entity_span_recall": 0.497907949790795,
+    "entity_span_f1": 0.5063829787234043,
+    "entity_counts": {
+      "tp": 119,
+      "fp": 112,
+      "fn": 120
+    },
+    "oos_precision": 0.7894736842105263,
+    "oos_recall": 0.9090909090909091,
+    "oos_f1": 0.8450704225352113,
+    "oos_counts": {
+      "tp": 30,
+      "fp": 8,
+      "fn": 3
+    },
+    "false_rejection_rate_in_scope": 0.04790419161676647,
+    "schema_validity_after_repair": 1.0,
+    "schema_validity_before_repair": 0.99,
+    "unsupported_extraction_rate": 0.07692307692307693,
+    "unsupported_extraction_counts": {
+      "unsupported_items": 18,
+      "predicted_items": 234
+    },
+    "runtime_failure_rate": 0.0,
+    "runtime_failure_counts": {
+      "ok": 162,
+      "oos": 38
+    },
+    "retries": 2,
+    "fallback_rate": 0.0,
+    "latency_median_s": null,
+    "latency_p95_s": null,
+    "latency_n_timed": 0,
+    "cold_start_s": null,
+    "design_cost": null
+  },
+  "secondary": {
+    "end_to_end_exact_match": 0.35,
+    "unsupported_request_rate": 0.09
+  },
+  "per_intent": {
+    "takeaway_order": {
+      "precision": 0.65625,
+      "recall": 0.9545454545454546,
+      "f1": 0.7777777777777778,
+      "support": 22
+    },
+    "takeaway_query": {
+      "precision": 1.0,
+      "recall": 0.6571428571428571,
+      "f1": 0.7931034482758621,
+      "support": 35
+    },
+    "transport_query": {
+      "precision": 0.9642857142857143,
+      "recall": 0.7297297297297297,
+      "f1": 0.8307692307692307,
+      "support": 37
+    },
+    "transport_taxi": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 23
+    },
+    "transport_ticket": {
+      "precision": 0.8947368421052632,
+      "recall": 0.9714285714285714,
+      "f1": 0.9315068493150684,
+      "support": 35
+    },
+    "transport_traffic": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 15
+    }
+  }
+}

@@ -388,3 +388,35 @@ P2 +0.020 (both include 0).
   reasoning is neutral on P1 and slightly helpful on P2 (+0.4), unlike development (F5).
 - Every score is lower than on development data, as expected: development scores were
   selection scores and optimistic.
+
+---
+
+## F11. Held-out project P3: the frozen framework on a project never seen (RQ4, 26 Oct)
+
+P3 (ordering and travel: takeaway and transport, 6 intents) was locked until the
+freeze. With the frozen code, every system made its choices on P3's development
+data, then was scored once on its 200 test requests. There is no B2 for P3.
+
+| System | Intent | Entity | OOS |
+|---|---|---|---|
+| B0 word matching | 0.769 | 0 | 0.404 |
+| **B1 generic prompt** | **0.895** | 0.529 | 0.771 |
+| B3-k XLM-R, matched data | 0.770 | 0.515 | 0.505 |
+| B4-random, mean of 5 seeds | 0.894 (0.882-0.909) | | |
+| A1 (chose schema-fixed-llm) | 0.889 | 0.506 | **0.845** |
+| A2 (chose joint-sim-llm, the development best) | 0.882 | **0.675** | 0.795 |
+| B3-full (upper reference) | 0.913 | 0.721 | 0.581 |
+
+- **RQ4 is negative on intent.** Neither agent beats the generic prompt on P3 intent
+  (A1 -0.6, A2 -1.3; intervals include 0), so neither meets the preregistered rule there
+  (intent needs +2.0). On a 6-intent project the generic prompt is already strong (0.895).
+- **A2 is much better at entities on P3** (+14.6 points over B1) and A1 best at refusing
+  off-topic requests (0.845); A1 also drops 2.3 entity points, outside the rule's 2.0.
+- Both agents again beat the matched published baseline B3-k by a wide margin (+11 to
+  +12 intent). B3-full, with far more data, is best on intent.
+- A2 selected the best of all 12 designs on P3's development data (it equals B4-best), but
+  that design is not the best on test intent: development and test disagree on P3.
+- Across the three projects: both agents pass the rule against B1 on P1 and P2 and fail it
+  on P3. The paper reports this per project and makes no claim that the framework always
+  beats a generic prompt; with three projects the plan forbids a cross-project
+  generalisation claim.

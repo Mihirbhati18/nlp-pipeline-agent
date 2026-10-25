@@ -1,0 +1,43 @@
+
+=== P3 (test: 200 cases) ===
+  B0                   tfidf-logreg           intent 0.769  entity 0.000  oos 0.404  schema 1.000
+  B1                   joint-fixed-llm        intent 0.895  entity 0.529  oos 0.771  schema 1.000
+  B4-random-seed0      twostage-sim-llm       intent 0.898  entity 0.554  oos 0.914  schema 1.000
+  B4-random-seed1      joint-sim-llm          intent 0.882  entity 0.675  oos 0.795  schema 1.000
+  B4-random-seed2      schema-sim-llm         intent 0.909  entity 0.652  oos 0.827  schema 1.000
+  B4-random-seed3      joint-sim-llm          intent 0.882  entity 0.675  oos 0.795  schema 1.000
+  B4-random-seed4      twostage-sim-llm       intent 0.898  entity 0.554  oos 0.914  schema 1.000
+  B4-best              joint-sim-llm          intent 0.882  entity 0.675  oos 0.795  schema 1.000
+  A1                   schema-fixed-llm       intent 0.889  entity 0.506  oos 0.845  schema 1.000
+  A2                   joint-sim-llm          intent 0.882  entity 0.675  oos 0.795  schema 1.000
+  A1-noAnalyzer        twostage-sim-llm       intent 0.898  entity 0.554  oos 0.914  schema 1.000
+  A1-noReasoning       joint-sim-llm          intent 0.882  entity 0.675  oos 0.795  schema 1.000
+  A1-noSelection       joint-fixed-llm        intent 0.895  entity 0.529  oos 0.771  schema 1.000
+  A1-oneCandidate      joint-fixed-llm        intent 0.895  entity 0.529  oos 0.771  schema 1.000
+  A1-noRepair          schema-fixed-llm       intent 0.889  entity 0.496  oos 0.845  schema 0.990
+  B4-random mean over 5 seeds: 0.894 (0.882-0.909)
+  A2 vs B1       intent -0.013 [-0.038, +0.014]
+  A1 vs B1       intent -0.006 [-0.041, +0.028]
+  A2 vs A1       intent -0.007 [-0.047, +0.035]
+  A2 vs B4-best  intent +0.000 [+0.000, +0.000]
+  A1 vs B4-best  intent +0.007 [-0.035, +0.047]
+
+wrote reports\final_test.json
+B3 local training on cpu | torch 2.14.1+cpu | xlm-roberta-base
+B3-k is the matched comparison; B3-full is an upper reference only.
+
+--- P3 B3-k: 60 training cases, 30 epochs ---
+    epoch 1/30 loss 5.7061
+    epoch 5/30 loss 3.4988
+    epoch 10/30 loss 3.0556
+    epoch 15/30 loss 2.1555
+    epoch 20/30 loss 1.2243
+    epoch 25/30 loss 0.7529
+    epoch 30/30 loss 0.5573
+    20261026_0105_P3_B3-k-final_0: intent macro-F1 0.770 | entity F1 0.515 | OOS F1 0.505 | 291s
+
+--- P3 B3-full: 828 training cases, 5 epochs ---
+    epoch 1/5 loss 3.6563
+    epoch 5/5 loss 0.5570
+    20261026_0115_P3_B3-full-final_0: intent macro-F1 0.913 | entity F1 0.721 | OOS F1 0.581 | 566s
+

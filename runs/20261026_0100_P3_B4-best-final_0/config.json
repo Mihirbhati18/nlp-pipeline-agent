@@ -1,0 +1,53 @@
+{
+  "run_id": "20261026_0100_P3_B4-best-final_0",
+  "project": "P3",
+  "system": "B4-best",
+  "seed": 0,
+  "split": "test",
+  "config_id": "joint-sim-llm",
+  "how_chosen": "best of all 12 designs on development data",
+  "allow_repair": true,
+  "freeze_commit": "0ee6b22b86894aebbe253fae3b00eb97c542c575",
+  "oos_threshold": 0.28395446136737595,
+  "b0_threshold": null,
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+  "settings": {
+    "temperature": 0.0,
+    "seed": 0,
+    "num_predict": 512,
+    "format": "json",
+    "stop": []
+  },
+  "data_access": {
+    "project_id": "P3",
+    "held_out": true,
+    "freeze_released": true,
+    "freeze_commit": "0ee6b22b86894aebbe253fae3b00eb97c542c575",
+    "available_splits": [
+      "dev",
+      "kshot",
+      "test"
+    ],
+    "splits_accessed": [
+      "kshot",
+      "dev",
+      "kshot",
+      "dev",
+      "kshot",
+      "dev",
+      "kshot",
+      "dev",
+      "kshot",
+      "dev",
+      "test"
+    ]
+  },
+  "data_sources": {
+    "manifest": "data/manifests/P3.json",
+    "description": "configs/descriptions/P3.md",
+    "kshot": "data/processed/P3/kshot.jsonl",
+    "dev": "data/processed/P3/dev.jsonl",
+    "test": "data/processed/P3/holdout/test.jsonl"
+  }
+}
