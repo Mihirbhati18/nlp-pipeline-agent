@@ -189,7 +189,8 @@ class Builder:
         self.doc.add_paragraph().paragraph_format.space_after = Pt(0)
 
     def image(self, path: Path, caption: str, width_cm: float = 16.6):
-        self.html.append(f'<img src="{Path(path).resolve().as_uri()}"><div class="cap">{_inline(caption)}</div>')
+        self.html.append(f'<img src="{Path(path).resolve().as_uri()}" style="width: min({width_cm}cm, 100%); '
+                         f'display: block; margin: 0 auto"><div class="cap">{_inline(caption)}</div>')
         self.doc.add_picture(str(path), width=Cm(width_cm))
         self.doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         cap = self.doc.add_paragraph()
