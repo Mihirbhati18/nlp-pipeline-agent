@@ -1,0 +1,17 @@
+{
+  "freeze_commit": "0ee6b22b86894aebbe253fae3b00eb97c542c575",
+  "B0": {
+    "recorded_run": "20261025_2320_P1_B0-final_0",
+    "metrics_compared": 15,
+    "identical": true,
+    "intent_macro_f1": 0.6990786552102155
+  },
+  "A2_live": {
+    "recorded_run": "20261025_2320_P1_A2-final_0",
+    "design": "schema-sim-llm",
+    "requests": 50,
+    "identical_answers": 50,
+    "physical_calls": 50,
+    "differences": []
+  }
+}
