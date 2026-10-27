@@ -193,7 +193,7 @@ Analysis has a deterministic validation part and an LM enrichment part. Validati
 
 The planner receives the description, the size of the inventory, the coverage findings and a short neutral guide to each factor. We study two planners with the same budget.
 
-\emph{Direct planner (A1).} The LM is asked to name three designs from the catalogue. Any name not in the catalogue is replaced from a fixed order that spreads the three extraction strategies, and each choice is recorded as reasoned or fallback.
+\emph{Direct planner (A1).} The LM is asked to name three designs from the catalogue. Any name not in the catalogue is replaced from a fixed order that spreads the three extraction strategies.
 
 \emph{Factor-wise planner (A2).} One LM call ranks the options of each factor separately and gives one reason per factor, producing orders $x_1\succ x_2\succ x_3$, $s_1\succ s_2$ and $o_1\succ o_2$. The three initial candidates are
 \begin{equation}
@@ -409,8 +409,7 @@ Designing one project with A2 cost about 397 logical model calls: two for enrich
 We built an agent that turns a project specification into a deployable, hash-verified intent and slot pipeline by evaluating four of twelve designs on 100 development utterances, using one 3-billion-parameter model on a laptop. Under a protocol frozen before the test data and the held-out project were seen, the factor-wise agent chose the development-optimal design on all three projects and met the preregistered success rule on both development projects, with intent gains of 2.2 and 4.9 points over a generic prompt. Its entity gains were significant on all three projects, including 14.6 points on the held-out project, where intent F1 fell by a non-significant 1.3 points. It scored above XLM-R trained on the same examples on every project. The gain came from planning that tests every factor and revises one at a time, not from the model's first preferences.
 
 \section*{Acknowledgment}
-The authors thank Vijayaprabakaran K for guidance throughout this work. MASSIVE is used under the CC~BY~4.0 licence. The human-designer baseline on P2 was assisted by a chat assistant, as stated in Section~\ref{sec:results}.
-The authors used an AI assistant (Claude, Anthropic) for help with code, analysis and drafting of this manuscript. All experiments were run by the authors, every reported number was checked against the saved run outputs, and the authors take full responsibility for the content.
+The authors thank Vijayaprabakaran K for guidance throughout this work. MASSIVE is used under the CC~BY~4.0 licence. An AI assistant (Claude, Anthropic) helped with code, analysis and drafting; the authors ran all experiments, checked every number against the saved outputs and take full responsibility for the content.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
