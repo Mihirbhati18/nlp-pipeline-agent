@@ -20,7 +20,8 @@
 
 \author{
 \IEEEauthorblockN{Mihir Bhati\IEEEauthorrefmark{1}}
-\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\IEEEauthorblockA{\textit{School of Computer Science}\\
+\textit{and Engineering}\\
 \textit{Vellore Institute of Technology}\\
 Chennai, India\\
 24BCE5341\\
@@ -28,14 +29,16 @@ Chennai, India\\
 email@vitstudent.ac.in}
 \and
 \IEEEauthorblockN{Ahana Sharan\IEEEauthorrefmark{1}}
-\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\IEEEauthorblockA{\textit{School of Computer Science}\\
+\textit{and Engineering}\\
 \textit{Vellore Institute of Technology}\\
 Chennai, India\\
 24BCE5334\\
 ahana.sharan2024@vitstudent.ac.in}
 \and
 \IEEEauthorblockN{Vijayaprabakaran K}
-\IEEEauthorblockA{\textit{School of Computer Science and Engineering}\\
+\IEEEauthorblockA{\textit{School of Computer Science}\\
+\textit{and Engineering}\\
 \textit{Vellore Institute of Technology}\\
 Chennai, India\\
 % TODO: add the guide's email
@@ -61,7 +64,7 @@ A task-oriented assistant turns an utterance such as \emph{``wake me up at seven
 
 Small instruction-tuned language models (LMs) remove the training step. A 3-billion-parameter model quantised to 4 bits runs on a laptop GPU with 4\,GB of memory, answers in under half a second and can follow a label inventory from a handful of examples. What it does not remove is design work. The developer still has to decide whether intent and slots are requested in one call or two, whether the prompt describes each label, which demonstrations go into the prompt, and whether out-of-scope (\oos) requests are rejected by the model or by a similarity threshold. These choices matter. With the model and data held fixed, the twelve combinations we study span 13.5 points of development intent macro-F1 on one project (0.839 to 0.974) and 16.0 points on another (0.738 to 0.898).
 
-Work on automating LM use has concentrated on rewriting instruction text~\cite{zhou2023large,pryzant2023automatic,yang2024large}, tuning the demonstrations of a fixed program~\cite{khattab2024dspy}, or replacing the LM with a fine-tuned small model~\cite{viswanathan2023prompt2model}. These methods optimise a single output metric. None of them produces a joint intent and span output with a rejection decision under hard deployment constraints, and they are rarely compared with random search over the same space at the same budget, which is the standard control for any adaptive search method~\cite{bergstra2012random}. Without that control it is not possible to say whether the LM's reasoning contributed anything beyond trying several options.
+Work on automating LM use has concentrated on rewriting instruction text~\cite{zhou2023large,pryzant2023automatic,yang2024large}, tuning the demonstrations of a fixed program~\cite{khattab2024dspy}, or replacing the LM with a fine-tuned small model~\cite{viswanathan2023prompt2model}. None of these produces a joint intent and span output with a rejection decision under deployment constraints, and they are rarely compared with random search at the same budget, the standard control for adaptive search~\cite{bergstra2012random}. Without that control, the contribution of the LM's reasoning cannot be separated from simply trying several options.
 
 This paper asks whether an LM agent with a budget of four candidate evaluations can design an intent and slot pipeline that beats a generic prompt, random search, a human designer and a fine-tuned encoder trained on the same examples. The contributions are:
 \begin{enumerate}
@@ -79,33 +82,33 @@ This section focuses on an extensive survey of fifteen works that define the dat
 
 \subsection{NLU datasets and fine-tuned models}
 
-\emph{FitzGerald et al.}~\cite{fitzgerald2023massive} released MASSIVE, one million utterances in 51 languages localised by professional translators from the English SLURP corpus~\cite{bastianelli2020slurp}. Each utterance carries one of 60 intents across 18 scenarios and span annotations over 55 slot types. Their baselines fine-tune XLM-R and mT5 on the full training split, so the reported scores assume thousands of labelled utterances per language. We use the English portion and restrict each project to a few scenarios, which turns MASSIVE into a set of small, realistic single-product inventories.
+\emph{FitzGerald et al.}~\cite{fitzgerald2023massive} released MASSIVE, one million utterances in 51 languages localised by professional translators from the English SLURP corpus~\cite{bastianelli2020slurp}. Each utterance carries one of 60 intents across 18 scenarios and span annotations over 55 slot types. Their XLM-R and mT5 baselines are fine-tuned on the full training split. We use the English portion and restrict each project to a few scenarios, which yields small, realistic single-product inventories.
 
-\emph{Larson et al.}~\cite{larson2019evaluation} built CLINC150, 150 intents over ten domains plus a separate set of queries that match none of them. They showed that classifiers with high in-scope accuracy recall few out-of-scope queries, whether rejection is done by a confidence threshold or by an extra ``out-of-scope'' class trained on examples. Their result is the reason our design space treats rejection as a factor in its own right and our metrics report \oos{} F1 separately from intent accuracy.
+\emph{Larson et al.}~\cite{larson2019evaluation} built CLINC150, 150 intents over ten domains plus a separate set of queries that match none of them. They showed that classifiers with high in-scope accuracy recall few out-of-scope queries, whether rejection is done by a confidence threshold or by an extra ``out-of-scope'' class trained on examples. For this reason our design space treats rejection as a separate factor and we report \oos{} F1 separately.
 
 \emph{Chen et al.}~\cite{chen2019bert} predicted the intent from BERT's sentence representation and the slot tags from its token representations, training both objectives together. On ATIS and Snips, joint training improved intent accuracy, slot F1 and whole-utterance accuracy over earlier recurrent and attention-based models. Joint encoders remain the reference architecture for intent and slot tasks, and our fine-tuned baseline follows the same two-head design.
 
-\emph{Conneau et al.}~\cite{conneau2020unsupervised} trained XLM-R, a masked language model, on 2.5\,TB of filtered web text in 100 languages and reported strong cross-lingual transfer on classification, question answering and named entity recognition. MASSIVE adopts XLM-R as its main encoder baseline. We fine-tune its base version twice: on the same ten utterances per intent the agent sees, and on the project's full training split.
+\emph{Conneau et al.}~\cite{conneau2020unsupervised} trained XLM-R, a masked language model, on 2.5\,TB of filtered web text in 100 languages and reported strong cross-lingual transfer on classification, question answering and named entity recognition. We fine-tune its base version on the ten utterances per intent the agent sees and on each project's full training split.
 
 \subsection{In-context learning and example selection}
 
-\emph{Brown et al.}~\cite{brown2020language} showed that a sufficiently large autoregressive LM can perform a new task from an instruction and a few demonstrations placed in its prompt, without any weight update, and that accuracy rises with the number of demonstrations and with model size. Once the task is specified through the prompt, what the prompt contains and how many calls are made become design decisions; our design space enumerates the decisions that matter for intent and slot output.
+\emph{Brown et al.}~\cite{brown2020language} showed that a sufficiently large autoregressive LM can perform a new task from an instruction and a few demonstrations placed in its prompt, without any weight update, and that accuracy rises with the number of demonstrations and with model size. Once a task is specified through the prompt, its contents and the number of calls become design decisions, which our design space enumerates.
 
 \emph{Liu et al.}~\cite{liu2022makes} retrieved, for each test input, the training examples nearest to it in a sentence-encoder space and placed them in the prompt. Nearest-neighbour demonstrations beat randomly sampled ones on sentiment analysis, table-to-text generation and open-domain question answering. Our similarity-based example selection applies the same idea with a lexical TF-IDF index, which costs nothing at request time and needs no second model.
 
 \subsection{Automatic prompt and program optimisation}
 
-\emph{Zhou et al.}~\cite{zhou2023large} proposed Automatic Prompt Engineer (APE): an LM writes candidate instructions from input--output pairs, each candidate is scored on held-out examples, and the best is kept or resampled. The generated instructions matched or exceeded human-written ones on most of the instruction-induction tasks they tested. APE searches over free text, so its output is a prompt rather than a pipeline, and its tasks have a single label or string as output.
+\emph{Zhou et al.}~\cite{zhou2023large} proposed Automatic Prompt Engineer (APE): an LM writes candidate instructions from input--output pairs, each candidate is scored on held-out examples, and the best is kept or resampled. The generated instructions matched or exceeded human-written ones on most instruction-induction tasks tested. APE's output is a prompt, not a pipeline, for tasks with a single label or string as output.
 
 \emph{Pryzant et al.}~\cite{pryzant2023automatic} described the errors of a prompt on a minibatch in natural language, treated that description as a ``gradient'', edited the prompt against it, and kept the best edits with beam search and a bandit procedure. The method improved initial prompts on several binary classification tasks. Our revision phase borrows the idea of showing the model an error report, but confines its answer to one move in a discrete space, so a wrong suggestion costs one evaluation and cannot produce an unrunnable pipeline.
 
 \emph{Yang et al.}~\cite{yang2024large} cast optimisation as prompting (OPRO): the meta-prompt lists earlier solutions with their scores and the LM proposes a new one. They applied it to small regression and travelling-salesman instances and to instruction search on GSM8K and Big-Bench Hard. OPRO needs many proposal rounds; our setting allows one, because every candidate evaluation costs about a hundred model calls on development data.
 
-\emph{Khattab et al.}~\cite{khattab2024dspy} introduced DSPy, in which an LM pipeline is written as declarative modules and a compiler bootstraps demonstrations and instructions to maximise a user-supplied metric. Compiled pipelines let small open models compete with larger prompted ones on multi-hop question answering and math word problems. DSPy optimises the contents of a pipeline whose structure the developer has written; our agent chooses the structure itself, including how many calls a request takes and whether rejection happens before the model is called.
+\emph{Khattab et al.}~\cite{khattab2024dspy} introduced DSPy, in which an LM pipeline is written as declarative modules and a compiler bootstraps demonstrations and instructions to maximise a user-supplied metric. Compiled pipelines let small open models compete with larger prompted ones on multi-hop question answering and math word problems. DSPy optimises the contents of a structure the developer writes; our agent chooses the structure, including the number of calls per request and where rejection happens.
 
 \subsection{From task description to deployable system}
 
-\emph{Viswanathan et al.}~\cite{viswanathan2023prompt2model} built Prompt2Model, which takes a task description with a few examples, retrieves related datasets and a pretrained model, generates further training data with an LM and fine-tunes a small model for deployment. Their models outperformed the prompting LM that generated the data on some of their three test tasks. It is the closest work to ours in intent, a deployable artefact from a description, but it requires training and it was not evaluated on slot filling or out-of-scope rejection.
+\emph{Viswanathan et al.}~\cite{viswanathan2023prompt2model} built Prompt2Model, which takes a task description with a few examples, retrieves related datasets and a pretrained model, generates further training data with an LM and fine-tunes a small model for deployment. It is the closest work to ours in aim, a deployable artefact from a description, but it requires training and was not evaluated on slot filling or out-of-scope rejection.
 
 \subsection{Agents and self-correction}
 
@@ -256,7 +259,7 @@ We use the English (en-US) portion of MASSIVE~1.1~\cite{fitzgerald2023massive}, 
 
 \begin{table}[t]
 \centering
-\caption{The three projects built from MASSIVE en-US}
+\caption{The three projects built from MASSIVE en-US. Every development set has 80 in-scope and 20 \oos{} utterances.}
 \label{tab:projects}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -270,12 +273,9 @@ P2 productivity & calendar, email, lists & 10 & 26 & 100 & 250\,+\,50 \\
 P3 ordering, travel & takeaway, transport & 6 & 19 & 60 & 167\,+\,33 \\
 \bottomrule
 \end{tabular}}
-\vspace{2pt}
-
-\footnotesize Development sets: 80 in-scope + 20 \oos{} for every project. P3 was held out.
 \end{table}
 
-P3 was held out completely. Its description was written and committed at the start, but every split, including development, was locked by a data-access object that raises an error until it is released with the hash of the freeze commit. P1 and P2 were used for all development. The protocol, thresholds, budgets, the selected design of every system and all code were then frozen in one commit; only after that were the test sets and P3 released.
+P3 was held out completely: its description was committed at the start, but every split, including development, was locked by a data-access object that raises an error until released with the hash of the freeze commit. All development used P1 and P2. The protocol, thresholds, budgets, every system's selected design and all code were then frozen in one commit, and only after that were the test sets and P3 released.
 
 \subsection{Model and environment}
 
@@ -315,7 +315,7 @@ A2 agent, factor-wise planner & 0.898 / \textbf{0.699} / 0.865 & \textbf{0.872} 
 \end{tabular}}
 \end{table*}
 
-Table~\ref{tab:main} gives the test results and Fig.~\ref{fig:intent} the intent scores. The selected designs were: A2 schema-guided with similarity examples and model rejection on P1 and P2, and joint with similarity examples and model rejection on P3; A1 two-stage with similarity examples on P1 and schema-guided with fixed examples on P2 and P3, all with model rejection. In each project A2's choice coincides with B4-best, the best of all twelve designs on development data.
+Table~\ref{tab:main} and Fig.~\ref{fig:intent} give the test results. The selected designs were: A2 schema-guided with similarity examples and model rejection on P1 and P2, and joint with similarity examples and model rejection on P3; A1 two-stage with similarity examples on P1 and schema-guided with fixed examples on P2 and P3, all with model rejection. In each project A2's choice coincides with B4-best, the best of all twelve designs on development data.
 
 \begin{figure}[t]
 \centering
@@ -324,27 +324,7 @@ Table~\ref{tab:main} gives the test results and Fig.~\ref{fig:intent} the intent
 \label{fig:intent}
 \end{figure}
 
-\emph{Success rule.} Table~\ref{tab:rule} checks the preregistered rule. A2 passes on P1 and P2 and fails on P3, where intent F1 falls by 1.3 points. A1 passes on P1 and P2 and fails on P3 on both intent and entity F1. Schema validity after repair was at least 0.997 for every agent run, and both agents' 95th-percentile latencies were within the limit (P1: A1 0.97\,s, A2 0.89\,s against 1.22\,s; P2: A1 0.77\,s, A2 1.08\,s against 1.67\,s). The median latency of A2 was 0.68\,s and 0.64\,s, against 0.45\,s and 0.41\,s for B1.
-
-\begin{table}[t]
-\centering
-\caption{Success rule against B1 on test (points). Intent must gain $\ge$2.0, entity must not lose more than 2.0.}
-\label{tab:rule}
-\small
-\setlength{\tabcolsep}{4pt}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lcccc@{}}
-\toprule
- & \multicolumn{2}{c}{A1} & \multicolumn{2}{c}{A2} \\
-\cmidrule(lr){2-3}\cmidrule(l){4-5}
-Project & $\Delta$ intent / entity & Rule & $\Delta$ intent / entity & Rule \\
-\midrule
-P1 & +2.7 / +1.3 & pass & +2.2 / +7.3 & pass \\
-P2 & +2.9 / +2.7 & pass & +4.9 / +5.5 & pass \\
-P3 & $-$0.6 / $-$2.3 & fail & $-$1.3 / +14.6 & fail \\
-\bottomrule
-\end{tabular}}
-\end{table}
+\emph{Success rule.} Against B1, A2 changed intent / entity F1 by +2.2 / +7.3 points on P1, +4.9 / +5.5 on P2 and $-$1.3 / +14.6 on P3; A1 by +2.7 / +1.3, +2.9 / +2.7 and $-$0.6 / $-$2.3. Both agents therefore pass the rule on P1 and P2 and fail it on P3. Schema validity after repair was at least 0.997 in every agent run, and 95th-percentile latencies were within the limit (P1: A1 0.97\,s, A2 0.89\,s against 1.22\,s; P2: A1 0.77\,s, A2 1.08\,s against 1.67\,s). A2's median latency was 0.68\,s and 0.64\,s, against 0.45\,s and 0.41\,s for B1.
 
 \emph{Significance.} Fig.~\ref{fig:ci} shows the paired intervals for intent macro-F1. A2's gain over B1 is significant on P2 (+4.9, 95\% CI [+1.1, +8.9]) but not on P1 (+2.2, [$-$0.6, +5.1]); on P3 the loss is not significant ($-$1.3, [$-$3.8, +1.4]). For entity F1, A2's gains over B1 are significant on all three projects: +7.3 [+0.8, +14.5] on P1, +5.5 [+0.3, +11.1] on P2 and +14.6 [+9.0, +21.3] on P3. None of A1's differences from B1 is significant. On test data 300 or 200 utterances give intervals about $\pm$3 points wide, so a two-point improvement, the threshold of the success rule, can pass the rule without being significant, as on P1.
 
@@ -363,12 +343,12 @@ Against the human designer, A2 was 6.1 points higher in intent F1 on P1 (95\% CI
 
 \subsection{Agent against fine-tuned encoders}
 
-Trained on the same ten utterances per intent, XLM-R (B3-k) was 8.9, 7.2 and 11.2 points below A2 in intent F1 and below it in entity F1 on all three projects. Its rejection by maximum softmax probability gave \oos{} F1 between 0.505 and 0.568, against 0.767 to 0.865 for A2. With the full training split, 10 to 32 times more labelled data, XLM-R (B3-full) exceeded A2 in entity F1 by 4.6 to 24.3 points and in intent F1 on P2 and P3, but its \oos{} F1 stayed below 0.61. The LM pipeline is therefore the better choice when only a few examples per intent are available, and its rejection is better in every data condition we tested; a fine-tuned encoder remains stronger at span extraction when thousands of annotated utterances exist.
+Trained on the same ten utterances per intent, XLM-R (B3-k) was 8.9, 7.2 and 11.2 points below A2 in intent F1 and below it in entity F1 on all three projects. Its rejection by maximum softmax probability gave \oos{} F1 between 0.505 and 0.568, against 0.767 to 0.865 for A2. With the full training split, 10 to 32 times more labelled data, XLM-R (B3-full) exceeded A2 in entity F1 by 4.6 to 24.3 points and in intent F1 on P2 and P3, but its \oos{} F1 stayed below 0.61. With a few examples per intent the LM pipeline is the better choice, and its rejection was better in every data condition tested; with thousands of annotated utterances a fine-tuned encoder extracts spans better.
 
 \subsection{Why factor-wise planning worked}
 \label{sec:trace}
 
-Table~\ref{tab:trace} lists A2's four development candidates. On both P1 and P2 the planning model ranked fixed examples above similarity examples and the threshold policy above model rejection; on P1 its stated reason was that the threshold avoids model calls. Both preferences were wrong for these projects, and the first three candidates scored between 0.762 and 0.869. The construction of $c_2$ nevertheless measured similarity examples, which won, and the revision step, given the error report and the one-factor moves from $c_2$, switched its rejection policy to the model label. That single move raised development intent F1 by 10.5 points on P1 and 9.6 on P2 and reached the best of the twelve designs. A1, which names designs directly, began with B1's design on both projects, never combined schema guidance with similarity examples, and spent its unrestricted revision on a threshold design that scored 0.862 on P1 and 0.790 on P2; it stopped at 0.958 and 0.841. The gain comes from the structure that forces each factor to be tested and from a revision restricted to one-factor moves, not from better first guesses by the model.
+Table~\ref{tab:trace} lists A2's four development candidates. On both P1 and P2 the planning model ranked fixed examples above similarity examples and the threshold policy above model rejection; on P1 its stated reason was that the threshold avoids model calls. Both preferences were wrong for these projects, and the first three candidates scored between 0.762 and 0.869. The construction of $c_2$ nevertheless measured similarity examples, which won, and the revision step, given the error report and the one-factor moves from $c_2$, switched its rejection policy to the model label. That single move raised development intent F1 by 10.5 points on P1 and 9.6 on P2 and reached the best of the twelve designs. A1, which names designs directly, began with B1's design on both projects, never combined schema guidance with similarity examples, and spent its unrestricted revision on a threshold design that scored 0.862 on P1 and 0.790 on P2; it stopped at 0.958 and 0.841. The gain comes from a structure that forces each factor to be tested and restricts revision to one-factor moves, not from better first guesses.
 
 \begin{table}[t]
 \centering
@@ -422,18 +402,17 @@ without schema repair & 0.907 & 0.852 & 0.889 \\
 
 \subsection{Cost and reproducibility}
 
-Designing one project with A2 cost about 397 logical model calls: two for enrichment, two for planning and about 393 for running four candidates on 100 development utterances (two-stage designs need two calls per request, and threshold rejections need none). Exhaustive evaluation of all twelve designs costs roughly three times as much. At the measured median latency this is about three minutes of model time per project, against 38 minutes for the human designer on P1.
-
-Every reported metric was recomputed from the saved predictions of its run: 99 of 99 runs reproduced exactly, and an independent implementation of intent macro-F1, accuracy and \oos{} precision, recall and F1 agreed to nine decimal places. Retraining B0 from scratch reproduced all its test metrics exactly.
+Designing one project with A2 cost about 397 logical model calls: two for enrichment, two for planning and about 393 for running four candidates on 100 development utterances (two-stage designs need two calls per request, and threshold rejections need none), about a third of exhaustive evaluation and about three minutes of model time per project, against 38 minutes for the human designer on P1. Every reported metric was recomputed from the saved predictions of its run: 99 of 99 runs reproduced exactly, and an independent implementation of intent macro-F1, accuracy and \oos{} precision, recall and F1 agreed to nine decimal places. Retraining B0 from scratch reproduced all its test metrics exactly.
 
 %=====================================================================
 \section{Conclusion}
 %=====================================================================
 
-We built an agent that turns a project specification into a deployable intent and slot pipeline by analysing the specification, planning candidates from a twelve-design space, evaluating four of them on 100 development utterances, revising one factor, selecting under explicit constraints and exporting a hash-verified package, using a single 3-billion-parameter model on a laptop. Under a protocol frozen before any test data or the held-out project was seen, the factor-wise agent chose the development-optimal design on all three projects. It met the preregistered success rule against a generic prompt on both development projects, with intent gains of 2.2 and 4.9 points and entity gains of 7.3 and 5.5 points, the P2 gains being significant. On the held-out project its intent F1 was 1.3 points lower than the generic prompt, a difference within the confidence interval, while its entity F1 was 14.6 points higher. The agent outperformed the human designer significantly on one of two projects and scored above XLM-R trained on the same examples in intent, entity and out-of-scope F1 on every project. The development trace shows that the improvement came from planning that tests every factor and revises one factor at a time, since the model's own preferences for two of the three factors were wrong.
+We built an agent that turns a project specification into a deployable, hash-verified intent and slot pipeline by evaluating four of twelve designs on 100 development utterances, using one 3-billion-parameter model on a laptop. Under a protocol frozen before the test data and the held-out project were seen, the factor-wise agent chose the development-optimal design on all three projects and met the preregistered success rule on both development projects, with intent gains of 2.2 and 4.9 points over a generic prompt. Its entity gains were significant on all three projects, including 14.6 points on the held-out project, where intent F1 fell by a non-significant 1.3 points. It scored above XLM-R trained on the same examples on every project. The gain came from planning that tests every factor and revises one at a time, not from the model's first preferences.
 
 \section*{Acknowledgment}
-The authors thank Vijayaprabakaran K for guidance throughout this work. MASSIVE is used under the CC~BY~4.0 licence. A chat assistant was used by the human-designer baseline on P2, as stated in Section~\ref{sec:results}; % TODO: add the AI-use statement your department requires for writing and code assistance.
+The authors thank Vijayaprabakaran K for guidance throughout this work. MASSIVE is used under the CC~BY~4.0 licence. The human-designer baseline on P2 was assisted by a chat assistant, as stated in Section~\ref{sec:results}.
+% TODO: add the AI-use statement your department requires for writing and code assistance.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

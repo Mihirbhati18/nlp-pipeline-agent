@@ -87,7 +87,7 @@ def intent_bars():
     systems = [("B0", "B0", "#ffffff", "//"), ("B1", "B1", "#bbbbbb", ""), ("B2", "B2", "#ffffff", ".."),
                ("B3-k", "B3-k", "#777777", ""), ("B4-random", "B4", "#dddddd", "xx"), ("A1", "A1", "#999999", "\\\\"),
                ("A2", "A2", "#222222", "")]
-    fig, ax = plt.subplots(figsize=(3.45, 2.2))
+    fig, ax = plt.subplots(figsize=(3.45, 2.0))
     width = 0.11
     for i, (sid, label, fill, hatch) in enumerate(systems):
         for j, p in enumerate(("P1", "P2", "P3")):
@@ -106,7 +106,7 @@ def intent_bars():
 
 def forest():
     pairs = ["A2 vs B1", "A1 vs B1", "A2 vs B2", "A2 vs A1"]
-    fig, ax = plt.subplots(figsize=(3.45, 2.6))
+    fig, ax = plt.subplots(figsize=(3.45, 2.25))
     y, ticks = 0, []
     for p in ("P1", "P2", "P3"):
         boot = FINAL["projects"][p]["bootstrap"]
