@@ -18,6 +18,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from docx_helpers import Builder  # noqa: E402
+from final_results import add_final_results  # noqa: E402
 
 IMG = HERE / "images"
 FIG = HERE.parents[0] / "figures"
@@ -328,6 +329,7 @@ b.p("**For each question your teacher might ask, the matching section here:** wh
     "(7), what the agent does (9), why it is not training (11), how the comparison works (12), whether it is "
     "innovative (14), why only 12 designs (15).")
 
+add_final_results(b)
 b.save(OUT)
 b.save_pdf(OUT.with_suffix(".pdf"))
 print(f"wrote {OUT.name} and {OUT.with_suffix('.pdf').name}")

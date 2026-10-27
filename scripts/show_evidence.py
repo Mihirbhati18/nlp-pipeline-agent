@@ -94,8 +94,45 @@ def main() -> int:
     for kind, n in sorted(kinds.items()):
         say(f"- {kind}: {n}")
 
-    # 4. headline results
-    say("\n## 4. Headline results (development data, intent macro-F1 / entity F1)")
+    # 4. final results on the locked test data (after the G10 freeze)
+    final_path = ROOT / "reports" / "final_test.json"
+    if final_path.is_file():
+        final = json.loads(final_path.read_text(encoding="utf-8"))
+        say(f"\n## 4. Final results on the locked test data (freeze commit `{final['freeze_commit'][:10]}`)")
+        say("Intent macro-F1 / entity F1 / out-of-scope F1. P3 was held out until the freeze.")
+        say("\n| System | P1 | P2 | P3 |\n|---|---|---|---|")
+        for label, system in (("B0 word matching", "B0"), ("B1 generic prompt", "B1"), ("B2 human", "B2"),
+                              ("B3-k XLM-R, same examples", "B3-k"), ("B3-full XLM-R, all data", "B3-full"),
+                              ("A1 first agent", "A1"), ("A2 improved agent", "A2")):
+            cells = []
+            for project in ("P1", "P2", "P3"):
+                m = final["projects"][project]["systems"].get(system) or latest_primary(project, f"{system}-final")
+                cells.append("not run" if m is None else
+                             f"{m['intent_macro_f1']:.3f} / {m['entity_span_f1']:.3f} / {m['oos_f1']:.3f}")
+            say(f"| {label} | {' | '.join(cells)} |")
+        cells = [f"{final['projects'][p]['b4_random']['mean_intent_macro_f1']:.3f} "
+                 f"({final['projects'][p]['b4_random']['min']:.3f}-{final['projects'][p]['b4_random']['max']:.3f})"
+                 for p in ("P1", "P2", "P3")]
+        say(f"| B4 random search, mean intent (range) | {' | '.join(cells)} |")
+        say("\nA2 against B1, intent macro-F1 difference with 95% paired bootstrap interval:")
+        for project in ("P1", "P2", "P3"):
+            ci = final["projects"][project]["bootstrap"]["A2 vs B1"]["intent_macro_f1"]
+            say(f"- {project}: {ci['difference']:+.3f} [{ci['ci_low']:+.3f}, {ci['ci_high']:+.3f}]")
+        say("Figures: `reports/figures/final/`; paper version: `paper/figures/`.")
+
+    # 4b. live reproduction (model asked again with the cache off)
+    live_path = ROOT / "reports" / "reproduction_live.json"
+    if live_path.is_file():
+        live = json.loads(live_path.read_text(encoding="utf-8"))
+        a2 = live.get("A2_live", {})
+        say("\n## 4b. Live reproduction (`python scripts/reproduce_live.py`)")
+        say(f"- B0 retrained from scratch: {'identical' if live['B0']['identical'] else 'DIFFERENT'} on "
+            f"{live['B0']['metrics_compared']} metrics")
+        say(f"- A2 asked live, cache off: {a2.get('identical_answers')} of {a2.get('requests')} P1 test answers "
+            f"identical to the recorded ones ({a2.get('physical_calls')} real model calls)")
+
+    # 4c. development results, kept for comparison
+    say("\n## 4c. Development results (before the freeze, intent macro-F1 / entity F1)")
     say("\n| System | P1 | P2 |\n|---|---|---|")
     for label, system in (("B0 word matching", "B0"), ("B1 generic prompt", "B1"),
                           ("B3-k published, matched", "B3-k"), ("A1 our agent", "A1"),
@@ -109,9 +146,10 @@ def main() -> int:
 
     # 5. figures
     say("\n## 5. Figures")
-    figures = sorted((ROOT / "reports" / "figures").glob("*.png"))
+    figures = sorted((ROOT / "reports" / "figures").glob("*.png")) + sorted(
+        (ROOT / "reports" / "figures" / "final").glob("*.png"))
     for fig in figures:
-        say(f"- `reports/figures/{fig.name}`")
+        say(f"- `{fig.relative_to(ROOT).as_posix()}`")
     if not figures:
         say("none yet: run `python scripts/make_figures.py`")
 

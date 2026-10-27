@@ -18,6 +18,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from docx_helpers import Builder  # noqa: E402
+from final_results import add_final_results  # noqa: E402
 
 IMG = HERE / "images"
 OUT = HERE / "How_Every_Test_Was_Done_v2.docx"
@@ -1303,6 +1304,7 @@ b.checklist([
     "Your own 40-line pipeline scores 0.927, the same as B1.",
 ])
 
+add_final_results(b)
 b.save(OUT)
 b.save_pdf(OUT.with_suffix(".pdf"))
 print(f"wrote {OUT.relative_to(HERE.parents[1])}")

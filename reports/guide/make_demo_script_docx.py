@@ -14,10 +14,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from docx_helpers import Builder  # noqa: E402
+from final_results import add_final_results  # noqa: E402
 
 IMG = HERE / "images"
 FIG = HERE.parents[0] / "figures"
-OUT = HERE / "Presentation_Script.docx"
+OUT = HERE / "Presentation_Script_v2.docx"
 
 b = Builder()
 b.title(
@@ -144,7 +145,7 @@ step(6, "The results and the comparisons (4 min)",
      image=FIG / "fig1_main_comparison.png", caption="Intent scores for every system on both projects.",
      asked=[["Why compare with random search?", "To check the agent's choices are smart, not lucky. A1 was no better than random; A2 is."],
             ["What is XLM-R?", "A language model that has to be trained on examples. With only 10 examples per intent it scored 0.909; ours scored 0.974 without any training."],
-            ["Are these final results?", "These are development scores. The final ones come from 300 locked test requests per project, after we freeze the settings."]])
+            ["Are these final results?", "These are development scores. The final test results (300 locked requests per project, plus the held-out P3) are in the last section: A2 met the success rule on P1 and P2 and found the best design on all three projects."]])
 
 step(7, "Proof the numbers are real (2 min)",
      "PowerShell.",
@@ -191,7 +192,7 @@ b.table(["If the teacher asks...", "Say", "Show"], [
     ["What is in the prompt?", "The intent list, short descriptions, real example sentences and the request.", "section 7"],
     ["How was each test done?", "Same 100 requests, same model, same scorer; every answer saved.", "python scripts/walkthrough.py"],
     ["Show me F1 by hand.", "Correct vs system answers, counted per intent, averaged.", "python scripts/explain_f1.py"],
-    ["Is the difference real?", "Not yet certain on 100 requests; the test set will tell.", "python scripts/explain_stats.py bootstrap"],
+    ["Is the difference real?", "On test, A2's gain over B1 is significant on P2 (+4.9 points) and its entity gains on all three projects; on P1 (+2.2) the interval still includes zero.", "python scripts/explain_stats.py bootstrap"],
     ["How fast is it?", "Under one second per request.", "python scripts/explain_stats.py timing"],
     ["What mistakes does it make?", "Mostly extracting extra words as details.", "python scripts/explain_stats.py errors"],
     ["Run all your tests.", "371 automated tests.", "python -m pytest tests"],
@@ -287,18 +288,19 @@ qa("Design choices", [
 
 qa("Honesty and process", [
     ["What are the weaknesses?",
-     "One small model; results so far are on development data; the human baseline is one beginner per project; the first "
-     "agent did not beat random search; entity extraction is the weakest area; English only; the final pipeline is always "
-     "one of 12 designs."],
+     "One small model; on the held-out P3 the agent did not beat the generic prompt on intents (−1.3 points, not "
+     "significant); the human baseline is one beginner per project; the first agent did not beat random search; entity "
+     "extraction is the weakest area; English only; the final pipeline is always one of 12 designs."],
     ["Why is the first agent (A1) worse than random?", "Its AI kept choosing one kind of example and never tried the best design. A2 fixed this by structuring the search, with the same model."],
-    ["Did you change the system after seeing results?", "Yes, once: A2, recorded as decision 42 with a keep-or-drop rule fixed in advance. Both A1 and A2 will be reported on the locked test data, whichever does better."],
+    ["Did you change the system after seeing results?", "Yes, once: A2, recorded as decision 42 with a keep-or-drop rule fixed in advance. Both A1 and A2 were frozen and reported on the locked test data; P3 was never seen during development."],
     ["How do we know you did not cheat?", "Test data is locked by code; every answer is saved; scores are recomputed by our scripts and by scikit-learn; and the git history shows the work step by step since 11 October."],
     ["What did you do yourselves, if AI wrote the code?",
      "We planned the project, decided what to test and compare, did the human baseline (B2), checked every result, and can "
      "explain and re-run each step. The AI assistance is recorded in docs\\contributions.md."],
-    ["What would you do with more time?", "A3 (the agent refines its own prompt from its mistakes), the final test runs and the held-out project P3, the DSPy comparison, more languages, and a larger model."],
+    ["What would you do with more time?", "A3 (the agent refines its own prompt from its mistakes), a larger development set so choices transfer better (the P3 lesson), the DSPy comparison, more languages, and a larger model."],
 ])
 
+add_final_results(b)
 b.save(OUT)
 b.save_pdf(OUT.with_suffix(".pdf"))
 print(f"wrote {OUT.name} and {OUT.with_suffix('.pdf').name}")
