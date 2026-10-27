@@ -26,11 +26,11 @@ WIDE = {"title", "table1", "fig1", "table3"}
 b = Builder()
 
 
-def part(name: str, label: str, short: str, words: list[str] | None = None) -> None:
+def part(name: str, label: str, short: str, words: list[str] | None = None, width_cm: float | None = None) -> None:
     """One piece of the paper: heading, screenshot, short meaning, terms."""
     b.html.append('<div style="break-inside: avoid; page-break-inside: avoid">')  # heading stays with its picture
     b.h(label, 2)
-    b.image(SHOTS / f"{name}.png", "From the paper", width_cm=16.6 if name in WIDE else 12.5)
+    b.image(SHOTS / f"{name}.png", "From the paper", width_cm=width_cm or (16.6 if name in WIDE else 12.5))
     b.html.append("</div>")
     b.callout(f"**In short:** {short}")
     if words:
@@ -529,7 +529,8 @@ part("refs", "References",
      "authors, title, where it was published, year and pages.",
      ["**arXiv preprint:** a paper posted online before or without formal publication.",
       "**Proceedings of …:** the book of papers from a conference (ACL, EMNLP, ICLR, NeurIPS are top AI/NLP conferences).",
-      "**vol., pp.:** volume and page numbers."])
+      "**vol., pp.:** volume and page numbers."], width_cm=9)
+b.image(SHOTS / "refs2.png", "From the paper: references, second column", width_cm=7.5)
 
 b.save(OUT)
 b.save_pdf(OUT.with_suffix(".pdf"))

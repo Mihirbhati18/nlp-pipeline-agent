@@ -159,7 +159,8 @@ SHOTS: dict[str, list[tuple]] = {
     "cost": [(8, "L", 172, 341)],
     "conclusion": [(8, "L", 341, 533)],
     "ack": [(8, "L", 533, 629)],
-    "refs": [(8, "L", 629, BOTTOM), (8, "R", TOP, BOTTOM)],
+    "refs": [(8, "L", 629, BOTTOM)],
+    "refs2": [(8, "R", TOP, BOTTOM)],
 }
 
 
