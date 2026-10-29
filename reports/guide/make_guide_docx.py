@@ -28,9 +28,9 @@ FIG = ROOT / "reports" / "figures"
 IMG = HERE / "images"
 OUT = HERE / "Project_Explained_and_Verification_Guide.docx"
 
-BLUE = RGBColor(0x1D, 0x4E, 0xD8)
-INK = RGBColor(0x1E, 0x29, 0x3B)
-GREY = RGBColor(0x47, 0x55, 0x69)
+HEADING = RGBColor(0x00, 0x00, 0x00)
+INK = RGBColor(0x1A, 0x1A, 0x1A)
+GREY = RGBColor(0x4D, 0x4D, 0x4D)
 
 doc = Document()
 for section in doc.sections:
@@ -44,7 +44,7 @@ for name, size in (("Heading 1", 18), ("Heading 2", 14), ("Heading 3", 12)):
     style = doc.styles[name]
     style.font.name = "Calibri"
     style.font.size = Pt(size)
-    style.font.color.rgb = BLUE if name != "Heading 3" else INK
+    style.font.color.rgb = HEADING if name != "Heading 3" else INK
 
 CONTENT_WIDTH = Cm(16.6)
 RUN_COUNT = sum(1 for d in (ROOT / "runs").iterdir() if d.is_dir())
@@ -112,7 +112,7 @@ def table(header, rows, widths_cm, font=9.5, bold_first_col=False):
         cell = t.rows[0].cells[i]
         cell.text = ""
         add_runs(cell.paragraphs[0], f"**{text}**", font)
-        shade(cell, "DBEAFE")
+        shade(cell, "E5E5E5")
     for row in rows:
         cells = t.add_row().cells
         for i, text in enumerate(row):
@@ -125,7 +125,7 @@ def table(header, rows, widths_cm, font=9.5, bold_first_col=False):
     return t
 
 
-def callout(text: str, fill="EFF6FF"):
+def callout(text: str, fill="F2F2F2"):
     t = doc.add_table(rows=1, cols=1)
     t.style = "Table Grid"
     cell = t.rows[0].cells[0]
@@ -146,7 +146,7 @@ def command(text: str):
     run.font.name = "Consolas"
     run.font.size = Pt(10.5)
     run.font.color.rgb = RGBColor(0xF8, 0xFA, 0xFC)
-    shade(cell, "0F172A")
+    shade(cell, "111111")
     cell.width = CONTENT_WIDTH
     doc.add_paragraph().paragraph_format.space_after = Pt(0)
 
@@ -169,7 +169,7 @@ title.alignment = WD_ALIGN_PARAGRAPH.CENTER
 run = title.add_run("Automatic NLP Pipeline Design with an AI Agent")
 run.bold = True
 run.font.size = Pt(24)
-run.font.color.rgb = BLUE
+run.font.color.rgb = HEADING
 p("What we built, every test we ran, and how anyone can verify the results",
   size=13, colour=INK, align=WD_ALIGN_PARAGRAPH.CENTER)
 p("Mihir Bhati (24BCE5341)  ·  Ahana Sharan (24BCE5334)", size=11, align=WD_ALIGN_PARAGRAPH.CENTER)
@@ -210,7 +210,7 @@ p("**The problem.** Every app that understands what users type or say, such as a
 p("**Our solution.** A framework that makes those decisions automatically. You give it a written description "
   "of the app and its list of request types; an AI agent analyses the project, decides which pipeline designs "
   "to test, tests them on real data, picks the best and exports it as a package any program can use.")
-image(IMG / "how_it_works.png", "Figure 1. How the framework works. Blue boxes are the steps where the AI agent makes decisions.")
+image(IMG / "how_it_works.png", "Figure 1. How the framework works. Shaded boxes with a thick border are the steps where the AI agent makes decisions.")
 p("**Why it is called agentic:** the AI does not just answer questions. It makes design decisions, looks at "
   "the results of its own choices, and revises them, with no human configuring anything.")
 p("**The main result (development data, intent macro-F1, higher is better):**")

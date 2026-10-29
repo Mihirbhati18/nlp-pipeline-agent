@@ -194,7 +194,7 @@ b.page_break()
 
 # 9 -------------------------------------------------------------------------
 b.h("9. What our framework does, step by step (with the real run)")
-b.image(IMG / "how_it_works.png", "The framework's steps. The blue steps are where qwen gives advice.")
+b.image(IMG / "how_it_works.png", "The framework's steps. The shaded steps are where qwen gives advice.")
 b.p("Testing every design costs time, so the agent tests **only 4 of the 12** and has to choose wisely which ones. "
     "This is exactly what happened on P1 in the real A2 run:")
 b.table(["Step", "Our program", "qwen"], [

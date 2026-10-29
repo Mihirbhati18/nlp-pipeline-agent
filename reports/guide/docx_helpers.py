@@ -15,26 +15,26 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
-BLUE = RGBColor(0x1D, 0x4E, 0xD8)
-INK = RGBColor(0x1E, 0x29, 0x3B)
-GREY = RGBColor(0x47, 0x55, 0x69)
+HEADING = RGBColor(0x00, 0x00, 0x00)
+INK = RGBColor(0x1A, 0x1A, 0x1A)
+GREY = RGBColor(0x4D, 0x4D, 0x4D)
 CONTENT_WIDTH = Cm(16.6)
 EDGE = Path("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
 
 _CSS = """
-body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1e293b; margin: 0 1.6cm; line-height: 1.4; }
-h1 { color: #1d4ed8; font-size: 18pt; margin-top: 18pt; } h2 { color: #1d4ed8; font-size: 14pt; margin-top: 14pt; }
+body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1a1a1a; margin: 0 1.6cm; line-height: 1.4; }
+h1 { color: #000000; font-size: 18pt; margin-top: 18pt; } h2 { color: #000000; font-size: 14pt; margin-top: 14pt; }
 h3 { font-size: 12pt; margin-top: 12pt; }
-.title { text-align: center; color: #1d4ed8; font-size: 24pt; font-weight: bold; margin-top: 30pt; }
-.center { text-align: center; } .grey { color: #475569; }
+.title { text-align: center; color: #000000; font-size: 24pt; font-weight: bold; margin-top: 30pt; }
+.center { text-align: center; } .grey { color: #4d4d4d; }
 table { border-collapse: collapse; width: 100%; margin: 6pt 0 12pt; font-size: 9.5pt; page-break-inside: avoid; }
-th, td { border: 1px solid #94a3b8; padding: 4px 6px; vertical-align: top; text-align: left; } th { background: #dbeafe; }
-.callout { background: #eff6ff; border: 1px solid #94a3b8; padding: 8px 10px; margin: 8pt 0 12pt; page-break-inside: avoid; }
+th, td { border: 1px solid #a3a3a3; padding: 4px 6px; vertical-align: top; text-align: left; } th { background: #e5e5e5; }
+.callout { background: #f2f2f2; border: 1px solid #a3a3a3; padding: 8px 10px; margin: 8pt 0 12pt; page-break-inside: avoid; }
 .warn { background: #fef9c3; }
-pre { background: #0f172a; color: #f8fafc; padding: 8px 10px; font-family: Consolas, monospace; font-size: 8.8pt;
+pre { background: #111111; color: #fafafa; padding: 8px 10px; font-family: Consolas, monospace; font-size: 8.8pt;
       white-space: pre-wrap; page-break-inside: avoid; }
 code { font-family: Consolas, monospace; font-size: 9.5pt; } img { width: 100%; }
-.cap { text-align: center; color: #475569; font-size: 9pt; margin-bottom: 12pt; }
+.cap { text-align: center; color: #4d4d4d; font-size: 9pt; margin-bottom: 12pt; }
 .pb { page-break-after: always; }
 """
 
@@ -78,7 +78,7 @@ class Builder:
             style = self.doc.styles[name]
             style.font.name = "Calibri"
             style.font.size = Pt(size)
-            style.font.color.rgb = INK if name == "Heading 3" else BLUE
+            style.font.color.rgb = INK if name == "Heading 3" else HEADING
 
     # -- text --------------------------------------------------------------
 
@@ -145,7 +145,7 @@ class Builder:
             cell = t.rows[0].cells[i]
             cell.text = ""
             self.runs(cell.paragraphs[0], f"**{text}**", font)
-            _shade(cell, "DBEAFE")
+            _shade(cell, "E5E5E5")
         for row in rows:
             cells = t.add_row().cells
             for i, text in enumerate(row):
@@ -157,7 +157,7 @@ class Builder:
         self.doc.add_paragraph()
         return t
 
-    def callout(self, text: str, fill: str = "EFF6FF"):
+    def callout(self, text: str, fill: str = "F2F2F2"):
         css = "callout warn" if fill.upper() == "FEF9C3" else "callout"
         self.html.append(f'<div class="{css}">' + "<br>".join(_inline(line) for line in text.split("\n")) + "</div>")
         t = self.doc.add_table(rows=1, cols=1)
@@ -184,7 +184,7 @@ class Builder:
             run.font.name = "Consolas"
             run.font.size = Pt(9.5)
             run.font.color.rgb = RGBColor(0xF8, 0xFA, 0xFC)
-        _shade(cell, "0F172A")
+        _shade(cell, "111111")
         cell.width = CONTENT_WIDTH
         self.doc.add_paragraph().paragraph_format.space_after = Pt(0)
 
@@ -208,7 +208,7 @@ class Builder:
         run = para.add_run(text)
         run.bold = True
         run.font.size = Pt(24)
-        run.font.color.rgb = BLUE
+        run.font.color.rgb = HEADING
         self.html.append(f'<div class="title">{_html.escape(text)}</div>')
         self.p(subtitle, size=13, colour=INK, center=True)
         for line in lines:

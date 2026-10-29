@@ -98,7 +98,7 @@ step(2, "How the system works (3 min)",
       "work, our program tests each on 100 practice sentences, the AI sees the scores and picks a 4th.",
       "The best of the 4 is kept and saved as a package any app can load.",
       "Important: qwen itself never changes. We are not training it. We only choose the best way to ask it."],
-     image=IMG / "how_it_works.png", caption="The framework's steps. Blue = where the AI decides.",
+     image=IMG / "how_it_works.png", caption="The framework's steps. Shaded boxes = where the AI decides.",
      asked=[["Is this training?", "No. Training changes the model, like XLM-R. Here the model stays the same; we only choose the best prompt."],
             ["Who makes the pipeline, qwen?", "No. Our Python program builds and tests it. qwen gives advice on which designs to try, and later answers each request."],
             ["What are the 12 designs?", "3 ways to ask × 2 ways to choose examples × 2 ways to refuse off-topic requests."]])

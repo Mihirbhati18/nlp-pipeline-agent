@@ -20,9 +20,9 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "images"
-INK, QUIET, EDGE = "#1e293b", "#475569", "#64748b"
-AI_FILL, AI_EDGE = "#dbeafe", "#2563eb"
-PLAIN_FILL = "#f8fafc"
+INK, QUIET, EDGE = "#1a1a1a", "#4d4d4d", "#6b6b6b"
+AI_FILL, AI_EDGE = "#e5e5e5", "#000000"
+PLAIN_FILL = "#fafafa"
 GOOD = "#16a34a"
 
 
@@ -60,7 +60,7 @@ def save(fig, name):
 
 
 def how_it_works():
-    fig, ax = canvas(11, 5.2, "How the framework designs a pipeline (blue = steps where the AI decides)")
+    fig, ax = canvas(11, 5.2, "How the framework designs a pipeline (shaded = steps where the AI decides)")
     y = 2.7
     box(ax, 0.2, y, 1.9, 1.4, "1. Input", ["project description", "request types", "fields + examples"])
     box(ax, 2.4, y, 1.9, 1.4, "2. Analyzer", ["AI writes a short", "description of every", "request type and field"], ai=True)
@@ -120,13 +120,13 @@ def terminal(capture: str, command: str, name: str, highlight: tuple[str, ...] =
     ax.set_ylim(0, height)
     ax.axis("off")
     ax.add_patch(FancyBboxPatch((0, 0), 1, height, boxstyle="round,pad=0,rounding_size=0.02",
-                                fc="#0f172a", ec="#0f172a", transform=ax.transData))
+                                fc="#111111", ec="#111111", transform=ax.transData))
     ax.add_patch(FancyBboxPatch((0, height - 0.38), 1, 0.38, boxstyle="square,pad=0",
-                                fc="#1e293b", ec="#1e293b"))
-    ax.text(0.015, height - 0.19, f"> {command}", va="center", fontsize=9.2, color="#e2e8f0",
+                                fc="#1a1a1a", ec="#1a1a1a"))
+    ax.text(0.015, height - 0.19, f"> {command}", va="center", fontsize=9.2, color="#e6e6e6",
             family="monospace", fontweight="bold")
     for i, line in enumerate(lines):
-        colour = "#86efac" if any(h in line for h in highlight) else "#cbd5e1"
+        colour = "#86efac" if any(h in line for h in highlight) else "#d4d4d4"
         ax.text(0.015, height - 0.6 - i * 0.2, line, va="center", fontsize=7.0, color=colour, family="monospace")
     save(fig, name)
 

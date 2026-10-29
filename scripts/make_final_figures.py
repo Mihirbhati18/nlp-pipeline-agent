@@ -23,9 +23,9 @@ OUT = ROOT / "reports" / "figures" / "final"
 FINAL = json.loads((ROOT / "reports" / "final_test.json").read_text(encoding="utf-8"))
 PROJECTS = ["P1", "P2", "P3"]
 NAMES = {"P1": "P1 Home assistant", "P2": "P2 Productivity", "P3": "P3 Ordering & travel (held out)"}
-AGENT, A1_COL, OTHER, DARK, REF, INK = "#2563eb", "#93c5fd", "#94a3b8", "#475569", "#cbd5e1", "#1e293b"
+AGENT, A1_COL, OTHER, DARK, REF, INK = "#000000", "#8c8c8c", "#c8c8c8", "#4d4d4d", "#e6e6e6", "#1a1a1a"
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
-                     "axes.edgecolor": "#64748b", "text.color": INK, "axes.labelcolor": INK})
+                     "axes.edgecolor": "#a6a6a6", "text.color": INK, "axes.labelcolor": INK})
 sources: list[str] = []
 
 
@@ -52,9 +52,9 @@ def save(fig, name, caption):
     print(f"wrote reports/figures/final/{name}")
 
 
-SYSTEMS = [("B0", "B0 word matching", OTHER), ("B1", "B1 generic prompt", "#64748b"),
-           ("B2", "B2 manual", "#cbd5e1"), ("B3-k", "B3-k XLM-R (matched)", DARK),
-           ("B4-random", "B4 random search (mean)", "#a5b4fc"), ("A1", "A1 agent", A1_COL), ("A2", "A2 agent", AGENT)]
+SYSTEMS = [("B0", "B0 word matching", OTHER), ("B1", "B1 generic prompt", "#a6a6a6"),
+           ("B2", "B2 manual", "#e6e6e6"), ("B3-k", "B3-k XLM-R (matched)", DARK),
+           ("B4-random", "B4 random search (mean)", "#ffffff"), ("A1", "A1 agent", A1_COL), ("A2", "A2 agent", AGENT)]
 
 
 def grouped(key, title, ylabel, name, caption, ylim, skip=()):
@@ -67,7 +67,10 @@ def grouped(key, title, ylabel, name, caption, ylim, skip=()):
             if v is None:
                 continue
             x = j + (i - (len(systems) - 1) / 2) * width
-            ax.bar(x, v, width * 0.95, color=colour, label=label if j == 0 else None)
+            # Greyscale only, so the busiest series also get a pattern to stay distinguishable.
+            hatch = {"B4-random": "//", "A1": "xx"}.get(sid)
+            ax.bar(x, v, width * 0.95, color=colour, label=label if j == 0 else None, hatch=hatch,
+                   edgecolor="#333333", linewidth=0.5)
             ax.text(x, v + 0.008, f"{v:.2f}", ha="center", fontsize=6.8, rotation=90)
     ax.set_xticks(range(len(PROJECTS)), [NAMES[p] for p in PROJECTS])
     ax.set_ylim(*ylim)
@@ -78,7 +81,7 @@ def grouped(key, title, ylabel, name, caption, ylim, skip=()):
 
 
 def forest():
-    pairs = [("A2 vs B1", AGENT), ("A1 vs B1", A1_COL), ("A2 vs B2", DARK), ("A2 vs A1", "#64748b")]
+    pairs = [("A2 vs B1", AGENT), ("A1 vs B1", A1_COL), ("A2 vs B2", DARK), ("A2 vs A1", "#a6a6a6")]
     fig, ax = plt.subplots(figsize=(8.5, 4.6))
     y, labels = 0, []
     for p in PROJECTS:

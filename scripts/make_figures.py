@@ -24,13 +24,13 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / "runs"
 OUT = ROOT / "reports" / "figures"
 
-AGENT = "#2563eb"   # the system under study (A2, the improved agent)
-A1_COL = "#93c5fd"  # the original agent
-OTHER = "#94a3b8"   # baselines
-REF = "#cbd5e1"     # references that are not matched comparisons
-INK = "#1e293b"
+AGENT = "#000000"   # the system under study (A2, the improved agent)
+A1_COL = "#8c8c8c"  # the original agent
+OTHER = "#c8c8c8"   # baselines
+REF = "#e6e6e6"     # references that are not matched comparisons
+INK = "#1a1a1a"
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
-                     "axes.edgecolor": "#64748b", "axes.labelcolor": INK, "text.color": INK,
+                     "axes.edgecolor": "#a6a6a6", "axes.labelcolor": INK, "text.color": INK,
                      "xtick.color": INK, "ytick.color": INK})
 
 sources: list[str] = []
@@ -122,7 +122,7 @@ def fig_main() -> None:
 
 
 def fig_entity() -> None:
-    systems = [("B1", OTHER), ("A1", A1_COL), ("A2", AGENT), ("B3-k", "#475569"), ("B3-full", REF)]
+    systems = [("B1", OTHER), ("A1", A1_COL), ("A2", AGENT), ("B3-k", "#4d4d4d"), ("B3-full", REF)]
     labels = {"B1": "B1 generic prompt", "A1": "A1 original agent", "A2": "A2 improved agent",
               "B3-k": "B3-k published, matched", "B3-full": "B3-full, all data\n(reference only)"}
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
@@ -157,7 +157,7 @@ def fig_catalogue() -> None:
     for ax, project in zip(axes, ("P1", "P2")):
         rows = sorted(ranking(project), key=lambda r: r["intent_macro_f1"])
         selected, tried = a1_attempts(project)
-        colours = [AGENT if r["config_id"] == selected else ("#93c5fd" if r["config_id"] in tried else OTHER)
+        colours = [AGENT if r["config_id"] == selected else ("#8c8c8c" if r["config_id"] in tried else OTHER)
                    for r in rows]
         ax.barh([r["config_id"] for r in rows], [r["intent_macro_f1"] for r in rows], color=colours)
         for y, r in enumerate(rows):
@@ -168,7 +168,7 @@ def fig_catalogue() -> None:
     axes[0].set_xlabel("Intent macro-F1 (development)")
     axes[1].set_xlabel("Intent macro-F1 (development)")
     from matplotlib.patches import Patch
-    fig.legend(handles=[Patch(color=AGENT, label="A1 selected"), Patch(color="#93c5fd", label="A1 tried"),
+    fig.legend(handles=[Patch(color=AGENT, label="A1 selected"), Patch(color="#8c8c8c", label="A1 tried"),
                         Patch(color=OTHER, label="not tried")], loc="lower center", ncol=3,
                frameon=False, fontsize=8.5, bbox_to_anchor=(0.5, -0.04))
     fig.suptitle("The agent never tried the best design (schema-sim-llm) on either project",
@@ -218,7 +218,7 @@ def fig_errors() -> None:
                   key=lambda c: sum(p["errors"]["counts"].get(c, 0) for p in data.values()))
     fig, ax = plt.subplots(figsize=(9, 4))
     height = 0.38
-    for i, (project, colour) in enumerate((("P1", "#93c5fd"), ("P2", AGENT))):
+    for i, (project, colour) in enumerate((("P1", "#8c8c8c"), ("P2", AGENT))):
         values = [data[project]["errors"]["counts"].get(c, 0) for c in cats]
         ys = [y + (i - 0.5) * height for y in range(len(cats))]
         ax.barh(ys, values, height, color=colour, label=project)
@@ -241,7 +241,7 @@ def fig_robustness() -> None:
         return
     data = json.loads(path.read_text(encoding="utf-8"))["projects"]
     variants = ["clean", "typo", "caps", "filler"]
-    systems = [("B0", OTHER, "B0 word matching"), ("B1", "#64748b", "B1 generic prompt"),
+    systems = [("B0", OTHER, "B0 word matching"), ("B1", "#a6a6a6", "B1 generic prompt"),
                ("A1", AGENT, "A1 our agent")]
     fig, axes = plt.subplots(1, 2, figsize=(10, 3.8), sharey=True)
     width = 0.26
