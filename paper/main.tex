@@ -300,8 +300,7 @@ P3 was held out completely: its description was committed at the start, but ever
 
 \subsection{Model and environment}
 
-All LM calls, both for planning and at runtime, use Qwen2.5-3B-Instruct~\cite{qwen2024qwen25,qwen2024card} quantised to 4 bits (Q4\_K\_M), served locally by Ollama~0.40.2~\cite{ollama2026} on a laptop with an NVIDIA RTX~3050 GPU (4\,GB). Decoding uses temperature~0, seed~0, JSON-constrained output and at most 512 output tokens. Fifty repeated uncached requests gave 50 identical outputs, so a single run per configuration is deterministic. For prompts averaging 1{,}028 input tokens a single call took 0.42\,s at the median and 0.59\,s at the 95th percentile. Model replies are cached by prompt hash for reproducibility; cached replies never contribute a latency figure.
-
+All LM calls, both for planning and at runtime, use Qwen2.5-3B-Instruct~\cite{qwen2024qwen25,qwen2024card} quantised to 4 bits (Q4\_K\_M), served locally by Ollama~0.40.2~\cite{ollama2026} on a laptop with an NVIDIA RTX~3050 GPU (4\,GB). Decoding uses temperature~0, seed~0, JSON-constrained output and at most 512 output tokens. Fifty repeated uncached requests gave 50 identical outputs, so a single run per configuration is deterministic. For prompts averaging 1{,}028 input tokens a single call took 0.42\,s at the median and 0.59\,s at the 95th percentile.
 \subsection{Baselines}
 
 \textbf{B0} is TF-IDF features with logistic regression~\cite{pedregosa2011scikit} trained on $K$, with an \oos{} threshold tuned on $V$; it predicts no entities. \textbf{B1} is a generic prompt: the joint, fixed-example, model-label design on the bare specification, i.e., what a developer gets without any design effort. \textbf{B2} is a human designer: a team member studied the development results through a worksheet and chose one design (38 minutes on P1; under 6 minutes on P2, assisted by a chat assistant, which we declare); B2 was not run on P3. \textbf{B3} fine-tunes XLM-R base~\cite{conneau2020unsupervised} with a joint intent and slot head~\cite{chen2019bert}, implemented with PyTorch~\cite{paszke2019pytorch} and Transformers~\cite{wolf2020transformers}, learning rate $3\times10^{-5}$ and batch size 16, either on $K$ for 30 epochs (B3-k) or on the full training split of the project's scenarios for 5 epochs (B3-full: 1{,}159, 3{,}180 and 828 utterances); its rejection threshold on maximum softmax probability is tuned on $V$. \textbf{B4-random} draws four designs uniformly at random and selects with the agent's rule, repeated with five seeds; \textbf{B4-best} evaluates all twelve designs and represents the best achievable choice on development data.
@@ -336,14 +335,8 @@ A2 agent, factor-wise planner & 0.898 / \textbf{0.699} / 0.865 & \textbf{0.872} 
 \end{tabular}}
 \end{table*}
 
-Table~\ref{tab:main} and Fig.~\ref{fig:intent} give the test results. The selected designs were: A2 schema-guided with similarity examples and model rejection on P1 and P2, and joint with similarity examples and model rejection on P3; A1 two-stage with similarity examples on P1 and schema-guided with fixed examples on P2 and P3, all with model rejection. In each project A2's choice coincides with B4-best, the best of all twelve designs on development data.
+Table~\ref{tab:main} gives the test results. The selected designs were: A2 schema-guided with similarity examples and model rejection on P1 and P2, and joint with similarity examples and model rejection on P3; A1 two-stage with similarity examples on P1 and schema-guided with fixed examples on P2 and P3, all with model rejection. In each project A2's choice coincides with B4-best, the best of all twelve designs on development data.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/intent_test.pdf}
-\caption{Test intent macro-F1. B4 is the mean of five random-search seeds. B2 was not run on P3.}
-\label{fig:intent}
-\end{figure}
 
 \emph{Success rule.} Against B1, A2 changed intent / entity F1 by +2.2 / +7.3 points on P1, +4.9 / +5.5 on P2 and $-$1.3 / +14.6 on P3; A1 by +2.7 / +1.3, +2.9 / +2.7 and $-$0.6 / $-$2.3. Both agents therefore pass the rule on P1 and P2 and fail it on P3. Schema validity after repair was at least 0.997 in every agent run, and 95th-percentile latencies were within the limit (P1: A1 0.97\,s, A2 0.89\,s against 1.22\,s; P2: A1 0.77\,s, A2 1.08\,s against 1.67\,s). A2's median latency was 0.68\,s and 0.64\,s, against 0.45\,s and 0.41\,s for B1.
 
@@ -358,7 +351,7 @@ Table~\ref{tab:main} and Fig.~\ref{fig:intent} give the test results. The select
 
 \subsection{Agent against random search and the human designer}
 
-Random search with the same budget and selection rule reached a mean intent F1 of 0.893, 0.854 and 0.894 on the three projects. A2 was above the mean on P1 (0.898) and P2 (0.872, the top of the random range), and at the bottom of the range on P3 (0.882). A random seed includes the development-optimal design among its four draws with probability $4/12$, and when it does, the shared selection rule picks it, so a seed can match A2 exactly. One of five seeds did so on P1 and P2, and two of five on P3. A2 reached that design on all three projects without depending on the draw.
+With the same budget and selection rule, A2 was above the random-search mean on P1 (0.898 against 0.893) and P2 (0.872, the top of the random range), and at the bottom of the range on P3 (0.882). A random seed includes the development-optimal design among its four draws with probability $4/12$, and when it does, the shared selection rule picks it, so a seed can match A2 exactly. One of five seeds did so on P1 and P2, and two of five on P3. A2 reached that design on all three projects without depending on the draw.
 
 Against the human designer, A2 was 6.1 points higher in intent F1 on P1 (95\% CI [+2.0, +10.2]) and 2.1 points higher on P2 (n.s.). On P1 the human chose the threshold rejection policy, which reduced \oos{} F1 to 0.471 against A2's 0.865; the agent never kept a threshold design because on both development projects all six model-label designs scored above all six threshold designs.
 
