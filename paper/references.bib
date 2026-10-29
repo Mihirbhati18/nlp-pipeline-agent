@@ -1,5 +1,13 @@
 % Every entry below was checked against the publisher's page (ACL Anthology,
-% OpenReview, JMLR, NeurIPS proceedings, ScienceDirect or arXiv).
+% OpenReview, JMLR, NeurIPS proceedings, ScienceDirect or arXiv). Software and
+% online resources were checked at their URLs.
+
+% IEEE style: entries with more than six authors list the first author and "et al."
+@IEEEtranBSTCTL{IEEEexample:BSTcontrol,
+  CTLuse_forced_etal       = "yes",
+  CTLmax_names_forced_etal = "6",
+  CTLnames_show_etal       = "1"
+}
 
 @inproceedings{fitzgerald2023massive,
   author    = {FitzGerald, Jack and Hench, Christopher and Peris, Charith and Mackie, Scott and Rottmann, Kay and Sanchez, Ana and Nash, Aaron and Urbach, Liam and Kakarala, Vishesh and Singh, Richa and Ranganath, Swetha and Crist, Laurie and Britan, Misha and Leeuwis, Wouter and Tur, Gokhan and Natarajan, Prem},
@@ -51,7 +59,7 @@
 }
 
 @inproceedings{brown2020language,
-  author    = {Brown, Tom B. and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared and others},
+  author    = {Brown, Tom B. and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared and Dhariwal, Prafulla and Neelakantan, Arvind and others},
   title     = {Language Models are Few-Shot Learners},
   booktitle = {Advances in Neural Information Processing Systems},
   volume    = {33},
@@ -151,6 +159,60 @@
   title   = {Qwen2.5 Technical Report},
   journal = {arXiv preprint arXiv:2412.15115},
   year    = {2024}
+}
+
+@article{pedregosa2011scikit,
+  author  = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and others},
+  title   = {Scikit-learn: Machine Learning in {P}ython},
+  journal = {Journal of Machine Learning Research},
+  volume  = {12},
+  pages   = {2825--2830},
+  year    = {2011}
+}
+
+@inproceedings{paszke2019pytorch,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and others},
+  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32},
+  year      = {2019}
+}
+
+@inproceedings{wolf2020transformers,
+  author    = {Wolf, Thomas and Debut, Lysandre and Sanh, Victor and Chaumond, Julien and Delangue, Clement and Moi, Anthony and Cistac, Pierric and others},
+  title     = {Transformers: State-of-the-Art Natural Language Processing},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations},
+  pages     = {38--45},
+  year      = {2020},
+  publisher = {Association for Computational Linguistics},
+  doi       = {10.18653/v1/2020.emnlp-demos.6}
+}
+
+@misc{massive2022repo,
+  author       = {{Amazon Alexa AI}},
+  title        = {{MASSIVE} dataset, version 1.1},
+  howpublished = {GitHub repository},
+  url          = {https://github.com/alexa/massive},
+  year         = {2022},
+  note         = {Accessed: Oct. 11, 2026}
+}
+
+@misc{qwen2024card,
+  author       = {{Qwen Team}},
+  title        = {{Qwen2.5-3B-Instruct} model card},
+  howpublished = {Hugging Face},
+  url          = {https://huggingface.co/Qwen/Qwen2.5-3B-Instruct},
+  year         = {2024},
+  note         = {Accessed: Oct. 12, 2026}
+}
+
+@misc{ollama2026,
+  author       = {{Ollama}},
+  title        = {Ollama: run large language models locally, version 0.40.2},
+  howpublished = {GitHub repository},
+  url          = {https://github.com/ollama/ollama},
+  year         = {2026},
+  note         = {Accessed: Oct. 12, 2026}
 }
 
 @inproceedings{koehn2004statistical,
